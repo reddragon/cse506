@@ -122,9 +122,12 @@ boot_alloc(uint32_t n, uint32_t align)
 	//	Step 2: save current value of boot_freemem as allocated chunk
 	//	Step 3: increase boot_freemem to record allocation
 	//	Step 4: return allocated chunk
-	ROUNDUP(boot_freemem, align);
+	cprintf("boot_alloc() called. n: %d, align: %x. Before: %x", n, align, boot_freemem);
+	boot_freemem = ROUNDUP(boot_freemem, align);
+	cprintf(" After: %x ", boot_freemem);
 	v = boot_freemem;
 	boot_freemem += n;
+	cprintf(" New boot_freemem: %x\n", boot_freemem);
 	return v;
 }
 
@@ -140,6 +143,8 @@ boot_alloc(uint32_t n, uint32_t align)
 //
 // From UTOP to ULIM, the user is allowed to read but not write.
 // Above ULIM the user cannot read (or write). 
+
+static physaddr_t check_va2pa(pde_t *pgdir, uintptr_t va);
 void
 i386_vm_init(void)
 {
@@ -177,8 +182,7 @@ i386_vm_init(void)
 	// array.  'npage' is the number of physical pages in memory.
 	// User-level programs will get read-only access to the array as well.
 	// Your code goes here:
-	pages = boot_alloc(npage * sizeof(struct Page), sizeof(struct Page));
-	cprintf("pages : %x\n", pages);
+	pages = boot_alloc(npage * sizeof(struct Page), PGSIZE);
 	//////////////////////////////////////////////////////////////////////
 	// Now that we've allocated the initial kernel data structures, we set
 	// up the list of free physical pages. Once we've done so, all further
@@ -200,6 +204,21 @@ i386_vm_init(void)
 	//      (ie. perm = PTE_U | PTE_P)
 	//    - pages itself -- kernel RW, user NONE
 	// Your code goes here:
+	
+	cprintf("\nPages: %d, Bytes: %d, Total Pages: %d\n",npage, npage*sizeof(struct Page), ROUNDUP(npage*sizeof(struct Page),PGSIZE)/PGSIZE);
+	int last_byte = ROUNDUP(npage * sizeof(struct Page), PGSIZE), i;
+	for(i = 0; i < last_byte; i+=PGSIZE) {
+		struct Page * page_at = pa2page(PADDR(pages) + i);
+		page_insert(pgdir, page_at, (void *)(UPAGES + i), 0xFFF);
+	}
+	
+
+	/*
+	int ploc = ROUNDUP(npage * sizeof(struct Page), PGSIZE), i, pn; 
+	for(i = 0, pn = 0; pn == 0 && i < ploc; i+= PGSIZE, pn++) {
+		page_insert(pgdir, pages + pn, (void *)(UPAGES + i), PTE_U | PTE_P);	
+		cprintf("Page Addr: %d %x %x %x %x %x\n", pn, page2pa(pages), page2pa(pages+pn), check_va2pa(pgdir, UPAGES + i), PADDR(pages) + i, UPAGES + i);
+	}*/
 
 	//////////////////////////////////////////////////////////////////////
 	// Use the physical memory that 'bootstack' refers to as the kernel
@@ -361,7 +380,6 @@ check_page_alloc()
 // in fact it doesn't test the permission bits at all,
 // but it is a pretty good sanity check. 
 //
-static physaddr_t check_va2pa(pde_t *pgdir, uintptr_t va);
 
 static void
 check_boot_pgdir(void)
@@ -374,8 +392,10 @@ check_boot_pgdir(void)
 	// check pages array
 	n = ROUNDUP(npage*sizeof(struct Page), PGSIZE);
 	for (i = 0; i < n; i += PGSIZE)
+	{
+		cprintf("Assert: %d %x %x %x %x %x %x\n", i/PGSIZE, pages, page2pa(pages+i), PADDR(pages), check_va2pa(pgdir,UPAGES+i), PADDR((pages))+i, UPAGES + i);
 		assert(check_va2pa(pgdir, UPAGES + i) == PADDR(pages) + i);
-	
+	}
 
 	// check phys mem
 	for (i = 0; i < npage * PGSIZE; i += PGSIZE)
