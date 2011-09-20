@@ -1,0 +1,5 @@
+obj
+*.swp
+jos.in
+jos.out
+.gdbinit

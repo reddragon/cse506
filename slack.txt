@@ -1,0 +1,22 @@
+Lateness Hours Used: 0
+
+Group Members:
+Aniruddha Laud (alaud@cs.stonybrook.edu)
+Gaurav Menghani (gmenghani@cs.stonybrook.edu)
+
+Challenge Problem:
+The problem of printing colored text on the console was solved.
+
+The cga_putc function ORs the value 0x0700 with the character.
+The most-significant byte contains character color data. The
+most-significant four bits from 15-12 contain data about the
+background and the next four bits from 11-8 contain the 
+foreground color. 
+
+When the text-color needs to be set, one can call the 
+cga_setcolor(foreground_color, background_color) function. 
+The colors are defined as macros in kern/console.h. This sets
+the value of color_mask in kern/console.c, which is ORed with
+the character in cga_putc.
+
+The monitor command 'debug' is used to demonstrate this.
