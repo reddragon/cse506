@@ -122,12 +122,9 @@ boot_alloc(uint32_t n, uint32_t align)
 	//	Step 2: save current value of boot_freemem as allocated chunk
 	//	Step 3: increase boot_freemem to record allocation
 	//	Step 4: return allocated chunk
-	cprintf("boot_alloc() called. n: %d, align: %x. Before: %x", n, align, boot_freemem);
 	boot_freemem = ROUNDUP(boot_freemem, align);
-	cprintf(" After: %x ", boot_freemem);
 	v = boot_freemem;
 	boot_freemem += n;
-	cprintf(" New boot_freemem: %x\n", boot_freemem);
 	return v;
 }
 
@@ -205,20 +202,12 @@ i386_vm_init(void)
 	//    - pages itself -- kernel RW, user NONE
 	// Your code goes here:
 	
-	cprintf("\nPages: %d, Bytes: %d, Total Pages: %d\n",npage, npage*sizeof(struct Page), ROUNDUP(npage*sizeof(struct Page),PGSIZE)/PGSIZE);
 	int last_byte = ROUNDUP(npage * sizeof(struct Page), PGSIZE), i;
 	for(i = 0; i < last_byte; i+=PGSIZE) {
 		struct Page * page_at = pa2page(PADDR(pages) + i);
-		page_insert(pgdir, page_at, (void *)(UPAGES + i), 0xFFF);
+		// TODO Are the permissions right?
+		page_insert(pgdir, page_at, (void *)(UPAGES + i), PTE_U | PTE_P);
 	}
-	
-
-	/*
-	int ploc = ROUNDUP(npage * sizeof(struct Page), PGSIZE), i, pn; 
-	for(i = 0, pn = 0; pn == 0 && i < ploc; i+= PGSIZE, pn++) {
-		page_insert(pgdir, pages + pn, (void *)(UPAGES + i), PTE_U | PTE_P);	
-		cprintf("Page Addr: %d %x %x %x %x %x\n", pn, page2pa(pages), page2pa(pages+pn), check_va2pa(pgdir, UPAGES + i), PADDR(pages) + i, UPAGES + i);
-	}*/
 
 	//////////////////////////////////////////////////////////////////////
 	// Use the physical memory that 'bootstack' refers to as the kernel
@@ -231,6 +220,8 @@ i386_vm_init(void)
 	//       overwrite memory.  Known as a "guard page".
 	//     Permissions: kernel RW, user NONE
 	// Your code goes here:
+	
+
 
 	//////////////////////////////////////////////////////////////////////
 	// Map all of physical memory at KERNBASE. 
@@ -240,6 +231,12 @@ i386_vm_init(void)
 	// we just set up the mapping anyway.
 	// Permissions: kernel RW, user NONE
 	// Your code goes here: 
+	for(i = KERNBASE; i < 0xffffffff; i += PGSIZE) {
+		cprintf("Page: %d\n",i)
+		struct Page * page_at = pa2page(PADDR(i));
+		// TODO Are the permissions right?
+		page_insert(pgdir, page_at, (void *)(PADDR(i)), PTE_U | PTE_P);
+	}
 
 	// Check that the initial page directory has been set up correctly.
 	check_boot_pgdir();
@@ -392,10 +389,7 @@ check_boot_pgdir(void)
 	// check pages array
 	n = ROUNDUP(npage*sizeof(struct Page), PGSIZE);
 	for (i = 0; i < n; i += PGSIZE)
-	{
-		cprintf("Assert: %d %x %x %x %x %x %x\n", i/PGSIZE, pages, page2pa(pages+i), PADDR(pages), check_va2pa(pgdir,UPAGES+i), PADDR((pages))+i, UPAGES + i);
 		assert(check_va2pa(pgdir, UPAGES + i) == PADDR(pages) + i);
-	}
 
 	// check phys mem
 	for (i = 0; i < npage * PGSIZE; i += PGSIZE)
@@ -437,14 +431,11 @@ check_va2pa(pde_t *pgdir, uintptr_t va)
 	pte_t *p;
 
 	pgdir = &pgdir[PDX(va)];
-	cprintf("va2pa 1 : %x, %x\n", pgdir, *pgdir);
 	if (!(*pgdir & PTE_P))
 		return ~0;
 	p = (pte_t*) KADDR(PTE_ADDR(*pgdir));
-	cprintf("va2pa 2 : %x, %x, %x\n", p, p[PTX(va)], p[PTX(va) + 1]);
 	if (!(p[PTX(va)] & PTE_P))
 		return ~0;
-	cprintf("va2pa 3 : %x\n",PTE_ADDR(p[PTX(va)]));
 	return PTE_ADDR(p[PTX(va)]);
 }
 		
@@ -486,22 +477,14 @@ page_init(void)
 	} */
 	
 	//My code begins here
-	cprintf("%d %d %d\n",npage, IOPHYSMEM/PGSIZE, EXTPHYSMEM/PGSIZE);
-	cprintf("%x %x\n", IOPHYSMEM, EXTPHYSMEM);
-	cprintf("sizeof struct Page : %d\n", sizeof(struct Page));
-	/* Skipping the first page physical page */
+	// Skipping the first page physical page 
 
 	for (i = 1; i < IOPHYSMEM / PGSIZE; i++) {
 		pages[i].pp_ref = 0;
 		LIST_INSERT_HEAD(&page_free_list, &pages[i], pp_link);
 	}
-	// Not sure about this part, need to skip the part where Kernel is.
-	/*
-		Kernel is loaded from 0x100000.
-		Assuming one page for the kernel. Since when the kernel
-		is read, it reads max of 512*8 bytes.
-	*/
 	
+	// Skipping the used pages
 	for(i = (PADDR(ROUNDUP(boot_freemem, PGSIZE))/ PGSIZE); i < npage; i++) {
 		pages[i].pp_ref = 0;
 		LIST_INSERT_HEAD(&page_free_list, &pages[i], pp_link);
@@ -538,7 +521,6 @@ page_alloc(struct Page **pp_store)
 {
 	// Fill this function in
 	// My code
-	// cprintf("page_alloc before : %x\n", LIST_FIRST(&page_free_list));
 	if(LIST_EMPTY(&page_free_list)) 
 	{
 		// cprintf("List empty :(\n");
@@ -558,9 +540,8 @@ void
 page_free(struct Page *pp)
 {
 	// Fill this function in
-	cprintf("before : %x\n", LIST_FIRST(&page_free_list));
+	//cprintf("before : %x\n", LIST_FIRST(&page_free_list));
 	LIST_INSERT_HEAD(&page_free_list, pp, pp_link);
-	cprintf("after : %x\n", LIST_FIRST(&page_free_list));
 }
 
 //
@@ -598,8 +579,8 @@ pgdir_walk(pde_t *pgdir, const void *va, int create)
 	// Fill this function in
 	// My code : alaud
 	// If page exists, use it
-	cprintf("Entered pgdir_walk : %x\n", pgdir[PDX(va)]);
-	cprintf("Value walk : %x\n", ((KADDR(PTE_ADDR(pgdir[PDX(va)]))) + PTX(va)));
+	//cprintf("Entered pgdir_walk : %x\n", pgdir[PDX(va)]);
+	//cprintf("Value walk : %x\n", ((KADDR(PTE_ADDR(pgdir[PDX(va)]))) + PTX(va)));
 	if(pgdir[PDX(va)] != 0)
 		return (pte_t*)&((pte_t*)(KADDR(PTE_ADDR(pgdir[PDX(va)]))))[PTX(va)];
 	// Don't create !
@@ -613,16 +594,11 @@ pgdir_walk(pde_t *pgdir, const void *va, int create)
 		return NULL;
 	}
 	new_page -> pp_ref++;
-	cprintf("Allocated page : %x %x\n", new_page, page2kva(new_page));
 	// Clear the new page
 	memset((void*)page2kva(new_page), 0, PGSIZE);
 	// Insert this in pgdir
 	pgdir[PDX(va)] = (page2pa(new_page) | 0xFFF);
-	//pde_t* p = page2kva((void*)&pgdir[PDX(va)]);
-	//cprintf("walk 2 : %x\n", p);
 	// Return the PTE entry
-	// cprintf("page2pa walk : %x %x %x\n",  new_page, pgdir[PDX(va)], pa2page(pgdir[PDX(va)]));
-	// cprintf("returned walk page : %x\n",(new_page + PTX(va)));
 	return (pte_t*)&((pte_t*)KADDR(PTE_ADDR(pgdir[PDX(va)])))[PTX(va)];
 	// cprintf("Exited pgdir_walk\n");
 }
@@ -656,7 +632,7 @@ page_insert(pde_t *pgdir, struct Page *pp, void *va, int perm)
 	// My code : alaud
 	// Get the PTE. Create if necessary 
 	pde_t* pte = pgdir_walk(pgdir, va, 1);
-	cprintf("insert : pte : %x %x\n", pte, *pte);
+	//cprintf("insert : pte : %x %x\n", pte, *pte);
 	//assert(pte != NULL);
 	if(pte == NULL)
 		return -E_NO_MEM;
@@ -670,7 +646,7 @@ page_insert(pde_t *pgdir, struct Page *pp, void *va, int perm)
 		page_remove(pgdir, va);
 	}
 	pte = (pte_t*)pgdir_walk(pgdir, va, 0);
-	cprintf("insert : pte, next : %x %x\n", pte, *pte);
+	//cprintf("insert : pte, next : %x %x\n", pte, *pte);
 	// page_remove might fail. If *pte is not 0 still, we have a problem. 
 	if(pte == NULL || *pte != 0)
 		return -E_NO_MEM;
@@ -679,8 +655,8 @@ page_insert(pde_t *pgdir, struct Page *pp, void *va, int perm)
 	// Assign the new page to the PTE
 	*pte = (page2pa(pp) | perm | PTE_P);
 	pp -> pp_ref++;
-	cprintf("LIST_HEAD : %x\n", LIST_FIRST(&page_free_list));
-	cprintf("inserted : %x %x %x\n", *pte, pp, pp -> pp_ref);
+	//cprintf("LIST_HEAD : %x\n", LIST_FIRST(&page_free_list));
+	//cprintf("inserted : %x %x %x\n", *pte, pp, pp -> pp_ref);
 	return 0;
 }
 
@@ -761,7 +737,7 @@ page_lookup(pde_t *pgdir, void *va, pte_t **pte_store)
 void
 page_remove(pde_t *pgdir, void *va)
 {
-	cprintf("Entered page_remove\n");
+	//cprintf("Entered page_remove\n");
 	// Fill this function in
 	// My code : alaud
 	pte_t* pte;
@@ -830,8 +806,8 @@ page_check(void)
 	page_free(pp0);
 	assert(page_insert(boot_pgdir, pp1, 0x0, 0) == 0);
 	assert(PTE_ADDR(boot_pgdir[0]) == page2pa(pp0));
-	cprintf("check 0: %x\n", page2pa(pp0)); 
-	cprintf("check 1: %x, %x\n", page2pa(pp1), check_va2pa(boot_pgdir, 0x0));
+	//cprintf("check 0: %x\n", page2pa(pp0)); 
+	//cprintf("check 1: %x, %x\n", page2pa(pp1), check_va2pa(boot_pgdir, 0x0));
 	assert(check_va2pa(boot_pgdir, 0x0) == page2pa(pp1));
 	assert(pp1->pp_ref == 1);
 	assert(pp0->pp_ref == 1);
