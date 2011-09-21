@@ -140,8 +140,6 @@ boot_alloc(uint32_t n, uint32_t align)
 //
 // From UTOP to ULIM, the user is allowed to read but not write.
 // Above ULIM the user cannot read (or write). 
-
-static physaddr_t check_va2pa(pde_t *pgdir, uintptr_t va);
 void
 i386_vm_init(void)
 {
@@ -180,6 +178,7 @@ i386_vm_init(void)
 	// User-level programs will get read-only access to the array as well.
 	// Your code goes here:
 	pages = boot_alloc(npage * sizeof(struct Page), PGSIZE);
+	//cprintf("pages : %x\n", pages);
 	//////////////////////////////////////////////////////////////////////
 	// Now that we've allocated the initial kernel data structures, we set
 	// up the list of free physical pages. Once we've done so, all further
@@ -201,13 +200,11 @@ i386_vm_init(void)
 	//      (ie. perm = PTE_U | PTE_P)
 	//    - pages itself -- kernel RW, user NONE
 	// Your code goes here:
-	
-	int last_byte = ROUNDUP(npage * sizeof(struct Page), PGSIZE), i;
-	for(i = 0; i < last_byte; i+=PGSIZE) {
-		struct Page * page_at = pa2page(PADDR(pages) + i);
-		// TODO Are the permissions right?
-		page_insert(pgdir, page_at, (void *)(UPAGES + i), PTE_U | PTE_P);
-	}
+
+	// My code : alaud
+	//cprintf("pages : %x\n", PADDR(pages));
+	uint32_t lim = ROUNDUP(npage * sizeof(struct Page), PGSIZE);
+	boot_map_segment(boot_pgdir, UPAGES, lim, PADDR(pages), PTE_U | PTE_P);
 
 	//////////////////////////////////////////////////////////////////////
 	// Use the physical memory that 'bootstack' refers to as the kernel
@@ -221,7 +218,8 @@ i386_vm_init(void)
 	//     Permissions: kernel RW, user NONE
 	// Your code goes here:
 	
-
+	// My code : alaud
+	boot_map_segment(boot_pgdir, KSTACKTOP-KSTKSIZE, KSTKSIZE, PADDR(bootstack), PTE_W | PTE_P);
 
 	//////////////////////////////////////////////////////////////////////
 	// Map all of physical memory at KERNBASE. 
@@ -231,13 +229,11 @@ i386_vm_init(void)
 	// we just set up the mapping anyway.
 	// Permissions: kernel RW, user NONE
 	// Your code goes here: 
-	for(i = KERNBASE; i < 0xffffffff; i += PGSIZE) {
-		cprintf("Page: %d\n",i)
-		struct Page * page_at = pa2page(PADDR(i));
-		// TODO Are the permissions right?
-		page_insert(pgdir, page_at, (void *)(PADDR(i)), PTE_U | PTE_P);
-	}
-
+	
+	// My code : alaud
+	uint32_t kernsz = (1ULL << 32) - KERNBASE;
+	//cprintf("kernsize : %x, %x\n", kernsz, npage*PGSIZE);
+	boot_map_segment(boot_pgdir, KERNBASE, kernsz , 0x0, PTE_W | PTE_P);
 	// Check that the initial page directory has been set up correctly.
 	check_boot_pgdir();
 
@@ -377,6 +373,7 @@ check_page_alloc()
 // in fact it doesn't test the permission bits at all,
 // but it is a pretty good sanity check. 
 //
+static physaddr_t check_va2pa(pde_t *pgdir, uintptr_t va);
 
 static void
 check_boot_pgdir(void)
@@ -390,6 +387,7 @@ check_boot_pgdir(void)
 	n = ROUNDUP(npage*sizeof(struct Page), PGSIZE);
 	for (i = 0; i < n; i += PGSIZE)
 		assert(check_va2pa(pgdir, UPAGES + i) == PADDR(pages) + i);
+	
 
 	// check phys mem
 	for (i = 0; i < npage * PGSIZE; i += PGSIZE)
@@ -431,11 +429,14 @@ check_va2pa(pde_t *pgdir, uintptr_t va)
 	pte_t *p;
 
 	pgdir = &pgdir[PDX(va)];
+	//cprintf("va2pa 1 : %x, %x\n", pgdir, *pgdir);
 	if (!(*pgdir & PTE_P))
 		return ~0;
 	p = (pte_t*) KADDR(PTE_ADDR(*pgdir));
+	//cprintf("va2pa 2 : %x, %x, %x\n", p, p[PTX(va)], p[PTX(va) + 1]);
 	if (!(p[PTX(va)] & PTE_P))
 		return ~0;
+	//cprintf("va2pa 3 : %x\n",PTE_ADDR(p[PTX(va)]));
 	return PTE_ADDR(p[PTX(va)]);
 }
 		
@@ -470,21 +471,29 @@ page_init(void)
 	// Change the code to reflect this.
 	int i;
 	LIST_INIT(&page_free_list);
-	// cprintf("page_free_list : %x\n", &page_free_list);
+	//cprintf("page_free_list : %x\n", &page_free_list);
 	/* for (i = 0; i < npage; i++) {
 		pages[i].pp_ref = 0;
 		LIST_INSERT_HEAD(&page_free_list, &pages[i], pp_link);
 	} */
 	
 	//My code begins here
-	// Skipping the first page physical page 
+	//cprintf("%d %d %d\n",npage, IOPHYSMEM/PGSIZE, EXTPHYSMEM/PGSIZE);
+	//cprintf("%x %x\n", IOPHYSMEM, EXTPHYSMEM);
+	//cprintf("sizeof struct Page : %d\n", sizeof(struct Page));
+	/* Skipping the first page physical page */
 
 	for (i = 1; i < IOPHYSMEM / PGSIZE; i++) {
 		pages[i].pp_ref = 0;
 		LIST_INSERT_HEAD(&page_free_list, &pages[i], pp_link);
 	}
+	// Not sure about this part, need to skip the part where Kernel is.
+	/*
+		Kernel is loaded from 0x100000.
+		Assuming one page for the kernel. Since when the kernel
+		is read, it reads max of 512*8 bytes.
+	*/
 	
-	// Skipping the used pages
 	for(i = (PADDR(ROUNDUP(boot_freemem, PGSIZE))/ PGSIZE); i < npage; i++) {
 		pages[i].pp_ref = 0;
 		LIST_INSERT_HEAD(&page_free_list, &pages[i], pp_link);
@@ -521,9 +530,10 @@ page_alloc(struct Page **pp_store)
 {
 	// Fill this function in
 	// My code
+	//cprintf("page_alloc before : %x\n", LIST_FIRST(&page_free_list));
 	if(LIST_EMPTY(&page_free_list)) 
 	{
-		// cprintf("List empty :(\n");
+		//cprintf("List empty :(\n");
 		return -E_NO_MEM;
 	}
 	*pp_store = LIST_FIRST(&page_free_list);
@@ -542,6 +552,7 @@ page_free(struct Page *pp)
 	// Fill this function in
 	//cprintf("before : %x\n", LIST_FIRST(&page_free_list));
 	LIST_INSERT_HEAD(&page_free_list, pp, pp_link);
+	//cprintf("after : %x\n", LIST_FIRST(&page_free_list));
 }
 
 //
@@ -594,13 +605,19 @@ pgdir_walk(pde_t *pgdir, const void *va, int create)
 		return NULL;
 	}
 	new_page -> pp_ref++;
+	//cprintf("foo\n");
+	//cprintf("Allocated page : %x %x\n", new_page, page2kva(new_page));
 	// Clear the new page
 	memset((void*)page2kva(new_page), 0, PGSIZE);
 	// Insert this in pgdir
 	pgdir[PDX(va)] = (page2pa(new_page) | 0xFFF);
+	//pde_t* p = page2kva((void*)&pgdir[PDX(va)]);
+	//cprintf("walk 2 : %x\n", p);
 	// Return the PTE entry
+	//cprintf("page2pa walk : %x %x %x\n",  new_page, pgdir[PDX(va)], pa2page(pgdir[PDX(va)]));
+	//cprintf("returned walk page : %x\n",(new_page + PTX(va)));
 	return (pte_t*)&((pte_t*)KADDR(PTE_ADDR(pgdir[PDX(va)])))[PTX(va)];
-	// cprintf("Exited pgdir_walk\n");
+	//cprintf("Exited pgdir_walk\n");
 }
 
 //
@@ -679,7 +696,7 @@ boot_map_segment(pde_t *pgdir, uintptr_t la, size_t size, physaddr_t pa, int per
 	physaddr_t cur_pa = pa;
 	uintptr_t cur_la = la;
 	// Change pa and la in PGSIZE increments
-	for(; cur_pa < pa + size && cur_la < la + size; cur_pa += PGSIZE, cur_la += PGSIZE)
+	for(; cur_pa - pa < size && cur_la - la < size; cur_pa += PGSIZE, cur_la += PGSIZE)
 	{
 		// For each of these values, get the corresponding PTE. Allocate if necessary
 		pte_t* pte = pgdir_walk(pgdir, (void*)cur_la, 1);
@@ -687,6 +704,7 @@ boot_map_segment(pde_t *pgdir, uintptr_t la, size_t size, physaddr_t pa, int per
 			continue;
 		// Assign the necessary pa and the permissions
 		*pte = (cur_pa | perm | PTE_P);
+		//cprintf("boot_map_seg_loop : %x, %x, %x\n", pte, cur_la, cur_pa);
 	}
 }
 

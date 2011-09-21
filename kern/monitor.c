@@ -10,6 +10,7 @@
 #include <kern/console.h>
 #include <kern/monitor.h>
 #include <kern/kdebug.h>
+#include <kern/pmap.h>
 
 #define CMDBUF_SIZE	80	// enough for one VGA text line
 
@@ -25,7 +26,10 @@ static struct Command commands[] = {
 	{ "help", "Display this list of commands", mon_help },
 	{ "kerninfo", "Display information about the kernel", mon_kerninfo },
 	{ "backtrace", "Displays the stack backtrace", mon_backtrace },
-	{ "debug", "Displays data as helpful in debugging", mon_debug }
+	{ "debug", "Displays data as helpful in debugging", mon_debug },
+	{ "alloc_page", "Allocates a page", mon_alloc_page },
+	{ "page_status", "Displays the current allocation status of a page", mon_page_status },
+	{ "free_page", "Frees an allocated page", mon_free_page }
 };
 #define NCOMMANDS (sizeof(commands)/sizeof(commands[0]))
 
@@ -96,6 +100,90 @@ mon_debug()
 	return 0;
 }
 
+int
+is_page_free(struct Page *p) 
+{
+	if(p->pp_link.le_next == NULL && p->pp_link.le_prev == NULL)
+		return 0;
+	return 1;
+}
+
+int
+mon_alloc_page()
+{
+	/* Use the page_alloc() function to allocate a page 
+	   For the purpose of Challenge Problem in Lab 2*/
+	struct Page * p;
+	if(page_alloc(&p) < 0) {
+		cprintf("Error: Could not allocate page.\n");
+		return 1;
+	}
+	cprintf("Page 0x%x Allocated\n",p-pages);
+	return 0;
+}
+
+int 
+parse_pagenum(char *str)
+{
+	// Allowing page number to be either a decimal or a hex
+	int base = 16, cur_multiplier = 1;
+	int pn = 0;
+	if(!(strlen(str) > 2 && str[0] == '0' && (str[1] == 'x' || str[1] == 'X')))
+		base = 10;
+	
+	int i;
+	for(i = strlen(str) - 1; (base == 10 && i >= 0) || (base == 16 && i >= 2); i--) {
+		if(str[i] >= '0' && str[i] <= '9') {
+				pn += (str[i] - '0') * cur_multiplier;
+				cur_multiplier *= base;
+				continue;
+		}
+		if(base == 16) {
+			int pos = 0;
+			if(str[i] >= 'a' && str[i] <= 'f') 
+				pos = 'a' - 10;
+			if(str[i] >= 'A' && str[i] <= 'F')
+				pos = 'A' - 10;
+			pn += (str[i] - pos) * cur_multiplier;
+			cur_multiplier *= base;
+			continue;
+		}
+	}
+	return pn;
+}
+	
+int
+mon_page_status(int argc, char **argv, struct Trapframe *tf)
+{
+	/* For the purpose of Challeng Problem in Lab 2 */
+	int page_num = parse_pagenum(argv[1]);
+	struct Page * query_page = pages + page_num;
+	cprintf("Page 0x%x is ", page_num);
+	switch(is_page_free(query_page)) {
+		case 0:
+			cprintf("Allocated\n");
+			break;
+		case 1:
+			cprintf("Free\n");
+			break;
+	}
+	return 0;
+}
+
+int 
+mon_free_page(int argc, char **argv, struct Trapframe *tf)
+{
+	/* For the purpose of Challenge Problem in Lab 2 */
+	int page_num = parse_pagenum(argv[1]);
+	struct Page * query_page = pages + page_num;
+	if(is_page_free(query_page))
+		cprintf("Page 0x%x is already free\n", page_num);
+	else {
+		page_free(query_page);
+		cprintf("Page 0x%x freed\n", page_num);
+	}
+	return 0;
+}
 
 /***** Kernel monitor command interpreter *****/
 
