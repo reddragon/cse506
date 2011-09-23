@@ -1,0 +1,6 @@
+Challenge Problem 5
+The JOS kernel monitor was extended to allow allocating and freeing pages explicitly using the commands alloc_page and free_page. The command page_status allows one to display the status of a particular page.
+
+page_status and free_page are followed by the page number, which can be either in Hexadecimal or Decimal notation.
+
+The mon_alloc_page() function implements the functionality of allocating a page.The function is_page_free() is used to check if a particular page is free or not. This is done by checking if the Page * has a valid le_prev or le_next pointers. If yes, then the page must belong to the page_free_list list. This function is used by mon_page_status() which prints the status of the page, and mon_page_free() which frees the page using page_free().
