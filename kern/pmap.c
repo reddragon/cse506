@@ -157,7 +157,7 @@ i386_vm_init(void)
 	memset(pgdir, 0, PGSIZE);
 	boot_pgdir = pgdir;
 	boot_cr3 = PADDR(pgdir);
-	//cprintf("boot_cr3 : %x\n", boot_cr3);
+	//cprintf("boot_pgdir : %x, boot_cr3 : %x\n", boot_pgdir, boot_cr3);
 	//////////////////////////////////////////////////////////////////////
 	// Recursively insert PD in itself as a page table, to form
 	// a virtual page table at virtual address VPT.
