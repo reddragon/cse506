@@ -58,7 +58,6 @@ int	page_insert(pde_t *pgdir, struct Page *pp, void *va, int perm);
 void	page_remove(pde_t *pgdir, void *va);
 struct Page *page_lookup(pde_t *pgdir, void *va, pte_t **pte_store);
 void	page_decref(struct Page *pp);
-static void	page_initpp(struct Page *pp);
 
 void	tlb_invalidate(pde_t *pgdir, void *va);
 

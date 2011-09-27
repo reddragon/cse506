@@ -77,6 +77,8 @@ env_init(void)
 	int i;
 	for(i = NENV - 1; i >= 0; i--) {
 		envs[i].env_id = 0;
+		envs[i].env_status = ENV_FREE;
+		envs[i].env_runs = 0;
 		LIST_INSERT_HEAD(&env_free_list, &(envs[i]), env_link);	
 	}
 }
@@ -125,11 +127,12 @@ env_setup_vm(struct Env *e)
 	
 	// Setting env_pgdir & env_cr3
 	e->env_pgdir = (pde_t *)page2kva(p);
-	e->env_cr3 = PADDR(e->env_pgdir);
-	cprintf("env_pgdir : %x, env_cr3 : %x\n", e->env_pgdir, e->env_cr3);	
+	e->env_cr3 = page2pa(p);
+	//cprintf("env_pgdir : %x, env_cr3 : %x\n", e->env_pgdir, e->env_cr3);	
 	// Zeroing the physical page
 	memset(e->env_pgdir, 0, PGSIZE);
 
+	// Putting the entries of boot_pgdir
 	for(i = 0; i < NPDENTRIES; i++) 
 		e->env_pgdir[i] = boot_pgdir[i];
 
@@ -223,31 +226,21 @@ segment_alloc(struct Env *e, void *va, size_t len)
 	//   You should round va down, and round (va + len) up.
 	// My code : gmenghani
 	
-	
-	// TODO How to allocate? Is this right?	
 	void * old_va = va;
 	va = ROUNDDOWN(va, PGSIZE);
-	uint32_t rlen = (uint32_t)(ROUNDUP(old_va + len, PGSIZE) - va);
-	uint32_t i = 0;
+	uint32_t rlen = (uint32_t)(ROUNDUP(old_va + len, PGSIZE) - va), i = 0;
+	
+	struct Page * p;
 	physaddr_t pa = 0;
 	for(i = 0; i < rlen; i += PGSIZE) {
-		struct Page *p;
 		assert(page_alloc(&p) == 0);
 		cprintf("In segment_alloc. va + i: %x, e->env_pgdir: %x, boot_pgdir: %x, page: %d, kva: %x\n", va+i, e->env_pgdir, boot_pgdir, p-pages, page2kva(p));
 		if(page_insert(e->env_pgdir, p, (void *)(va + i), PTE_W | PTE_U | PTE_P) < 0)
 			panic("segment_alloc() failed!\n");
 		cprintf("Page insert done.\n");	
-		//cprintf("Page insert done. Page No: %d, Page PA: %x\n", pages - p);
-		// Setting the physical address which we give to env
-		//if(!pa) 
-		//	pa = page2pa(&p) + (physaddr_t) (va - old_va);
-		// Clearing the page
+		// Zeroing the page.
 		memset(page2kva(p), 0, PGSIZE);
 	}
-
-	// TODO Is this right? What is the use of e?
-	// This does not look right!
-	//e = (struct Env *) pa;
 
 }
 
@@ -310,49 +303,79 @@ load_icode(struct Env *e, uint8_t *binary, size_t size)
 	cprintf("In load_icode\n");
 
 	struct Elf * ELFHDR = (struct Elf *) binary;
-	//cprintf("ELf Magic: %x\n", ELFHDR->e_magic);
+	// Checking for the magic number.
 	assert(ELFHDR->e_magic == ELF_MAGIC);
 	
+
+	// Code here is similar to boot/main.c . Still doesn't work :(
 	struct Proghdr * ph, * eph;
 	ph = (struct Proghdr *)((uint8_t *) ELFHDR + ELFHDR->e_phoff);
 	eph = ph + ELFHDR->e_phnum;
-	cprintf("%x %x\n", ph, eph);
 	struct Page * p;
+	
 	for (; ph < eph; ph++) {
 		// Load program headers only of this type
-		//cprintf("Program Headter Type == ELF_PROG_LOAD: %d\n", (ph->p_type == ELF_PROG_LOAD));
 		if(ph->p_type != ELF_PROG_LOAD) 
 			continue;
-		// TODO Do this.
-		cprintf("filesz: %x, memsz: %x, offset: %x, va: %x\n", ph->p_filesz, ph->p_memsz, ph->p_offset, ph->p_va);
+		
+		//cprintf("filesz: %x, memsz: %x, offset: %x, va: %x\n", ph->p_filesz, ph->p_memsz, ph->p_offset, ph->p_va);
+		
 		segment_alloc(e, (void *)ph->p_va, ph->p_memsz);
-		p = page_lookup(e->env_pgdir, (void *)ph->p_va, NULL);
-		cprintf("Checking first page: %d. Physical address: %x. KVA: %x\n", p - pages, page2pa(p), page2kva(p));	
-			
+		
+		// This is for debugging
+		//p = page_lookup(e->env_pgdir, (void *)ph->p_va, NULL);
+		//cprintf("Checking first page: %d. Physical address: %x. KVA: %x\n", p - pages, page2pa(p), page2kva(p));	
 		assert(ph->p_filesz <= ph->p_memsz);
 
 	 	uint32_t off = ph->p_va - ROUNDDOWN(ph->p_va, PGSIZE); 
-		uint32_t from = ph->p_va, bytes_left = ph->p_filesz, done = 0;
+		uint32_t from = ph->p_va, done = 0, bytes_tx;
+		int bytes_left = ph->p_filesz;
+		
 		cprintf("Offset: %x\n", off);
-		while(done < ph->p_filesz) {
-			p = page_lookup(e->env_pgdir, (void *)(from + done), NULL);
-			memmove(page2kva(p) + off, (void *) (binary + ph->p_offset + done), MIN(bytes_left, PGSIZE - off));
-			from = ROUNDUP(ph->p_va, PGSIZE);
-			done += PGSIZE;
-			bytes_left -= PGSIZE;
-			off = 0;
+		cprintf("Now beginning to copy %x bytes at VA: %x\n", ph->p_filesz, ph->p_va);
+
+		// This is to handle the special case, when the desired VA is not aligned
+		// with the page boundary.
+		if(off > 0)
+		{
+			p = page_lookup(e->env_pgdir, (void *)(from), NULL);
+			bytes_tx = MIN(bytes_left, PGSIZE - off);
+			memmove(page2kva(p) + off, (void *)(binary + ph->p_offset), bytes_tx);
+			cprintf("Transferring %x bytes from %x to %x.\n", bytes_tx, (uint32_t)(binary + ph->p_offset), page2kva(p) + off);
+			cprintf("Sanity Check. Byte 1 in binary: %d, Byte 1 in memory %d\n", *(char *)(binary+ph->p_offset), *(char *)(page2kva(p)+off));	
+			bytes_left -= bytes_tx;
+			from += bytes_tx;
+			done += bytes_tx;
+			cprintf("Bytes Left: %x\n", bytes_left);
+		}
+		
+		while(bytes_left > 0) {
+			p = page_lookup(e->env_pgdir, (void *)(from), NULL);
+			bytes_tx = MIN(bytes_left, PGSIZE);
+			memmove(page2kva(p), (void *)(binary + ph->p_offset + done), bytes_tx);
+			cprintf("Transferring %x bytes from %x to %x\n", bytes_tx, (uint32_t)(binary + ph->p_offset + done), page2kva(p) + off);
+			
+			cprintf("Sanity Check. Byte 1 in binary: %d, Byte 1 in memory %d\n", *(char *)(binary+ph->p_offset + done), *(char *)(page2kva(p)));	
+			bytes_left -= bytes_tx;
+			bytes_left -= bytes_tx;
+			from += bytes_tx;
+			done += bytes_tx;
+			cprintf("Bytes Left: %x\n", bytes_left);
 		}
 
-		// What is the difference between page2kva(p) now and the va at which we want it.
+		cprintf("Copying done.\n");
 	}
 
 
 	// Now map one page for the program's initial stack
 	// at virtual address USTACKTOP - PGSIZE.
 	// LAB 3: Your code here.
-	page_insert(e->env_pgdir, p, (void *)(USTACKTOP - PGSIZE), PTE_U | PTE_P);
+	segment_alloc(e, (void *)(USTACKTOP - PGSIZE), PGSIZE);		
+
 	// Setting the eip
+	cprintf("e_entry : %x\n", ELFHDR->e_entry);
 	e->env_tf.tf_eip = ELFHDR->e_entry; 
+	
 	cprintf("Out of load_icode()\n");
 }
 
@@ -373,6 +396,8 @@ env_create(uint8_t *binary, size_t size)
 	if(env_alloc(&env, 0) < 0)
 		panic("err_create() failed.");
 	
+	env->env_status = ENV_RUNNABLE;
+	env->env_parent_id = 0;
 	load_icode(env, binary, size);
 	cprintf("Out of env_create()\n");
 }
@@ -487,9 +512,11 @@ env_run(struct Env *e)
 	
 	// LAB 3: Your code here.
 	
+	// My code: gmenghani
 	curenv = e;
 	e->env_runs++;
-	lcr3(boot_cr3);
+	cprintf("Here we go!\n");
+	lcr3(e->env_cr3);
 	env_pop_tf(&(e->env_tf));
 	//panic("env_run not yet implemented");
 }
