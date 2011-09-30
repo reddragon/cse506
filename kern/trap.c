@@ -52,12 +52,6 @@ static const char *trapname(int trapno)
 	return "(unknown trap)";
 }
 
-//extern void handler0();
-
-void
-dummy_proc() {
-  cprintf("dummy_proc()\n");
-}
 
 void
 idt_init(void)
@@ -68,12 +62,13 @@ idt_init(void)
 	// My code: gmenghani
 
 	uint32_t addr;
-	asm("movl $handler0, %0"
+	asm("movl $h_divide, %0"
 	    :"=r"(addr));
-	//cprintf("Address- What I got: %x, Offset: %x, Segment: %x\n", addr, (addr) & ((1<<16) - 1), addr>>16); 
 	SETGATE(idt[0], 1, GD_KT, addr, 0);
-	cprintf("Setting idt[0]\n");
-	
+	asm("movl $h_gpflt, %0"
+	    :"=r"(addr));	
+	SETGATE(idt[13], 1, GD_KT, addr, 3);
+
 	// Setup a TSS so that we get the right stack
 	// when we trap to the kernel.
 	ts.ts_esp0 = KSTACKTOP;

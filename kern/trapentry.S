@@ -41,7 +41,8 @@
  * Lab 3: Your code here for generating entry points for the different traps.
  */
 
-TRAPHANDLER_NOEC(handler0, T_DIVIDE);
+TRAPHANDLER_NOEC(h_divide, T_DIVIDE);
+TRAPHANDLER(h_gpflt, T_GPFLT);
 /*
 		mov %cs, %ebx;
 	ret
@@ -50,31 +51,11 @@ TRAPHANDLER_NOEC(handler0, T_DIVIDE);
  * Lab 3: Your code here for _alltraps
  */
 _alltraps:
-	/* Getting the trap number */
-	pop %eax;	
-	/* Extra zero pushed while defining the handler */
-	pop %ecx;
-	/* This is the old eip */
-	pop %ecx;
-	/* This is the old cs */
-	pop %edx;
-	pop %ebx;
-	push %ebx;
-	/* Fix this. ss should be 0x23, somehow es and ds are 0x23 isntead */
-	push %ebx;
-	push %esp;
-	/* EFLAGS */
-	pushf;
-	push %edx;
-	/* Need to get the eip */
-	push %ecx;
-	/* I do not know what to do for err */
-	push $0x0;
-	/* Trap Number */
-	push %eax;
 	push %ds;
 	push %es;
 	/* Registers */
 	pushal;
+	mov $0x10, %ax;
+	mov %ax, %ds;
 	pushl %esp;
 	call trap;
