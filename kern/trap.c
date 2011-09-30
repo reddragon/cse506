@@ -73,7 +73,7 @@ idt_init(void)
 	//cprintf("Address- What I got: %x, Offset: %x, Segment: %x\n", addr, (addr) & ((1<<16) - 1), addr>>16); 
 	SETGATE(idt[0], 1, GD_KT, addr, 0);
 	cprintf("Setting idt[0]\n");
-	//asm("call handler0");
+	
 	// Setup a TSS so that we get the right stack
 	// when we trap to the kernel.
 	ts.ts_esp0 = KSTACKTOP;

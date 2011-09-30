@@ -51,26 +51,30 @@ TRAPHANDLER_NOEC(handler0, T_DIVIDE);
  */
 _alltraps:
 	/* Getting the trap number */
-	pop %eax;
-	/* Pushing all registers */
-	pushal;
-	push %es;
-	push $0x0;
-	push %ds;
+	pop %eax;	
+	/* Extra zero pushed while defining the handler */
+	pop %ecx;
+	/* This is the old eip */
+	pop %ecx;
+	/* This is the old cs */
+	pop %edx;
+	pop %ebx;
+	push %ebx;
+	/* Fix this. ss should be 0x23, somehow es and ds are 0x23 isntead */
+	push %ebx;
+	push %esp;
+	/* EFLAGS */
+	pushf;
+	push %edx;
+	/* Need to get the eip */
+	push %ecx;
+	/* I do not know what to do for err */
 	push $0x0;
 	/* Trap Number */
 	push %eax;
-	/* push %err; */
-	push $0x0;
-	/* push %eip; */
-	push $0x0;
-	push %cs;
-	push $0x0;
-	/* To push eflags. TODO check if this works */
-	pushf;
-	push %esp;
-	push %ss;
-	push $0x0;
+	push %ds;
+	push %es;
+	/* Registers */
+	pushal;
 	pushl %esp;
-	/* Dummy call*/
 	call trap;
