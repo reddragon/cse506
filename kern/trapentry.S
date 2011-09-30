@@ -41,13 +41,36 @@
  * Lab 3: Your code here for generating entry points for the different traps.
  */
 
-TRAPHANDLER_NOEC(handler0, 0x30);
-TRAPHANDLER_NOEC(handler1, 1);
-
+TRAPHANDLER_NOEC(handler0, T_DIVIDE);
+/*
+		mov %cs, %ebx;
+	ret
+*/
 /*
  * Lab 3: Your code here for _alltraps
  */
 _alltraps:
-	/* Dummy */
-	mov %cs, %ebx;
-	ret
+	/* Getting the trap number */
+	pop %eax;
+	/* Pushing all registers */
+	pushal;
+	push %es;
+	push $0x0;
+	push %ds;
+	push $0x0;
+	/* Trap Number */
+	push %eax;
+	/* push %err; */
+	push $0x0;
+	/* push %eip; */
+	push $0x0;
+	push %cs;
+	push $0x0;
+	/* To push eflags. TODO check if this works */
+	pushf;
+	push %esp;
+	push %ss;
+	push $0x0;
+	pushl %esp;
+	/* Dummy call*/
+	call trap;
