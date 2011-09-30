@@ -57,9 +57,17 @@ void
 idt_init(void)
 {
 	extern struct Segdesc gdt[];
-	
+	extern uint32_t handler0;	
 	// LAB 3: Your code here.
+	// My code: gmenghani
 
+	uint32_t addr;
+	asm("movl $handler0, %0"
+	    :"=r"(addr));
+	cprintf("Address- What I got: %x, Offset: %x, Segment: %x\n", addr, (addr) & ((1<<16) - 1), addr>>16); 
+	SETGATE(idt[0], 1, 0x30, 0xf01, 0);
+	cprintf("Setting idt[0]\n");
+	//asm("call handler0");
 	// Setup a TSS so that we get the right stack
 	// when we trap to the kernel.
 	ts.ts_esp0 = KSTACKTOP;

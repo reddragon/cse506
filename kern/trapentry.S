@@ -41,9 +41,13 @@
  * Lab 3: Your code here for generating entry points for the different traps.
  */
 
-
+TRAPHANDLER_NOEC(handler0, 0x30);
+TRAPHANDLER_NOEC(handler1, 1);
 
 /*
  * Lab 3: Your code here for _alltraps
  */
-
+_alltraps:
+	/* Dummy */
+	mov %cs, %ebx;
+	ret
