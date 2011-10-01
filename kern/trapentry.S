@@ -51,13 +51,11 @@ TRAPHANDLER(h_gpflt, T_GPFLT);
  * Lab 3: Your code here for _alltraps
  */
 _alltraps:
-	mov $0x0010, %ax;
+	mov $GD_KD, %ax;
 	mov %ax, %ds;
 	mov %ax, %es;
 	push %ds;
 	push %es;
 	pushal;
-	mov $0x10, %ax;
-	mov %ax, %ds;
 	pushl %esp;
 	call trap;
