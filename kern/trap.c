@@ -64,10 +64,19 @@ idt_init(void)
 	uint32_t addr;
 	asm("movl $h_divide, %0"
 	    :"=r"(addr));
-	SETGATE(idt[0], 1, GD_KT, addr, 0);
+	SETGATE(idt[T_DIVIDE], 1, GD_KT, addr, 0);
+	asm("movl $h_brkpt, %0"
+	    :"=r"(addr));
+	SETGATE(idt[T_BRKPT], 1, GD_KT, addr, 3);
 	asm("movl $h_gpflt, %0"
 	    :"=r"(addr));	
-	SETGATE(idt[13], 1, GD_KT, addr, 3);
+	SETGATE(idt[T_GPFLT], 1, GD_KT, addr, 3);
+	asm("movl $h_pgflt, %0"
+	    :"=r"(addr));	
+	SETGATE(idt[T_PGFLT], 1, GD_KT, addr, 0);
+	asm("movl $h_syscall, %0"
+	    :"=r"(addr));	
+	SETGATE(idt[T_SYSCALL], 1, GD_KT, addr, 3);
 
 	// Setup a TSS so that we get the right stack
 	// when we trap to the kernel.
@@ -121,7 +130,28 @@ trap_dispatch(struct Trapframe *tf)
 	// Handle processor exceptions.
 	// LAB 3: Your code here.
 	
+	// Used for the return value of the syscall
+	int syscall_ret = 0;
+	switch(tf->tf_trapno) {
 
+		case T_PGFLT:	page_fault_handler(tf);
+				return;
+
+		case T_BRKPT:	monitor(tf);	
+				return;
+
+		case T_SYSCALL:	
+				cprintf("eax = %d NSYSCALLS %d\n", tf->tf_regs.reg_eax, NSYSCALLS);
+				syscall_ret = \
+					syscall(tf->tf_regs.reg_eax, tf->tf_regs.reg_edx, \
+					tf->tf_regs.reg_ecx, tf->tf_regs.reg_ebx, \
+					tf->tf_regs.reg_esi, tf->tf_regs.reg_edi);
+				// Putting the return value back
+				asm("mov %0, %%eax"
+				    : : "r"(syscall_ret));
+				return;
+	};
+	
 	// Unexpected trap: The user process or the kernel has a bug.
 	print_trapframe(tf);
 	if (tf->tf_cs == GD_KT)

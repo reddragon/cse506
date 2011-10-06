@@ -43,19 +43,18 @@
 
 TRAPHANDLER_NOEC(h_divide, T_DIVIDE);
 TRAPHANDLER(h_gpflt, T_GPFLT);
-/*
-		mov %cs, %ebx;
-	ret
-*/
+TRAPHANDLER(h_pgflt, T_PGFLT);
+TRAPHANDLER_NOEC(h_brkpt, T_BRKPT);
+TRAPHANDLER_NOEC(h_syscall, T_SYSCALL);
 /*
  * Lab 3: Your code here for _alltraps
  */
 _alltraps:
-	mov $GD_KD, %ax;
-	mov %ax, %ds;
-	mov %ax, %es;
 	push %ds;
 	push %es;
 	pushal;
 	pushl %esp;
+	mov $GD_KD, %ax;
+	mov %ax, %ds;
+	mov %ax, %es;
 	call trap;

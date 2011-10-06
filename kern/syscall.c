@@ -71,7 +71,11 @@ syscall(uint32_t syscallno, uint32_t a1, uint32_t a2, uint32_t a3, uint32_t a4, 
 	// Call the function corresponding to the 'syscallno' parameter.
 	// Return any appropriate return value.
 	// LAB 3: Your code here.
-
-	panic("syscall not implemented");
+	
+	cprintf("Got the following values %x %x %x %x %x %x\n", syscallno, a1, a2, a3, a4, a5);
+	sys_cputs((char *)a1,(size_t)a2);
+	if(syscallno >= NSYSCALLS)
+		return -E_INVAL;
+	return 0;
 }
 
