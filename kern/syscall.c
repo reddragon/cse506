@@ -21,7 +21,7 @@ sys_cputs(const char *s, size_t len)
 	// Destroy the environment if not.
 	
 	// LAB 3: Your code here.
-
+	user_mem_assert(curenv, s, len, PTE_U);
 	// Print the string supplied by the user.
 	cprintf("%.*s", len, s);
 }
@@ -38,6 +38,7 @@ sys_cgetc(void)
 static envid_t
 sys_getenvid(void)
 {
+	//panic("env_id %x\n", curenv->env_id);
 	return curenv->env_id;
 }
 
@@ -71,11 +72,19 @@ syscall(uint32_t syscallno, uint32_t a1, uint32_t a2, uint32_t a3, uint32_t a4, 
 	// Call the function corresponding to the 'syscallno' parameter.
 	// Return any appropriate return value.
 	// LAB 3: Your code here.
-	
-	cprintf("Got the following values %x %x %x %x %x %x\n", syscallno, a1, a2, a3, a4, a5);
-	sys_cputs((char *)a1,(size_t)a2);
+	// My code: gmenghani
+
+	// An invalid system call
 	if(syscallno >= NSYSCALLS)
 		return -E_INVAL;
+
+	switch(syscallno) {
+		case SYS_cputs: 	sys_cputs((char *) a1, (size_t)a2);
+					return 0;
+		case SYS_cgetc:		return sys_cgetc();
+		case SYS_getenvid:	return sys_getenvid();
+		case SYS_env_destroy:	return sys_env_destroy((envid_t)a1);
+	}
 	return 0;
 }
 

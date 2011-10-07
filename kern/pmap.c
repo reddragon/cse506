@@ -792,7 +792,27 @@ int
 user_mem_check(struct Env *env, const void *va, size_t len, int perm)
 {
 	// LAB 3: Your code here. 
-
+	// My code: gmenghani
+	
+	uint32_t vaddr = (uint32_t)va;
+	for(; vaddr < (uint32_t)va + len;)
+	{
+		cprintf("vaddr: %x\n", vaddr);
+		pte_t * pte = pgdir_walk(env->env_pgdir, (void *)vaddr, 0);
+		
+		// The permissions in the PTE should match
+		if( !(*pte & perm))
+		{
+			user_mem_check_addr = vaddr;
+			return -E_FAULT;
+		}
+		// To take care of the alignment issues
+		uint32_t next_vaddr = ROUNDUP(vaddr, PGSIZE);
+		if(next_vaddr == vaddr) 
+			vaddr += PGSIZE;
+		else vaddr = next_vaddr;
+	}
+	
 	return 0;
 }
 

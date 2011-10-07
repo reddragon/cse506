@@ -203,7 +203,7 @@ env_alloc(struct Env **newenv_store, envid_t parent_id)
 	// commit the allocation
 	LIST_REMOVE(e, env_link);
 	*newenv_store = e;
-
+	
 	cprintf("[%08x] new env %08x\n", curenv ? curenv->env_id : 0, e->env_id);
 	return 0;
 }
@@ -514,10 +514,9 @@ env_run(struct Env *e)
 	
 	// My code: gmenghani
 	curenv = e;
-	e->env_runs++;
+	curenv->env_runs++;
 	cprintf("Here we go!\n");
-	lcr3(e->env_cr3);
-	env_pop_tf(&(e->env_tf));
-	//panic("env_run not yet implemented");
+	lcr3(curenv->env_cr3);
+	env_pop_tf(&(curenv->env_tf));
 }
 

@@ -56,5 +56,5 @@ _alltraps:
 	pushl %esp;
 	mov $GD_KD, %ax;
 	mov %ax, %ds;
-	mov %ax, %es;
+	mov %ax, %es; 
 	call trap;
