@@ -75,6 +75,13 @@ void
 env_init(void)
 {
 	// LAB 3: Your code here.
+	int i;
+	for(i = NENV - 1; i >= 0; i--) {
+		envs[i].env_id = 0;
+		envs[i].env_status = ENV_FREE;
+		envs[i].env_runs = 0;
+		LIST_INSERT_HEAD(&env_free_list, &(envs[i]), env_link);	
+	}
 }
 
 //
@@ -116,6 +123,24 @@ env_setup_vm(struct Env *e)
 	//    - The functions in kern/pmap.h are handy.
 
 	// LAB 3: Your code here.
+	// My code : gmenghani
+	
+	
+	// Setting env_pgdir & env_cr3
+	e->env_pgdir = (pde_t *)page2kva(p);
+	e->env_cr3 = page2pa(p);
+	//cprintf("env_pgdir : %x, env_cr3 : %x\n", e->env_pgdir, e->env_cr3);	
+	// Zeroing the physical page
+	memset(e->env_pgdir, 0, PGSIZE);
+
+	// Putting the entries of boot_pgdir
+	for(i = 0; i < NPDENTRIES; i++) 
+		e->env_pgdir[i] = boot_pgdir[i];
+
+	// Incrementing pp_ref
+	p->pp_ref += 1;
+
+	// TODO Something else to map the VA / PA stuff ?
 
 	// VPT and UVPT map the env's own page table, with
 	// different permissions.
@@ -188,7 +213,7 @@ env_alloc(struct Env **newenv_store, envid_t parent_id)
 	// commit the allocation
 	LIST_REMOVE(e, env_link);
 	*newenv_store = e;
-
+	
 	cprintf("[%08x] new env %08x\n", curenv ? curenv->env_id : 0, e->env_id);
 	return 0;
 }
@@ -209,6 +234,24 @@ segment_alloc(struct Env *e, void *va, size_t len)
 	// Hint: It is easier to use segment_alloc if the caller can pass
 	//   'va' and 'len' values that are not page-aligned.
 	//   You should round va down, and round (va + len) up.
+	// My code : gmenghani
+	
+	void * old_va = va;
+	va = ROUNDDOWN(va, PGSIZE);
+	uint32_t rlen = (uint32_t)(ROUNDUP(old_va + len, PGSIZE) - va), i = 0;
+	
+	struct Page * p;
+	physaddr_t pa = 0;
+	for(i = 0; i < rlen; i += PGSIZE) {
+		assert(page_alloc(&p) == 0);
+		cprintf("In segment_alloc. va + i: %x, e->env_pgdir: %x, boot_pgdir: %x, page: %d, kva: %x\n", va+i, e->env_pgdir, boot_pgdir, p-pages, page2kva(p));
+		if(page_insert(e->env_pgdir, p, (void *)(va + i), PTE_W | PTE_U | PTE_P) < 0)
+			panic("segment_alloc() failed!\n");
+		cprintf("Page insert done.\n");	
+		// Zeroing the page.
+		memset(page2kva(p), 0, PGSIZE);
+	}
+
 }
 
 //
@@ -265,11 +308,85 @@ load_icode(struct Env *e, uint8_t *binary, size_t size)
 	//  What?  (See env_run() and env_pop_tf() below.)
 
 	// LAB 3: Your code here.
+	// My code: gmenghani
+
+	cprintf("In load_icode\n");
+
+	struct Elf * ELFHDR = (struct Elf *) binary;
+	// Checking for the magic number.
+	assert(ELFHDR->e_magic == ELF_MAGIC);
+	
+
+	// Code here is similar to boot/main.c . Still doesn't work :(
+	struct Proghdr * ph, * eph;
+	ph = (struct Proghdr *)((uint8_t *) ELFHDR + ELFHDR->e_phoff);
+	eph = ph + ELFHDR->e_phnum;
+	struct Page * p;
+	
+	for (; ph < eph; ph++) {
+		// Load program headers only of this type
+		if(ph->p_type != ELF_PROG_LOAD) 
+			continue;
+		
+		//cprintf("filesz: %x, memsz: %x, offset: %x, va: %x\n", ph->p_filesz, ph->p_memsz, ph->p_offset, ph->p_va);
+		
+		segment_alloc(e, (void *)ph->p_va, ph->p_memsz);
+		
+		// This is for debugging
+		//p = page_lookup(e->env_pgdir, (void *)ph->p_va, NULL);
+		//cprintf("Checking first page: %d. Physical address: %x. KVA: %x\n", p - pages, page2pa(p), page2kva(p));	
+		assert(ph->p_filesz <= ph->p_memsz);
+
+	 	uint32_t off = ph->p_va - ROUNDDOWN(ph->p_va, PGSIZE); 
+		uint32_t from = ph->p_va, done = 0, bytes_tx;
+		int bytes_left = ph->p_filesz;
+		
+		cprintf("Offset: %x\n", off);
+		cprintf("Now beginning to copy %x bytes at VA: %x\n", ph->p_filesz, ph->p_va);
+
+		// This is to handle the special case, when the desired VA is not aligned
+		// with the page boundary.
+		if(off > 0)
+		{
+			p = page_lookup(e->env_pgdir, (void *)(from), NULL);
+			bytes_tx = MIN(bytes_left, PGSIZE - off);
+			memmove(page2kva(p) + off, (void *)(binary + ph->p_offset), bytes_tx);
+			cprintf("Transferring %x bytes from %x to %x.\n", bytes_tx, (uint32_t)(binary + ph->p_offset), page2kva(p) + off);
+			cprintf("Sanity Check. Byte 1 in binary: %d, Byte 1 in memory %d\n", *(char *)(binary+ph->p_offset), *(char *)(page2kva(p)+off));	
+			bytes_left -= bytes_tx;
+			from += bytes_tx;
+			done += bytes_tx;
+			cprintf("Bytes Left: %x\n", bytes_left);
+		}
+		
+		while(bytes_left > 0) {
+			p = page_lookup(e->env_pgdir, (void *)(from), NULL);
+			bytes_tx = MIN(bytes_left, PGSIZE);
+			memmove(page2kva(p), (void *)(binary + ph->p_offset + done), bytes_tx);
+			cprintf("Transferring %x bytes from %x to %x\n", bytes_tx, (uint32_t)(binary + ph->p_offset + done), page2kva(p) + off);
+			
+			cprintf("Sanity Check. Byte 1 in binary: %d, Byte 1 in memory %d\n", *(char *)(binary+ph->p_offset + done), *(char *)(page2kva(p)));	
+			bytes_left -= bytes_tx;
+			bytes_left -= bytes_tx;
+			from += bytes_tx;
+			done += bytes_tx;
+			cprintf("Bytes Left: %x\n", bytes_left);
+		}
+
+		cprintf("Copying done.\n");
+	}
+
 
 	// Now map one page for the program's initial stack
 	// at virtual address USTACKTOP - PGSIZE.
-
 	// LAB 3: Your code here.
+	segment_alloc(e, (void *)(USTACKTOP - PGSIZE), PGSIZE);		
+
+	// Setting the eip
+	cprintf("e_entry : %x\n", ELFHDR->e_entry);
+	e->env_tf.tf_eip = ELFHDR->e_entry; 
+	
+	cprintf("Out of load_icode()\n");
 }
 
 //
@@ -283,6 +400,16 @@ void
 env_create(uint8_t *binary, size_t size)
 {
 	// LAB 3: Your code here.
+	// My code : gmenghani
+	cprintf("In env_create()\n");
+	struct Env * env;
+	if(env_alloc(&env, 0) < 0)
+		panic("err_create() failed.");
+	
+	env->env_status = ENV_RUNNABLE;
+	env->env_parent_id = 0;
+	load_icode(env, binary, size);
+	cprintf("Out of env_create()\n");
 }
 
 //
@@ -397,7 +524,12 @@ env_run(struct Env *e)
 	//	e->env_tf to sensible values.
 	
 	// LAB 3: Your code here.
-
-	panic("env_run not yet implemented");
+	
+	// My code: gmenghani
+	curenv = e;
+	curenv->env_runs++;
+	cprintf("Here we go!\n");
+	lcr3(curenv->env_cr3);
+	env_pop_tf(&(curenv->env_tf));
 }
 

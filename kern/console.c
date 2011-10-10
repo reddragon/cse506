@@ -159,12 +159,27 @@ cga_init(void)
 }
 
 
+int color_mask;
+
+void
+cga_setcolor(int fg_color, int bg_color)
+{
+	/* 
+		Bits 15-12 Denote the foreground
+	  	Bits 11-8  Denote the background 
+	  	Refer kern/console.h for the color-codes
+	*/
+	color_mask = (bg_color<<12) + (fg_color<<8);
+}
 
 static void
 cga_putc(int c)
 {
-	// if no attribute given, then use black on white
-	if (!(c & ~0xFF))
+	c |= color_mask;
+
+	// if no attribute given, AND the color mask hasn't been
+	// applied already, then use black on white
+	if (!(c & ~0xFF) && !color_mask)
 		c |= 0x0700;
 
 	switch (c & 0xff) {
