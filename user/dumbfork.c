@@ -13,6 +13,7 @@ umain(void)
 	int i;
 
 	// fork a child process
+	cprintf("dumbfork executing\n");
 	who = dumbfork();
 
 	// print a message and yield to the other a few times
@@ -51,6 +52,7 @@ dumbfork(void)
 	// except that in the child, this "fake" call to sys_exofork()
 	// will return 0 instead of the envid of the child.
 	envid = sys_exofork();
+	cprintf("dumbfork : envid : %d\n", envid);
 	if (envid < 0)
 		panic("sys_exofork: %e", envid);
 	if (envid == 0) {
@@ -58,6 +60,7 @@ dumbfork(void)
 		// The copied value of the global variable 'env'
 		// is no longer valid (it refers to the parent!).
 		// Fix it and return 0.
+		cprintf("\t\t\t\tWe're the child\n");
 		env = &envs[ENVX(sys_getenvid())];
 		return 0;
 	}

@@ -797,7 +797,7 @@ user_mem_check(struct Env *env, const void *va, size_t len, int perm)
 	uint32_t vaddr = (uint32_t)va;
 	for(; vaddr < (uint32_t)va + len;)
 	{
-		cprintf("vaddr: %x\n", vaddr);
+		// cprintf("vaddr: %x\n", vaddr);
 		pte_t * pte = pgdir_walk(env->env_pgdir, (void *)vaddr, 0);
 		
 		// The permissions in the PTE should match

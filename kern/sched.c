@@ -19,6 +19,19 @@ sched_yield(void)
 	// unless NOTHING else is runnable.
 
 	// LAB 4: Your code here.
+	static int position = 0;
+	int start = position;
+	int i;
+	for(position = (position + 1)%NENV; position != start; position = (position+1)%NENV)
+	{
+		if(position == 0)
+			continue;
+		if(envs[position].env_status == ENV_RUNNABLE)
+		{
+			cprintf("\t\t\t\t\tsched_yield will now run : %x\n", position);
+			env_run(&envs[position]);
+		}
+	}
 
 	// Run the special idle environment when nothing else is runnable.
 	if (envs[0].env_status == ENV_RUNNABLE)

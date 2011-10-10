@@ -244,10 +244,10 @@ segment_alloc(struct Env *e, void *va, size_t len)
 	physaddr_t pa = 0;
 	for(i = 0; i < rlen; i += PGSIZE) {
 		assert(page_alloc(&p) == 0);
-		cprintf("In segment_alloc. va + i: %x, e->env_pgdir: %x, boot_pgdir: %x, page: %d, kva: %x\n", va+i, e->env_pgdir, boot_pgdir, p-pages, page2kva(p));
+		//cprintf("In segment_alloc. va + i: %x, e->env_pgdir: %x, boot_pgdir: %x, page: %d, kva: %x\n", va+i, e->env_pgdir, boot_pgdir, p-pages, page2kva(p));
 		if(page_insert(e->env_pgdir, p, (void *)(va + i), PTE_W | PTE_U | PTE_P) < 0)
 			panic("segment_alloc() failed!\n");
-		cprintf("Page insert done.\n");	
+		//cprintf("Page insert done.\n");	
 		// Zeroing the page.
 		memset(page2kva(p), 0, PGSIZE);
 	}
@@ -310,7 +310,7 @@ load_icode(struct Env *e, uint8_t *binary, size_t size)
 	// LAB 3: Your code here.
 	// My code: gmenghani
 
-	cprintf("In load_icode\n");
+	//cprintf("In load_icode\n");
 
 	struct Elf * ELFHDR = (struct Elf *) binary;
 	// Checking for the magic number.
@@ -341,8 +341,8 @@ load_icode(struct Env *e, uint8_t *binary, size_t size)
 		uint32_t from = ph->p_va, done = 0, bytes_tx;
 		int bytes_left = ph->p_filesz;
 		
-		cprintf("Offset: %x\n", off);
-		cprintf("Now beginning to copy %x bytes at VA: %x\n", ph->p_filesz, ph->p_va);
+		//cprintf("Offset: %x\n", off);
+		//cprintf("Now beginning to copy %x bytes at VA: %x\n", ph->p_filesz, ph->p_va);
 
 		// This is to handle the special case, when the desired VA is not aligned
 		// with the page boundary.
@@ -351,29 +351,29 @@ load_icode(struct Env *e, uint8_t *binary, size_t size)
 			p = page_lookup(e->env_pgdir, (void *)(from), NULL);
 			bytes_tx = MIN(bytes_left, PGSIZE - off);
 			memmove(page2kva(p) + off, (void *)(binary + ph->p_offset), bytes_tx);
-			cprintf("Transferring %x bytes from %x to %x.\n", bytes_tx, (uint32_t)(binary + ph->p_offset), page2kva(p) + off);
-			cprintf("Sanity Check. Byte 1 in binary: %d, Byte 1 in memory %d\n", *(char *)(binary+ph->p_offset), *(char *)(page2kva(p)+off));	
+			//cprintf("Transferring %x bytes from %x to %x.\n", bytes_tx, (uint32_t)(binary + ph->p_offset), page2kva(p) + off);
+			//cprintf("Sanity Check. Byte 1 in binary: %d, Byte 1 in memory %d\n", *(char *)(binary+ph->p_offset), *(char *)(page2kva(p)+off));	
 			bytes_left -= bytes_tx;
 			from += bytes_tx;
 			done += bytes_tx;
-			cprintf("Bytes Left: %x\n", bytes_left);
+			//cprintf("Bytes Left: %x\n", bytes_left);
 		}
 		
 		while(bytes_left > 0) {
 			p = page_lookup(e->env_pgdir, (void *)(from), NULL);
 			bytes_tx = MIN(bytes_left, PGSIZE);
 			memmove(page2kva(p), (void *)(binary + ph->p_offset + done), bytes_tx);
-			cprintf("Transferring %x bytes from %x to %x\n", bytes_tx, (uint32_t)(binary + ph->p_offset + done), page2kva(p) + off);
+			//cprintf("Transferring %x bytes from %x to %x\n", bytes_tx, (uint32_t)(binary + ph->p_offset + done), page2kva(p) + off);
 			
-			cprintf("Sanity Check. Byte 1 in binary: %d, Byte 1 in memory %d\n", *(char *)(binary+ph->p_offset + done), *(char *)(page2kva(p)));	
+			//cprintf("Sanity Check. Byte 1 in binary: %d, Byte 1 in memory %d\n", *(char *)(binary+ph->p_offset + done), *(char *)(page2kva(p)));	
 			bytes_left -= bytes_tx;
 			bytes_left -= bytes_tx;
 			from += bytes_tx;
 			done += bytes_tx;
-			cprintf("Bytes Left: %x\n", bytes_left);
+			//cprintf("Bytes Left: %x\n", bytes_left);
 		}
 
-		cprintf("Copying done.\n");
+		//cprintf("Copying done.\n");
 	}
 
 
@@ -383,10 +383,10 @@ load_icode(struct Env *e, uint8_t *binary, size_t size)
 	segment_alloc(e, (void *)(USTACKTOP - PGSIZE), PGSIZE);		
 
 	// Setting the eip
-	cprintf("e_entry : %x\n", ELFHDR->e_entry);
+	//cprintf("e_entry : %x\n", ELFHDR->e_entry);
 	e->env_tf.tf_eip = ELFHDR->e_entry; 
 	
-	cprintf("Out of load_icode()\n");
+	//cprintf("Out of load_icode()\n");
 }
 
 //
@@ -401,7 +401,7 @@ env_create(uint8_t *binary, size_t size)
 {
 	// LAB 3: Your code here.
 	// My code : gmenghani
-	cprintf("In env_create()\n");
+	//cprintf("In env_create()\n");
 	struct Env * env;
 	if(env_alloc(&env, 0) < 0)
 		panic("err_create() failed.");
@@ -409,7 +409,7 @@ env_create(uint8_t *binary, size_t size)
 	env->env_status = ENV_RUNNABLE;
 	env->env_parent_id = 0;
 	load_icode(env, binary, size);
-	cprintf("Out of env_create()\n");
+	//cprintf("Out of env_create()\n");
 }
 
 //
@@ -528,7 +528,7 @@ env_run(struct Env *e)
 	// My code: gmenghani
 	curenv = e;
 	curenv->env_runs++;
-	cprintf("Here we go!\n");
+	// cprintf("Here we go!\n");
 	lcr3(curenv->env_cr3);
 	env_pop_tf(&(curenv->env_tf));
 }
