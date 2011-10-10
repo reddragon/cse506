@@ -177,12 +177,17 @@ grade: $(LABSETUP)grade-lab$(LAB).sh
 
 handin-a: realclean
 	if [ `git status --porcelain| wc -l` != 0 ] ; then echo "\n\n\n\n\t\tWARNING: YOU HAVE UNCOMMITTED CHANGES\n\n    Consider committing any pending changes and rerunning make handin.\n\n\n\n"; fi
-	git tag -f -a lab3a-handin -m "Lab3a Handin"
+	git tag -f -a lab4a-handin -m "Lab4a Handin"
 	git push --tags
 
 handin-b: realclean
 	if [ `git status --porcelain| wc -l` != 0 ] ; then echo "\n\n\n\n\t\tWARNING: YOU HAVE UNCOMMITTED CHANGES\n\n    Consider committing any pending changes and rerunning make handin.\n\n\n\n"; fi
-	git tag -f -a lab3b-handin -m "Lab3b Handin"
+	git tag -f -a lab4b-handin -m "Lab4b Handin"
+	git push --tags
+
+handin-c: realclean
+	if [ `git status --porcelain| wc -l` != 0 ] ; then echo "\n\n\n\n\t\tWARNING: YOU HAVE UNCOMMITTED CHANGES\n\n    Consider committing any pending changes and rerunning make handin.\n\n\n\n"; fi
+	git tag -f -a lab4c-handin -m "Lab4c Handin"
 	git push --tags
 
 
