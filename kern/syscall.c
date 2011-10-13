@@ -349,6 +349,17 @@ sys_ipc_recv(void *dstva)
 }
 
 
+// Sets the niceness of the current environment
+// Fails silently if the nice is not a valid value
+// This was done because I did not want to mess with inc/error.h
+static void
+sys_env_set_nice(int nice)
+{
+	if(MIN_ENV_NICENESS <= nice && nice <= MAX_ENV_NICENESS)
+		curenv->env_nice = -1;
+	cprintf("Setting nice. Nice: %d. Nice asked for: %d\n", curenv->env_nice, nice);
+}
+
 // Dispatches to the correct kernel function, passing the arguments.
 int32_t
 syscall(uint32_t syscallno, uint32_t a1, uint32_t a2, uint32_t a3, uint32_t a4, uint32_t a5)
@@ -374,6 +385,8 @@ syscall(uint32_t syscallno, uint32_t a1, uint32_t a2, uint32_t a3, uint32_t a4, 
 		case SYS_page_alloc : return sys_page_alloc((envid_t)a1, (void*)a2, (int)a3);
 		case SYS_page_map : return sys_page_map((envid_t)a1, (void*)a2, (envid_t)a3, (void*)a5, (int)a4);
 		case SYS_page_unmap : return sys_page_unmap((envid_t)a1, (void*)a2);
+		case SYS_env_set_nice:	sys_env_set_nice(a1);
+					return 0;
 	}
 	return 0;
 }

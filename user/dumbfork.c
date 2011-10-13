@@ -15,12 +15,16 @@ umain(void)
 	// fork a child process
 	cprintf("dumbfork executing\n");
 	who = dumbfork();
-
+	if(!who) 
+	{ 
+		sys_env_set_nice(-10); 
+	}
 	// print a message and yield to the other a few times
 	for (i = 0; i < (who ? 10 : 20); i++) {
 		cprintf("%d: I am the %s!\n", i, who ? "parent" : "child");
 		sys_yield();
 	}
+	cprintf("Done with the %s\n", who ? "parent" : "child");
 }
 
 void

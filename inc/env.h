@@ -35,6 +35,11 @@ typedef int32_t envid_t;
 #define ENV_RUNNABLE		1
 #define ENV_NOT_RUNNABLE	2
 
+// Max and min niceness of an environment's priority
+// TODO Put this in a better place if possible.
+#define MAX_ENV_NICENESS	19
+#define MIN_ENV_NICENESS	-20
+
 struct Env {
 	struct Trapframe env_tf;	// Saved registers
 	LIST_ENTRY(Env) env_link;	// Free list link pointers
@@ -50,6 +55,8 @@ struct Env {
 	// Exception handling
 	void *env_pgfault_upcall;	// page fault upcall entry point
 
+	int env_nice;			// niceness of the environment
+	
 	// Lab 4 IPC
 	bool env_ipc_recving;		// env is blocked receiving
 	void *env_ipc_dstva;		// va at which to map received page

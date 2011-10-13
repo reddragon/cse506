@@ -80,6 +80,7 @@ env_init(void)
 		envs[i].env_id = 0;
 		envs[i].env_status = ENV_FREE;
 		envs[i].env_runs = 0;
+		envs[i].env_nice = 0;
 		LIST_INSERT_HEAD(&env_free_list, &(envs[i]), env_link);	
 	}
 }
