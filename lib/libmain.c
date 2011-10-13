@@ -19,7 +19,6 @@ libmain(int argc, char **argv)
 	//panic("Value %x\n", env_id);
 	env = &envs[ENVX(env_id)];
 	// save the name of the program so that panic() can use it
-	cprintf("Value received: %x\n", env_id);
 	if (argc > 0)
 		binaryname = argv[0];
 

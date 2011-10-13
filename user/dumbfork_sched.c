@@ -1,4 +1,6 @@
-// Ping-pong a counter between two processes.
+// Demonstrates the use of sys_env_set_nice()
+// Causes the child process to get scheduled every time, 
+// since it is not as 'nice' as its parent.
 // Only need to start one of these -- splits into two, crudely.
 
 #include <inc/string.h>
@@ -15,12 +17,17 @@ umain(void)
 	// fork a child process
 	cprintf("dumbfork executing\n");
 	who = dumbfork();
-	
+	if(!who) 
+	{ 
+		// For Challenge Problem 1 Lab 4a
+		sys_env_set_nice(-10); 
+	}
 	// print a message and yield to the other a few times
 	for (i = 0; i < (who ? 10 : 20); i++) {
 		cprintf("%d: I am the %s!\n", i, who ? "parent" : "child");
 		sys_yield();
 	}
+	cprintf("Done with the %s\n", who ? "parent" : "child");
 }
 
 void

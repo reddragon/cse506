@@ -1,6 +1,30 @@
-Challenge Problem 5
-The JOS kernel monitor was extended to allow allocating and freeing pages explicitly using the commands alloc_page and free_page. The command page_status allows one to display the status of a particular page.
+Challenge Problem 1 Lab 4a
+We implemented a priority based scheduler for the purpose of the problem. 
 
-page_status and free_page are followed by the page number, which can be either in Hexadecimal or Decimal notation.
+(You can check the changes made for this challenge by grep-ing for 'Challenge Problem 1 Lab 4a').
 
-The mon_alloc_page() function implements the functionality of allocating a page.The function is_page_free() is used to check if a particular page is free or not. This is done by checking if the Page * has a valid le_prev or le_next pointers. If yes, then the page must belong to the page_free_list list. This function is used by mon_page_status() which prints the status of the page, and mon_page_free() which frees the page using page_free().
+To complete this challenge, we did the following:
+
+0. Used the Linux-type 'nice' value to set priority. The nice value can be between -20 and +19. 
+These values are defined as MIN_ENV_NICENESS and MAX_ENV_NICENESS in inc/env.h. While setting the
+nice values for an environment, we check the desired value to be in this range.
+
+1. Added the 'env_nice' attribute in the Env structure. In inc/env.h.
+
+2. Initialized the env_nice attributes in all elements of Envs to 0. Thus, all environments start
+with a default value of 0. In kern/env.c.
+
+3. Added a system call 'sys_env_set_nice' to kern/syscall.c. Here the user program is expected
+to pass make the system call with one integer argument, which is the nice value. The system call
+when serviced, will set the nice value of the current environment to the value which has been passed.
+
+4. We then modified our scheduling algorithm in kern/sched.c. It basically picks up the environment
+which has the least nice value, and runs it. 
+
+We probably can improve this by explicitly breaking ties by the time consumed by a particular process 
+in execution, however, we need to figure out how exactly it is done.
+
+5. Created a new user program called dumbfork_sched.c, which is nothing but dumbfork with a small change.
+The child process is not so nice, and it makes a call to sys_env_set_nice, with a niceness value of -10.
+So, the child process runs 20 times, since it has the lowest nice value, followed by the parent process.
+

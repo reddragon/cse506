@@ -54,7 +54,8 @@ struct Env {
 
 	// Exception handling
 	void *env_pgfault_upcall;	// page fault upcall entry point
-
+	
+	// For Challenge Problem 1 Lab 4a
 	int env_nice;			// niceness of the environment
 	
 	// Lab 4 IPC

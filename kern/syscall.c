@@ -40,7 +40,6 @@ sys_cgetc(void)
 static envid_t
 sys_getenvid(void)
 {
-	//panic("env_id %x\n", curenv->env_id);
 	return curenv->env_id;
 }
 
@@ -86,7 +85,7 @@ sys_exofork(void)
 	// will appear to return 0.
 
 	// LAB 4: Your code here.
-	cprintf("In sysexofork\n");
+	//cprintf("In sysexofork\n");
 	struct Env* cur_env;
 	int status = envid2env(0, &cur_env, 1);
 	if(status < 0)
@@ -102,7 +101,7 @@ sys_exofork(void)
 	// Change return value to 0. Stored in the EAX register
 	(new_env -> env_tf) = (cur_env -> env_tf);
 	(new_env -> env_tf).tf_regs.reg_eax = 0;
-	cprintf("Out sysexofork %x\n", new_env -> env_id);
+	//cprintf("Out sysexofork %x\n", new_env -> env_id);
 	return new_env -> env_id;
 	//panic("sys_exofork not implemented");
 }
@@ -117,7 +116,7 @@ sys_exofork(void)
 static int
 sys_env_set_status(envid_t envid, int status)
 {
-	cprintf("In sysenvsetstatus %d %d\n", envid, status);
+	//cprintf("In sysenvsetstatus %d %d\n", envid, status);
 	// Hint: Use the 'envid2env' function from kern/env.c to translate an
 	// envid to a struct Env.
 	// You should set envid2env's third argument to 1, which will
@@ -132,7 +131,7 @@ sys_env_set_status(envid_t envid, int status)
 	if((ret = envid2env(envid, &env, 1)) < 0)
 		return ret;
 	env -> env_status = status;
-	cprintf("Out sysenvsetstatus %d %d\n", envid, status);
+	//cprintf("Out sysenvsetstatus %d %d\n", envid, status);
 	return 0;
 	//panic("sys_env_set_status not implemented");
 }
@@ -171,7 +170,7 @@ sys_env_set_pgfault_upcall(envid_t envid, void *func)
 static int
 sys_page_alloc(envid_t envid, void *va, int perm)
 {
-	cprintf("In syspagealloc %d %x %d\n", envid, va, perm);
+	//cprintf("In syspagealloc %d %x %d\n", envid, va, perm);
 	// Hint: This function is a wrapper around page_alloc() and
 	//   page_insert() from kern/pmap.c.
 	//   Most of the new code you write should be to check the
@@ -198,7 +197,7 @@ sys_page_alloc(envid_t envid, void *va, int perm)
 		page_free(new_page);
 		return status;
 	}
-	cprintf("Out syspagealloc %d %x %d\n", envid, va, perm);
+	//cprintf("Out syspagealloc %d %x %d\n", envid, va, perm);
 	return 0;
 	//panic("sys_page_alloc not implemented");
 }
@@ -223,7 +222,7 @@ static int
 sys_page_map(envid_t srcenvid, void *srcva,
 	     envid_t dstenvid, void *dstva, int perm)
 {
-	cprintf("In syspagemap %d %x %d %x %d\n", srcenvid, srcva, dstenvid, dstva, perm);
+	//cprintf("In syspagemap %d %x %d %x %d\n", srcenvid, srcva, dstenvid, dstva, perm);
 	// Hint: This function is a wrapper around page_lookup() and
 	//   page_insert() from kern/pmap.c.
 	//   Again, most of the new code you write should be to check the
@@ -235,13 +234,13 @@ sys_page_map(envid_t srcenvid, void *srcva,
 	struct Env *srcenv, *destenv;
 	if((status = envid2env(srcenvid, &srcenv, 1)) < 0 || (status = envid2env(dstenvid, &destenv, 1)) < 0)
 		return status;
-	cprintf("pagemap 1\n");
+	//cprintf("pagemap 1\n");
 	if((perm & (PTE_U | PTE_P)) == 0)
 		return -E_INVAL;
-	cprintf("pagemap 2\n");
+	//cprintf("pagemap 2\n");
 	if((perm & ~(PTE_USER)) != 0)
 		return -E_INVAL;
-	cprintf("pagemap 3\n");
+	//cprintf("pagemap 3\n");
 	if((uint32_t)srcva >= UTOP || ROUNDUP(srcva, PGSIZE) != srcva)
 		return -E_INVAL;
 	if((uint32_t)dstva >= UTOP || ROUNDUP(dstva, PGSIZE) != dstva)
@@ -254,7 +253,7 @@ sys_page_map(envid_t srcenvid, void *srcva,
 		return -E_INVAL;
 	if((status = page_insert(destenv -> env_pgdir, pg, dstva, perm)) < 0)
 		return status;
-	cprintf("Out syspagemap %d %x %d %x %d\n", srcenvid, srcva, dstenvid, dstva, perm);
+	//cprintf("Out syspagemap %d %x %d %x %d\n", srcenvid, srcva, dstenvid, dstva, perm);
 	return 0;	
 	//panic("sys_page_map not implemented");
 }
@@ -270,7 +269,7 @@ static int
 sys_page_unmap(envid_t envid, void *va)
 {
 	// Hint: This function is a wrapper around page_remove().
-	cprintf("In syspageunmap\n");
+	//cprintf("In syspageunmap\n");
 	// LAB 4: Your code here.
 	struct Env *env;
 	int status = 0;
@@ -279,7 +278,7 @@ sys_page_unmap(envid_t envid, void *va)
 	if((uint32_t)va >= UTOP || ROUNDUP(va, PGSIZE) != va)
 		return -E_INVAL;
 	page_remove(env -> env_pgdir, va);
-	cprintf("Out syspageunmap\n");
+	//cprintf("Out syspageunmap\n");
 	return 0;
 	//panic("sys_page_unmap not implemented");
 }
@@ -349,6 +348,7 @@ sys_ipc_recv(void *dstva)
 }
 
 
+// For Challenge Problem 1 Lab 4a
 // Sets the niceness of the current environment
 // Fails silently if the nice is not a valid value
 // This was done because I did not want to mess with inc/error.h
@@ -357,7 +357,6 @@ sys_env_set_nice(int nice)
 {
 	if(MIN_ENV_NICENESS <= nice && nice <= MAX_ENV_NICENESS)
 		curenv->env_nice = nice;
-	cprintf("Setting nice. Nice: %d. Nice asked for: %d\n", curenv->env_nice, nice);
 }
 
 // Dispatches to the correct kernel function, passing the arguments.
@@ -368,7 +367,6 @@ syscall(uint32_t syscallno, uint32_t a1, uint32_t a2, uint32_t a3, uint32_t a4, 
 	// Return any appropriate return value.
 	// LAB 3: Your code here.
 	// My code: gmenghani
-	cprintf("syscall : %x %x %x %x %x\n", a1, a2, a3, a4, a5);
 	// An invalid system call
 	if(syscallno >= NSYSCALLS)
 		return -E_INVAL;
@@ -385,6 +383,7 @@ syscall(uint32_t syscallno, uint32_t a1, uint32_t a2, uint32_t a3, uint32_t a4, 
 		case SYS_page_alloc : return sys_page_alloc((envid_t)a1, (void*)a2, (int)a3);
 		case SYS_page_map : return sys_page_map((envid_t)a1, (void*)a2, (envid_t)a3, (void*)a5, (int)a4);
 		case SYS_page_unmap : return sys_page_unmap((envid_t)a1, (void*)a2);
+		// For Challenge problem 1 Lab 4a
 		case SYS_env_set_nice:	sys_env_set_nice(a1);
 					return 0;
 	}
