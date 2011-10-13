@@ -116,5 +116,5 @@ sys_ipc_recv(void *dstva)
 int
 sys_env_set_nice(int nice)
 {
-	return syscall(SYS_env_set_nice, nice, 0, 0, 0, 0, 0);
+	return syscall(SYS_env_set_nice, 0, nice, 0, 0, 0, 0);
 }

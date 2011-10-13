@@ -31,8 +31,8 @@ sched_yield(void)
 		{	
 			claimant_env = position;
 			min_niceness = envs[position].env_nice;
-			/* Look ahead to check if we have a more selfish environment here */
-			/* Doing this so that environments with same priority run in round-robin */
+			// Look ahead to check if we have a more selfish environment here 
+			// Doing this so that environments with same priority run in round-robin 
 			for(look_ahead = (position + 1)%NENV; look_ahead != position; look_ahead = (look_ahead+1)%NENV)
 				if(look_ahead != 0 && envs[look_ahead].env_status == ENV_RUNNABLE)
 					if(envs[look_ahead].env_nice < min_niceness)
@@ -41,13 +41,13 @@ sched_yield(void)
 						min_niceness = envs[look_ahead].env_nice;
 					}
 
-			cprintf("\t\t\t\t\tsched_yield will now run : %x, with niceness: %x\n", claimant_env, min_niceness);
+			cprintf("\t\t\t\t\tsched_yield will now run : %x, with niceness: %d\n", claimant_env, min_niceness);
 			env_run(&envs[claimant_env]);
 		}
 	}
 	if(!claimant_env && envs[position].env_status == ENV_RUNNABLE)
 	{
-		cprintf("\t\t\t\t\tsched_yield will now run : %x, with niceness: %x\n", position, envs[position].env_nice);
+		cprintf("\t\t\t\t\tsched_yield will now run : %x, with niceness: %d\n", position, envs[position].env_nice);
 		env_run(&envs[position]);
 	}
 	

@@ -356,7 +356,7 @@ static void
 sys_env_set_nice(int nice)
 {
 	if(MIN_ENV_NICENESS <= nice && nice <= MAX_ENV_NICENESS)
-		curenv->env_nice = -1;
+		curenv->env_nice = nice;
 	cprintf("Setting nice. Nice: %d. Nice asked for: %d\n", curenv->env_nice, nice);
 }
 
