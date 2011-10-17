@@ -255,11 +255,45 @@ page_fault_handler(struct Trapframe *tf)
 	//   (the 'tf' variable points at 'curenv->env_tf').
 
 	// LAB 4: Your code here.
-
-	// Destroy the environment that caused the fault.
-	cprintf("[%08x] user fault va %08x ip %08x\n",
-		curenv->env_id, fault_va, tf->tf_eip);
-	print_trapframe(tf);
-	env_destroy(curenv);
+    cprintf("In page fault handler\n");
+        // Comment the following line
+        print_trapframe(tf);
+        if(curenv->env_pgfault_upcall == NULL)
+        {
+                // Upcall is not set, destroy.
+                cprintf("Upcall is not set, destroying\n");
+                cprintf("[%08x] user fault va %08x ip %08x\n",
+                curenv->env_id, fault_va, tf->tf_eip);
+                print_trapframe(tf);
+                env_destroy(curenv);
+                return;
+        }
+        
+        // Test if the user has got a page for User Exceptions
+        user_mem_assert(curenv, (void *)(UXSTACKTOP - PGSIZE), PGSIZE, 0);
+        
+        struct UTrapframe * utf;
+        // Faulted when in the User Exception Stack.
+        if(tf->tf_esp < UXSTACKTOP && tf->tf_esp >= UXSTACKTOP - PGSIZE)
+        {
+                cprintf("PgFault on the UXSTACK eip: %x, esp: %x\n", tf->tf_eip, tf->tf_esp);
+                utf = (struct UTrapframe *)(tf->tf_esp - (uint32_t)sizeof(struct UTrapframe) - sizeof(uint32_t));
+        }
+        else
+        {       
+                cprintf("Normal PgFault  eip: %x, esp: %x\n", tf->tf_eip, tf->tf_esp);
+                utf = (struct UTrapframe *)(UXSTACKTOP - (uint32_t)sizeof(struct UTrapframe));
+        }
+        
+        utf->utf_fault_va = fault_va;
+        utf->utf_err = tf->tf_err;
+        utf->utf_regs = tf->tf_regs;
+        utf->utf_eip = tf->tf_eip;
+        utf->utf_eflags = tf->tf_eflags;
+	    utf->utf_esp = tf->tf_esp;
+	    tf->tf_esp = (uint32_t)utf;
+        tf->tf_eip = (uint32_t)(curenv->env_pgfault_upcall);
+        cprintf("UTF: %p, fault_va: %x, UTEMP: %x, esp: %x\n", utf, fault_va, UTEMP, tf->tf_esp);
+        env_run(curenv);
 }
 
