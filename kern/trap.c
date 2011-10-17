@@ -256,45 +256,43 @@ page_fault_handler(struct Trapframe *tf)
 
 	// LAB 4: Your code here.
     	cprintf("In page fault handler Fault_va: %x\n", fault_va);
-        // Comment the following line
-        print_trapframe(tf);
-        if(curenv->env_pgfault_upcall == NULL)
-        {
-                // Upcall is not set, destroy.
-                cprintf("Upcall is not set, destroying\n");
-                cprintf("[%08x] user fault va %08x ip %08x\n",
-                curenv->env_id, fault_va, tf->tf_eip);
-                print_trapframe(tf);
-                env_destroy(curenv);
-                return;
-        }
+	if(curenv->env_pgfault_upcall == NULL)
+	{
+		// Upcall is not set, destroy.
+		cprintf("Upcall is not set, destroying\n");
+		cprintf("[%08x] user fault va %08x ip %08x\n",curenv->env_id, fault_va, tf->tf_eip);
+		print_trapframe(tf);
+		env_destroy(curenv);
+		return;
+	}
         
-        // Do not test for memory yet. Do precise asserts later on.
+	// Do not test for memory yet. Do precise asserts later on.
         
-        struct UTrapframe * utf;
-        // Faulted when in the User Exception Stack.
-        if(tf->tf_esp < UXSTACKTOP && tf->tf_esp >= UXSTACKTOP - PGSIZE)
+	struct UTrapframe * utf;
+	
+	// Faulted when in the User Exception Stack.
+	if(tf->tf_esp < UXSTACKTOP && tf->tf_esp >= UXSTACKTOP - PGSIZE)
         {
-                cprintf("PgFault on the UXSTACK eip: %x, esp: %x\n", tf->tf_eip, tf->tf_esp);
-                utf = (struct UTrapframe *)(tf->tf_esp - (uint32_t)sizeof(struct UTrapframe) - sizeof(uint32_t));
+		cprintf("PgFault on the UXSTACK eip: %x, esp: %x\n", tf->tf_eip, tf->tf_esp);
+		utf = (struct UTrapframe *)(tf->tf_esp - (uint32_t)sizeof(struct UTrapframe) - sizeof(uint32_t));
 		user_mem_assert(curenv, (void *)(utf), (uint32_t)(sizeof(struct UTrapframe) + sizeof(uint32_t)), 0);
 	}
         else
         {       
-                cprintf("Normal PgFault  eip: %x, esp: %x\n", tf->tf_eip, tf->tf_esp);
-                utf = (struct UTrapframe *)(UXSTACKTOP - (uint32_t)sizeof(struct UTrapframe));
-        	user_mem_assert(curenv, (void *)(utf), (uint32_t)(sizeof(struct UTrapframe)), 0);
+		cprintf("Normal PgFault  eip: %x, esp: %x\n", tf->tf_eip, tf->tf_esp);
+		utf = (struct UTrapframe *)(UXSTACKTOP - (uint32_t)sizeof(struct UTrapframe));
+		user_mem_assert(curenv, (void *)(utf), (uint32_t)(sizeof(struct UTrapframe)), 0);
 	}
 
-        utf->utf_fault_va = fault_va;
-        utf->utf_err = tf->tf_err;
-        utf->utf_regs = tf->tf_regs;
-        utf->utf_eip = tf->tf_eip;
-        utf->utf_eflags = tf->tf_eflags;
+	utf->utf_fault_va = fault_va;
+	utf->utf_err = tf->tf_err;
+	utf->utf_regs = tf->tf_regs;
+	utf->utf_eip = tf->tf_eip;
+	utf->utf_eflags = tf->tf_eflags;
 	utf->utf_esp = tf->tf_esp;
 	tf->tf_esp = (uint32_t)utf;
-        tf->tf_eip = (uint32_t)(curenv->env_pgfault_upcall);
-        cprintf("UTF: %p, fault_va: %x, UTEMP: %x, esp: %x\n", utf, fault_va, UTEMP, tf->tf_esp);
+	tf->tf_eip = (uint32_t)(curenv->env_pgfault_upcall);
+	cprintf("UTF: %p, fault_va: %x, UTEMP: %x, esp: %x\n", utf, fault_va, UTEMP, tf->tf_esp);
         env_run(curenv);
 }
 
