@@ -255,7 +255,7 @@ page_fault_handler(struct Trapframe *tf)
 	//   (the 'tf' variable points at 'curenv->env_tf').
 
 	// LAB 4: Your code here.
-    cprintf("In page fault handler\n");
+    	cprintf("In page fault handler Fault_va: %x\n", fault_va);
         // Comment the following line
         print_trapframe(tf);
         if(curenv->env_pgfault_upcall == NULL)
@@ -290,8 +290,8 @@ page_fault_handler(struct Trapframe *tf)
         utf->utf_regs = tf->tf_regs;
         utf->utf_eip = tf->tf_eip;
         utf->utf_eflags = tf->tf_eflags;
-	    utf->utf_esp = tf->tf_esp;
-	    tf->tf_esp = (uint32_t)utf;
+	utf->utf_esp = tf->tf_esp;
+	tf->tf_esp = (uint32_t)utf;
         tf->tf_eip = (uint32_t)(curenv->env_pgfault_upcall);
         cprintf("UTF: %p, fault_va: %x, UTEMP: %x, esp: %x\n", utf, fault_va, UTEMP, tf->tf_esp);
         env_run(curenv);
