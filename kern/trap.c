@@ -269,8 +269,7 @@ page_fault_handler(struct Trapframe *tf)
                 return;
         }
         
-        // Test if the user has got a page for User Exceptions
-        user_mem_assert(curenv, (void *)(UXSTACKTOP - PGSIZE), PGSIZE, 0);
+        // Do not test for memory yet. Do precise asserts later on.
         
         struct UTrapframe * utf;
         // Faulted when in the User Exception Stack.
@@ -278,13 +277,15 @@ page_fault_handler(struct Trapframe *tf)
         {
                 cprintf("PgFault on the UXSTACK eip: %x, esp: %x\n", tf->tf_eip, tf->tf_esp);
                 utf = (struct UTrapframe *)(tf->tf_esp - (uint32_t)sizeof(struct UTrapframe) - sizeof(uint32_t));
-        }
+		user_mem_assert(curenv, (void *)(utf), (uint32_t)(sizeof(struct UTrapframe) + sizeof(uint32_t)), 0);
+	}
         else
         {       
                 cprintf("Normal PgFault  eip: %x, esp: %x\n", tf->tf_eip, tf->tf_esp);
                 utf = (struct UTrapframe *)(UXSTACKTOP - (uint32_t)sizeof(struct UTrapframe));
-        }
-        
+        	user_mem_assert(curenv, (void *)(utf), (uint32_t)(sizeof(struct UTrapframe)), 0);
+	}
+
         utf->utf_fault_va = fault_va;
         utf->utf_err = tf->tf_err;
         utf->utf_regs = tf->tf_regs;

@@ -797,9 +797,7 @@ user_mem_check(struct Env *env, const void *va, size_t len, int perm)
 	uint32_t vaddr = (uint32_t)va;
 	for(; vaddr < (uint32_t)va + len;)
 	{
-		// cprintf("vaddr: %x\n", vaddr);
 		pte_t * pte = pgdir_walk(env->env_pgdir, (void *)vaddr, 0);
-		//cprintf("pte: %p\n",pte);	
 		// The permissions in the PTE should match
 		if( pte == NULL || !(*pte & perm))
 		{
@@ -826,7 +824,6 @@ user_mem_check(struct Env *env, const void *va, size_t len, int perm)
 void
 user_mem_assert(struct Env *env, const void *va, size_t len, int perm)
 {
-	//cprintf("mem check for va: %x, len: %x, va+len: %x\n", va, len, va+len);
 	if (user_mem_check(env, va, len, perm | PTE_U) < 0) {
 		cprintf("[%08x] user_mem_check assertion failure for "
 			"va %08x\n", env->env_id, user_mem_check_addr);
