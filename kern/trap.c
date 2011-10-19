@@ -259,7 +259,6 @@ page_fault_handler(struct Trapframe *tf)
 	if(curenv->env_pgfault_upcall == NULL)
 	{
 		// Upcall is not set, destroy.
-		cprintf("Upcall is not set, destroying\n");
 		cprintf("[%08x] user fault va %08x ip %08x\n",curenv->env_id, fault_va, tf->tf_eip);
 		print_trapframe(tf);
 		env_destroy(curenv);
