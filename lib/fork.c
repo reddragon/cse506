@@ -40,14 +40,14 @@ pgfault(struct UTrapframe *utf)
 
 	// LAB 4: Your code here.
 	// Allocate a new page at PFTEMP
-	sys_page_alloc(env->env_id, (void *)PFTEMP, PTE_W | PTE_U | PTE_P);
+	sys_page_alloc(0, (void *)PFTEMP, PTE_W | PTE_U | PTE_P);
 	// Copy the old contents into the new page
 	memmove((void *)PFTEMP, (void *)ROUNDDOWN((uint32_t)addr, PGSIZE), PGSIZE);	
 	// Now map the page to the 
-	sys_page_map(env->env_id, (void *)PFTEMP, \
-		env->env_id, (void *)ROUNDDOWN((uint32_t)addr,PGSIZE), PTE_W | PTE_U | PTE_P);		
+	sys_page_map(0, (void *)PFTEMP, \
+		0, (void *)ROUNDDOWN((uint32_t)addr,PGSIZE), PTE_W | PTE_U | PTE_P);		
 
-	sys_page_unmap(env->env_id, PFTEMP);
+	sys_page_unmap(0, PFTEMP);
 	//panic("pgfault not implemented");
 }
 
@@ -66,27 +66,24 @@ static int
 duppage(envid_t envid, unsigned pn)
 {
 	int r;
-	int perm = vpt[pn] & PTE_USER;
-
+	uint32_t perm = vpt[pn] & PTE_USER;
+	envid_t cur_envid;
 	// LAB 4: Your code here.
 	if((perm & PTE_COW) || (perm & PTE_W))
 	{
 		
-		cprintf("In duppage, envid: %d, addr: %x, vpt[n]&PTE_COW:%d, vpt[n]&PTE_W:%d, vpt[n]&PTE_U:%d, perm:%d\n", envid, pn<<PGSHIFT, vpt[pn]&PTE_COW, vpt[pn]&PTE_W, vpt[pn]&PTE_U, perm);
 		perm &= ~PTE_W;
 		perm |= PTE_COW;
-		if((r=sys_page_map(0, (void *)(pn<<PGSHIFT), \
+		if((r=sys_page_map(cur_envid, (void *)(pn<<PGSHIFT), \
 			envid, (void *)(pn<<PGSHIFT), perm))<0)
 			return r;
-		if((r=sys_page_map(0, (void *)(pn<<PGSHIFT), \
-			0, (void *)(pn<<PGSHIFT), perm))<0)
+		if((r=sys_page_map(cur_envid, (void *)(pn<<PGSHIFT), \
+			cur_envid, (void *)(pn<<PGSHIFT), perm))<0)
 			return r;
 	}
 	else
-	{
-		
-	cprintf("In duppage, envid: %d, addr: %x, vpt[n]&PTE_COW:%d, vpt[n]&PTE_W:%d, vpt[n]&PTE_U:%d, perm:%d\n", envid, pn<<PGSHIFT, vpt[pn]&PTE_COW, vpt[pn]&PTE_W, vpt[pn]&PTE_U, perm);
-		if((r=sys_page_map(env->env_id, (void *)(pn<<PGSHIFT), \
+	{	
+		if((r=sys_page_map(cur_envid, (void *)(pn<<PGSHIFT), \
 			envid, (void *)(pn<<PGSHIFT), perm))<0)
 			return r;
 	}
@@ -114,31 +111,37 @@ envid_t
 fork(void)
 {
 	// LAB 4: Your code here.
+	cprintf("In environment %04x\n", sys_getenvid());
 	set_pgfault_handler(pgfault);
 	envid_t envid;
 	int r;
 	envid = sys_exofork();
 	if(envid < 0)
-		panic("sys_exofork: %e", envid);
-	
+		panic("sys_exofork: %e", envid);	
 	else if(envid == 0)
 	{
 		env = &envs[ENVX(sys_getenvid())];
+		//cprintf("I am the child %04x\n", sys_getenvid());
 		return 0;
 	}
 	
-	sys_page_alloc(envid, (void *)(UXSTACKTOP - PGSIZE), PTE_W | PTE_P);
-	sys_env_set_pgfault_upcall(envid, env->env_pgfault_upcall);	
-	uint32_t pn;
-	for(pn = UTEXT; pn < UTOP; pn += PGSIZE)
-		if(pn == UXSTACKTOP - PGSIZE) 
+	//cprintf("In the parent process %04x\n", sys_getenvid());
+	if((r = sys_page_alloc(envid, (void *)(UXSTACKTOP - PGSIZE), PTE_W | PTE_U | PTE_P))<0)
+		panic("sys_page_alloc: %e", r);
+	if((r = sys_env_set_pgfault_upcall(envid, env->env_pgfault_upcall))<0)
+		panic("sys_env_set_pgfault_upcall: %e", r);
+	
+	uint32_t va;
+	for(va = UTEXT; va < UTOP; va += PGSIZE)
+		if(va == UXSTACKTOP - PGSIZE) 
 		{
-			if((r = sys_page_alloc(envid, (void *)(UXSTACKTOP - PGSIZE), PTE_W | PTE_U))<0)
+			if((r = sys_page_alloc(envid, (void *)(UXSTACKTOP - PGSIZE), PTE_P | PTE_W | PTE_U))<0)
 				panic("sys_page_alloc: %e", r);
 		}
-		else if((vpd[(pn>>PGSHIFT)/NPTENTRIES] & PTE_P) && (vpt[(pn>>PGSHIFT)] & PTE_P))
-			duppage(envid, pn>>PGSHIFT);
-	
+		else if((vpd[(va>>PGSHIFT)/NPTENTRIES] & PTE_P) && (vpt[(va>>PGSHIFT)] & PTE_P))
+			duppage(envid, va>>PGSHIFT);
+
+	//cprintf("Done with the copying in environment %04x\n", env->env_id);
 	if((r = sys_env_set_pgfault_upcall(envid, env->env_pgfault_upcall))<0)
 		panic("sys_env_set_pgfault_upcall: %e", r);
 
@@ -147,7 +150,6 @@ fork(void)
 
 	// Returning the child's envid to the parent
 	return envid;
-	//panic("fork not implemented");
 }
 
 // Challenge!
