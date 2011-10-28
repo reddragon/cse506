@@ -1,8 +1,0 @@
-Challenge Problem 1 - Fair IPC
-We solved this problem, in a manner similar to the CFS. This is like a producer-consumer problem, where the producer is environment 1, and the consumers are environment 2 and 3. Whenever environment 1 blocks on a receive, the next environment to be scheduled was environment 2, in a round robin fashion. Thus, when environment 3 was scheduled, environment 1 was no more blocking on a receive.
-
-Hence, whenever an environment failed to send a message across, we increase its niceness by one. Thus, when environment 3 fails, it is scheduled before 2 the next time.
-
-Given more time, I would like to solve it using a Message Queue.
-
-The relevant code is in kern/syscall.c. "grep -rn" for 'Challenge Problem 1 Lab 4c'
