@@ -332,6 +332,7 @@ sys_ipc_try_send(envid_t envid, uint32_t value, void *srcva, unsigned perm)
 {
 	// LAB 4: Your code here.
 	// My code : alaud
+	//cprintf("Trying to send for %x, nice %x\n", curenv->env_id, curenv->env_nice);
 	int status = 0;
 	struct Env *target_env;
 	if((status = envid2env(envid, &target_env, 0)) < 0)
@@ -340,6 +341,8 @@ sys_ipc_try_send(envid_t envid, uint32_t value, void *srcva, unsigned perm)
 	}
 	if(!target_env -> env_ipc_recving)
 	{
+		// For the purpose of Challenge Problem 1 Lab 4c
+		curenv->env_nice = MAX(DEF_ENV_NICENESS, curenv->env_nice - 1);
 		return -E_IPC_NOT_RECV;
 	}
 	target_env -> env_ipc_perm = 0;
@@ -352,9 +355,11 @@ sys_ipc_try_send(envid_t envid, uint32_t value, void *srcva, unsigned perm)
 		target_env -> env_ipc_perm = perm;
 	}
 	target_env -> env_ipc_value = value;
-	target_env -> env_ipc_from = curenv -> env_id;
 	target_env -> env_ipc_recving = 0;
+	target_env -> env_ipc_from = curenv -> env_id;
 	target_env -> env_status = ENV_RUNNABLE;
+	// For the purpose of Challenge Problem 1 Lab 4c
+	curenv->env_nice = MIN(MAX_ENV_NICENESS, curenv->env_nice + 1);
 	return 0;
 	//panic("sys_ipc_try_send not implemented");
 }

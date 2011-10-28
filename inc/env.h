@@ -38,6 +38,7 @@ typedef int32_t envid_t;
 // Max and min niceness of an environment's priority
 // TODO Put this in a better place if possible.
 #define MAX_ENV_NICENESS	19
+#define DEF_ENV_NICENESS	0
 #define MIN_ENV_NICENESS	-20
 
 struct Env {
