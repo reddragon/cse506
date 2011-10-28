@@ -82,7 +82,9 @@ idt_init(void)
 	asm("movl $h_syscall, %0"
 	    :"=r"(addr));	
 	SETGATE(idt[T_SYSCALL], 1, GD_KT, addr, 3);
-
+	asm("movl $h_timer, %0"
+			:"=r"(addr));
+	SETGATE(idt[IRQ_OFFSET + IRQ_TIMER], 0, GD_KT, addr, 3);
 	// Setup a TSS so that we get the right stack
 	// when we trap to the kernel.
 	ts.ts_esp0 = KSTACKTOP;
@@ -156,7 +158,8 @@ trap_dispatch(struct Trapframe *tf)
 
 		case T_BRKPT:	monitor(tf);	
 				return;
-
+		case IRQ_OFFSET + IRQ_TIMER : sched_yield();
+				return;
 		case T_SYSCALL:	
 				tf->tf_regs.reg_eax = \
 					syscall(tf->tf_regs.reg_eax, tf->tf_regs.reg_edx, \

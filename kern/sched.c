@@ -19,6 +19,7 @@ sched_yield(void)
 	// unless NOTHING else is runnable.
 
 	// LAB 4: Your code here.
+	//cprintf("Entering sched_yield\n");
 	static int position = 0;	
 	//cprintf("Entering sched_yield(), position: %d\n", position);
 	int start = position, min_niceness = MAX_ENV_NICENESS + 1, claimant_env = 0, look_ahead;

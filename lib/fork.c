@@ -111,7 +111,7 @@ envid_t
 fork(void)
 {
 	// LAB 4: Your code here.
-	cprintf("In environment %04x\n", sys_getenvid());
+	//cprintf("In environment %04x\n", sys_getenvid());
 	set_pgfault_handler(pgfault);
 	envid_t envid;
 	int r;
