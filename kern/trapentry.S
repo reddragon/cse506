@@ -47,6 +47,7 @@ TRAPHANDLER(h_gpflt, T_GPFLT);
 TRAPHANDLER(h_pgflt, T_PGFLT);
 TRAPHANDLER_NOEC(h_brkpt, T_BRKPT);
 TRAPHANDLER_NOEC(h_syscall, T_SYSCALL);
+TRAPHANDLER_NOEC(h_timer, IRQ_OFFSET + IRQ_TIMER);
 /*
  * Lab 3: Your code here for _alltraps
  */
@@ -58,4 +59,5 @@ _alltraps:
 	mov $GD_KD, %ax;
 	mov %ax, %ds;
 	mov %ax, %es; 
+	cli;
 	call trap;

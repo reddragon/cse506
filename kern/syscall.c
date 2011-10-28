@@ -331,7 +331,32 @@ static int
 sys_ipc_try_send(envid_t envid, uint32_t value, void *srcva, unsigned perm)
 {
 	// LAB 4: Your code here.
-	panic("sys_ipc_try_send not implemented");
+	// My code : alaud
+	int status = 0;
+	struct Env *target_env;
+	if((status = envid2env(envid, &target_env, 0)) < 0)
+	{
+		return status;
+	}
+	if(!target_env -> env_ipc_recving)
+	{
+		return -E_IPC_NOT_RECV;
+	}
+	target_env -> env_ipc_perm = 0;
+	if((uint32_t)srcva < UTOP && (uint32_t)target_env -> env_ipc_dstva < UTOP)
+	{
+		if((status = sys_page_map(curenv -> env_id, srcva, envid, target_env -> env_ipc_dstva, perm)) < 0)
+		{
+			return status;
+		}
+		target_env -> env_ipc_perm = perm;
+	}
+	target_env -> env_ipc_value = value;
+	target_env -> env_ipc_from = curenv -> env_id;
+	target_env -> env_ipc_recving = 0;
+	target_env -> env_status = ENV_RUNNABLE;
+	return 0;
+	//panic("sys_ipc_try_send not implemented");
 }
 
 // Block until a value is ready.  Record that you want to receive
@@ -349,8 +374,14 @@ static int
 sys_ipc_recv(void *dstva)
 {
 	// LAB 4: Your code here.
-	panic("sys_ipc_recv not implemented");
+	// My code : alaud
+	if((uint32_t)dstva < UTOP && ROUNDUP(dstva, PGSIZE) != dstva)
+		return -E_INVAL;
+	curenv -> env_ipc_recving = 1;
+	curenv -> env_ipc_dstva = dstva;
+	curenv -> env_status = ENV_NOT_RUNNABLE;
 	return 0;
+	//panic("sys_ipc_recv not implemented");
 }
 
 
@@ -394,6 +425,8 @@ syscall(uint32_t syscallno, uint32_t a1, uint32_t a2, uint32_t a3, uint32_t a4, 
 					return 0;
 		case SYS_env_set_pgfault_upcall: sys_env_set_pgfault_upcall((envid_t)a1, (void *)a2);
 		                                 return 0;
+		case SYS_ipc_try_send: return sys_ipc_try_send((envid_t)a1, (uint32_t)a2, (void*)a3, (unsigned)a5);
+		case SYS_ipc_recv: return sys_ipc_recv((void*)a1);
 	}
 	return 0;
 }

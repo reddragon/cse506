@@ -25,7 +25,7 @@ void
 set_pgfault_handler(void (*handler)(struct UTrapframe *utf))
 {
 	int r;
-    	cprintf("In set_pgfault_handler\n");
+ 	//cprintf("In set_pgfault_handler\n");
 	if (_pgfault_handler == 0) {
 		// First time through!
 		// LAB 4: Your code here.
