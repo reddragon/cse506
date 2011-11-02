@@ -120,10 +120,11 @@ include boot/Makefrag
 include kern/Makefrag
 include lib/Makefrag
 include user/Makefrag
+include fs/Makefrag
 
 
-IMAGES = $(OBJDIR)/kern/kernel.img
-QEMUOPTS = -no-kvm -hda $(OBJDIR)/kern/kernel.img -serial mon:stdio
+IMAGES = $(OBJDIR)/kern/kernel.img $(OBJDIR)/fs/fs.img
+QEMUOPTS = -no-kvm -hda $(OBJDIR)/kern/kernel.img -hdb $(OBJDIR)/fs/fs.img -serial mon:stdio
 
 .gdbinit: .gdbinit.tmpl
 	sed "s/localhost:1234/localhost:$(GDBPORT)/" < $^ > $@
@@ -175,21 +176,10 @@ grade: $(LABSETUP)grade-lab$(LAB).sh
 	$(MAKE) all
 	sh $(LABSETUP)grade-lab$(LAB).sh
 
-handin-a: realclean
+handin: realclean
 	if [ `git status --porcelain| wc -l` != 0 ] ; then echo "\n\n\n\n\t\tWARNING: YOU HAVE UNCOMMITTED CHANGES\n\n    Consider committing any pending changes and rerunning make handin.\n\n\n\n"; fi
-	git tag -f -a lab4a-handin -m "Lab4a Handin"
+	git tag -f -a lab5-handin -m "Lab5 Handin"
 	git push --tags
-
-handin-b: realclean
-	if [ `git status --porcelain| wc -l` != 0 ] ; then echo "\n\n\n\n\t\tWARNING: YOU HAVE UNCOMMITTED CHANGES\n\n    Consider committing any pending changes and rerunning make handin.\n\n\n\n"; fi
-	git tag -f -a lab4b-handin -m "Lab4b Handin"
-	git push --tags
-
-handin-c: realclean
-	if [ `git status --porcelain| wc -l` != 0 ] ; then echo "\n\n\n\n\t\tWARNING: YOU HAVE UNCOMMITTED CHANGES\n\n    Consider committing any pending changes and rerunning make handin.\n\n\n\n"; fi
-	git tag -f -a lab4c-handin -m "Lab4c Handin"
-	git push --tags
-
 
 tarball: realclean
 	tar cf - `find . -type f | grep -v '^\.*$$' | grep -v '/CVS/' | grep -v '/\.svn/' | grep -v '/\.git/' | grep -v 'lab[0-9].*\.tar\.gz'` | gzip > lab$(LAB)-handin.tar.gz
