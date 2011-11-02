@@ -344,6 +344,7 @@ sys_ipc_try_send(envid_t envid, uint32_t value, void *srcva, unsigned perm)
 {
 	// LAB 4: Your code here.
 	// My code : alaud
+	//cprintf("Trying to send for %x, nice %x\n", curenv->env_id, curenv->env_nice);
 	int status = 0;
 	struct Env *target_env;
 	if((status = envid2env(envid, &target_env, 0)) < 0)
@@ -364,8 +365,8 @@ sys_ipc_try_send(envid_t envid, uint32_t value, void *srcva, unsigned perm)
 		target_env -> env_ipc_perm = perm;
 	}
 	target_env -> env_ipc_value = value;
-	target_env -> env_ipc_from = curenv -> env_id;
 	target_env -> env_ipc_recving = 0;
+	target_env -> env_ipc_from = curenv -> env_id;
 	target_env -> env_status = ENV_RUNNABLE;
 	return 0;
 	//panic("sys_ipc_try_send not implemented");
