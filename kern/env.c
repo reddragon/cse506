@@ -366,6 +366,8 @@ load_icode(struct Env *e, uint8_t *binary, size_t size)
 		
 		while(bytes_left > 0) {
 			p = page_lookup(e->env_pgdir, (void *)(from), NULL);
+			if(p == NULL)
+				panic("No page found\n");
 			bytes_tx = MIN(bytes_left, PGSIZE);
 			memmove(page2kva(p), (void *)(binary + ph->p_offset + done), bytes_tx);
 			//cprintf("Transferring %x bytes from %x to %x\n", bytes_tx, (uint32_t)(binary + ph->p_offset + done), page2kva(p) + off);
@@ -377,6 +379,22 @@ load_icode(struct Env *e, uint8_t *binary, size_t size)
 			done += bytes_tx;
 			//cprintf("Bytes Left: %x\n", bytes_left);
 		}
+		//cprintf("filesz: %x, memsz: %x, done: %x\n", ph->p_filesz, ph->p_memsz, done);	
+		done = ph->p_filesz;
+		while(done < ph->p_memsz) {
+			off = done - ROUNDDOWN(done, PGSIZE);
+			bytes_tx = MIN(PGSIZE, PGSIZE - off);
+			if(done + bytes_tx > ph->p_memsz)
+				bytes_tx = MIN(bytes_tx, ph->p_memsz - done);
+			//cprintf("done: %x, off: %x, bytes_tx: %x\n", done, off, bytes_tx);
+			if((p = page_lookup(e->env_pgdir, (void *)(ph->p_va + done), NULL)) == NULL)
+				panic("No page found at va: %x\n", ph->p_va + done);
+			memset(page2kva(p) + off, 0, bytes_tx);
+			done += bytes_tx;
+		}
+		//cprintf("filesz: %x, memsz: %x, done: %x\n", ph->p_filesz, ph->p_memsz, done);	
+		assert(done == ph->p_memsz);
+
 
 		//cprintf("Copying done.\n");
 	}
