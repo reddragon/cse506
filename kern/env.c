@@ -214,6 +214,8 @@ env_alloc(struct Env **newenv_store, envid_t parent_id)
 
 	// If this is the file server (e == &envs[1]) give it I/O privileges.
 	// LAB 5: Your code here.
+	if(e == &envs[1])
+		e->env_tf.tf_eflags |= FL_IOPL_MASK;
 
 	// commit the allocation
 	LIST_REMOVE(e, env_link);
@@ -373,7 +375,6 @@ load_icode(struct Env *e, uint8_t *binary, size_t size)
 			//cprintf("Transferring %x bytes from %x to %x\n", bytes_tx, (uint32_t)(binary + ph->p_offset + done), page2kva(p) + off);
 			
 			//cprintf("Sanity Check. Byte 1 in binary: %d, Byte 1 in memory %d\n", *(char *)(binary+ph->p_offset + done), *(char *)(page2kva(p)));	
-			bytes_left -= bytes_tx;
 			bytes_left -= bytes_tx;
 			from += bytes_tx;
 			done += bytes_tx;
