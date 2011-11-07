@@ -240,7 +240,7 @@ static int
 sys_page_map(envid_t srcenvid, void *srcva,
 	     envid_t dstenvid, void *dstva, int perm)
 {
-	//cprintf("In syspagemap %d %x %d %x %d\n", srcenvid, srcva, dstenvid, dstva, perm);
+	cprintf("In syspagemap %d %x %d %x %d\n", srcenvid, srcva, dstenvid, dstva, perm);
 	// Hint: This function is a wrapper around page_lookup() and
 	//   page_insert() from kern/pmap.c.
 	//   Again, most of the new code you write should be to check the
@@ -250,15 +250,15 @@ sys_page_map(envid_t srcenvid, void *srcva,
 	// LAB 4: Your code here.
 	int status = 0;
 	struct Env *srcenv, *destenv;
-	if((status = envid2env(srcenvid, &srcenv, 1)) < 0 || (status = envid2env(dstenvid, &destenv, 1)) < 0)
+	if((status = envid2env(srcenvid, &srcenv, 0)) < 0 || (status = envid2env(dstenvid, &destenv, 0)) < 0)
 		return status;
-	//cprintf("pagemap 1\n");
+	cprintf("pagemap 1\n");
 	if((perm & (PTE_U | PTE_P)) == 0)
 		return -E_INVAL;
-	//cprintf("pagemap 2\n");
+	cprintf("pagemap 2\n");
 	if((perm & ~(PTE_USER)) != 0)
 		return -E_INVAL;
-	//cprintf("pagemap 3\n");
+	cprintf("pagemap 3\n");
 	if((uint32_t)srcva >= UTOP || ROUNDUP(srcva, PGSIZE) != srcva)
 		return -E_INVAL;
 	if((uint32_t)dstva >= UTOP || ROUNDUP(dstva, PGSIZE) != dstva)
@@ -271,7 +271,7 @@ sys_page_map(envid_t srcenvid, void *srcva,
 		return -E_INVAL;
 	if((status = page_insert(destenv -> env_pgdir, pg, dstva, perm)) < 0)
 		return status;
-	//cprintf("Out syspagemap %d %x %d %x %d\n", srcenvid, srcva, dstenvid, dstva, perm);
+	cprintf("Out syspagemap %d %x %d %x %d\n", srcenvid, srcva, dstenvid, dstva, perm);
 	return 0;	
 	//panic("sys_page_map not implemented");
 }
@@ -344,7 +344,7 @@ sys_ipc_try_send(envid_t envid, uint32_t value, void *srcva, unsigned perm)
 {
 	// LAB 4: Your code here.
 	// My code : alaud
-	//cprintf("Trying to send for %x, nice %x\n", curenv->env_id, curenv->env_nice);
+	cprintf("Trying to send to %x, for %x, nice %x\n", envid,curenv->env_id, curenv->env_nice);
 	int status = 0;
 	struct Env *target_env;
 	if((status = envid2env(envid, &target_env, 0)) < 0)
@@ -355,6 +355,7 @@ sys_ipc_try_send(envid_t envid, uint32_t value, void *srcva, unsigned perm)
 	{
 		return -E_IPC_NOT_RECV;
 	}
+	cprintf("Still Trying to send to %x, for %x, nice %x\n", envid,curenv->env_id, curenv->env_nice);
 	target_env -> env_ipc_perm = 0;
 	if((uint32_t)srcva < UTOP && (uint32_t)target_env -> env_ipc_dstva < UTOP)
 	{
@@ -364,6 +365,7 @@ sys_ipc_try_send(envid_t envid, uint32_t value, void *srcva, unsigned perm)
 		}
 		target_env -> env_ipc_perm = perm;
 	}
+	cprintf("Still Still Trying to send to %x, for %x, nice %x\n", envid,curenv->env_id, curenv->env_nice);
 	target_env -> env_ipc_value = value;
 	target_env -> env_ipc_recving = 0;
 	target_env -> env_ipc_from = curenv -> env_id;
@@ -388,6 +390,7 @@ sys_ipc_recv(void *dstva)
 {
 	// LAB 4: Your code here.
 	// My code : alaud
+	cprintf("Ipc recv : %x\n", curenv -> env_id);
 	if((uint32_t)dstva < UTOP && ROUNDUP(dstva, PGSIZE) != dstva)
 		return -E_INVAL;
 	curenv -> env_ipc_recving = 1;

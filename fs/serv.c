@@ -9,7 +9,7 @@
 #include "fs.h"
 
 
-#define debug 0
+#define debug 1
 
 // The file system server maintains three structures
 // for each open file.
@@ -215,7 +215,23 @@ serve_read(envid_t envid, union Fsipc *ipc)
 	// Hint: Use file_read.
 	// Hint: The seek position is stored in the struct Fd.
 	// LAB 5: Your code here
-	panic("serve_read not implemented");
+	int fd = req -> req_fileid;
+	size_t n = MIN(req -> req_n, PGSIZE);
+	struct OpenFile* o;
+	int status;
+	if((status = openfile_lookup(envid, fd, &o)) < 0)
+		return status;
+	cprintf("opened : %x %x\n", o->o_fd, ret->ret_buf);
+	off_t offset = o->o_fd->fd_offset;
+	if((status = file_read(o->o_file, (void*)ret -> ret_buf, n, offset)) < 0)
+	{
+		cprintf("file_read : error now\n");
+		// Kind of redundant, but useful for debugging
+		return status;
+	}
+	o->o_fd->fd_offset += status;
+	return status;
+	//panic("serve_read not implemented");
 }
 
 // Write req->req_n bytes from req->req_buf to req_fileid, starting at
@@ -322,6 +338,7 @@ serve(void)
 	void *pg;
 
 	while (1) {
+		cprintf("In serve\n");
 		perm = 0;
 		req = ipc_recv((int32_t *) &whom, fsreq, &perm);
 		if (debug)
@@ -347,6 +364,7 @@ serve(void)
 		ipc_send(whom, r, pg, perm);
 		sys_page_unmap(0, fsreq);
 	}
+	cprintf("Out of serve\n");
 }
 
 void

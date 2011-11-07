@@ -180,18 +180,22 @@ file_get_block(struct File *f, uint32_t filebno, char **blk)
 	// LAB 5: Your code here.
 	if(filebno >= NDIRECT + NINDIRECT)
 		return -E_INVAL;
+	cprintf("file get block : 1\n");
 	uint32_t* baddr;
 	int status = 0;
 	if((status = file_block_walk(f, filebno, &baddr, 1)) < 0)
 		return status;
+	cprintf("file get block : 2\n");
 	if(*baddr == 0)
 	{
 		if((status = alloc_block()) < 0)
 			return status;
 		*baddr = status;
 	}
+	cprintf("file get block : 3\n");
 	char* addr = (char*)diskaddr(*baddr);
 	*blk = addr;
+	cprintf("file get block : 4\n");
 	return 0;
 	//panic("file_get_block not implemented");
 }
@@ -351,7 +355,9 @@ file_create(const char *path, struct File **pf)
 int
 file_open(const char *path, struct File **pf)
 {
-	return walk_path(path, 0, pf, 0);
+	int status = walk_path(path, 0, pf, 0);
+	cprintf("file_open for %s : %d\n", path, status);
+	return status;
 }
 
 // Read count bytes from f into buf, starting from seek position
@@ -360,6 +366,7 @@ file_open(const char *path, struct File **pf)
 ssize_t
 file_read(struct File *f, void *buf, size_t count, off_t offset)
 {
+	cprintf("In file_read \n");
 	int r, bn;
 	off_t pos;
 	char *blk;
@@ -370,6 +377,7 @@ file_read(struct File *f, void *buf, size_t count, off_t offset)
 	count = MIN(count, f->f_size - offset);
 
 	for (pos = offset; pos < offset + count; ) {
+		cprintf("In file_read %x\n", pos);
 		if ((r = file_get_block(f, pos / BLKSIZE, &blk)) < 0)
 			return r;
 		bn = MIN(BLKSIZE - pos % BLKSIZE, offset + count - pos);

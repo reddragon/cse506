@@ -24,13 +24,15 @@ umain(void)
 	struct Fd fdcopy;
 	struct Stat st;
 	char buf[512];
-
+	cprintf("Enter testfile zero\n");
 	// We open files manually first, to avoid the FD layer
 	if ((r = xopen("/not-found", O_RDONLY)) < 0 && r != -E_NOT_FOUND)
 		panic("serve_open /not-found: %e", r);
 	else if (r >= 0)
 		panic("serve_open /not-found succeeded!");
-
+	cprintf("Enter testfile one\n");
+	
+	// We open files manually first, to avoid the FD layer
 	if ((r = xopen("/newmotd", O_RDONLY)) < 0)
 		panic("serve_open /newmotd: %e", r);
 	if (FVA->fd_dev_id != 'f' || FVA->fd_offset != 0 || FVA->fd_omode != O_RDONLY)
