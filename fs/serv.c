@@ -221,7 +221,7 @@ serve_read(envid_t envid, union Fsipc *ipc)
 	int status;
 	if((status = openfile_lookup(envid, fd, &o)) < 0)
 		return status;
-	cprintf("opened : %x %x\n", o->o_fd, ret->ret_buf);
+	cprintf("opened : %x %x %x\n",o, o->o_fd, ret->ret_buf);
 	off_t offset = o->o_fd->fd_offset;
 	if((status = file_read(o->o_file, (void*)ret -> ret_buf, n, offset)) < 0)
 	{
