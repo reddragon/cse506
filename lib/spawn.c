@@ -83,7 +83,7 @@ spawn(const char *prog, const char **argv)
 	//     correct initial eip and esp values in the child.
 	//
 	//   - Start the child process running with sys_env_set_status().
-
+	cprintf("In spawn\n");
 	if ((r = open(prog, O_RDONLY)) < 0)
 		return r;
 	fd = r;
@@ -96,15 +96,16 @@ spawn(const char *prog, const char **argv)
 		cprintf("elf magic %08x want %08x\n", elf->e_magic, ELF_MAGIC);
 		return -E_NOT_EXEC;
 	}
-
+	cprintf("Spawn read elf\n");
 	// Create new child environment
 	if ((r = sys_exofork()) < 0)
 		return r;
 	child = r;
-
+	cprintf("Spawn exoforked\n");
 	// Set up trap frame, including initial stack.
 	child_tf = envs[ENVX(child)].env_tf;
 	child_tf.tf_eip = elf->e_entry;
+	cprintf("\t\t\t\tChild entry : %x\n", elf->e_entry);
 
 	if ((r = init_stack(child, argv, &child_tf.tf_esp)) < 0)
 		return r;
@@ -114,6 +115,8 @@ spawn(const char *prog, const char **argv)
 	for (i = 0; i < elf->e_phnum; i++, ph++) {
 		if (ph->p_type != ELF_PROG_LOAD)
 			continue;
+		cprintf("\t\t\t\t\tELF_PROG_LOAD\n");
+		cprintf("type : %x, va : %x, pa : %x\n", ph->p_type, ph->p_va, ph->p_pa);
 		perm = PTE_P | PTE_U;
 		if (ph->p_flags & ELF_PROG_FLAG_WRITE)
 			perm |= PTE_W;
@@ -122,6 +125,7 @@ spawn(const char *prog, const char **argv)
 			goto error;
 	}
 	close(fd);
+	cprintf("Spawn fd closed\n");
 	fd = -1;
 
 	if ((r = sys_env_set_trapframe(child, &child_tf)) < 0)

@@ -59,7 +59,7 @@ ipc_send(envid_t to_env, uint32_t val, void *pg, int perm)
 {
 	// LAB 4: Your code here.
 	// My code : alaud
-	cprintf("ipc_send : %x %x %x %x\n", to_env, val, pg, perm);
+	//cprintf("ipc_send : %x %x %x %x\n", to_env, val, pg, perm);
 	void* pg_val = pg;
 	int status = 0;
 	if(pg_val == NULL)
@@ -70,7 +70,6 @@ ipc_send(envid_t to_env, uint32_t val, void *pg, int perm)
 	{
 		if(status != -E_IPC_NOT_RECV)
 		{
-			cprintf("ipc send fail : %d\n", status);
 			panic("ipc_send failed");
 			break;
 		}

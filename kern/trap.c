@@ -258,7 +258,7 @@ page_fault_handler(struct Trapframe *tf)
 	//   (the 'tf' variable points at 'curenv->env_tf').
 
 	// LAB 4: Your code here.
-    	cprintf("In page fault handler Fault_va: %x\n", fault_va);
+    	//cprintf("In page fault handler Fault_va: %x\n", fault_va);
 	if(curenv->env_pgfault_upcall == NULL)
 	{
 		// Upcall is not set, destroy.
@@ -281,7 +281,7 @@ page_fault_handler(struct Trapframe *tf)
 	}
         else
         {       
-		cprintf("Normal PgFault  eip: %x, esp: %x\n", tf->tf_eip, tf->tf_esp);
+		//cprintf("Normal PgFault  eip: %x, esp: %x\n", tf->tf_eip, tf->tf_esp);
 		utf = (struct UTrapframe *)(UXSTACKTOP - (uint32_t)sizeof(struct UTrapframe));
 		user_mem_assert(curenv, (void *)(utf), (uint32_t)(sizeof(struct UTrapframe)), 0);
 	}
@@ -294,7 +294,7 @@ page_fault_handler(struct Trapframe *tf)
 	utf->utf_esp = tf->tf_esp;
 	tf->tf_esp = (uint32_t)utf;
 	tf->tf_eip = (uint32_t)(curenv->env_pgfault_upcall);
-	cprintf("UTF: %p, fault_va: %x, UTEMP: %x, esp: %x\n", utf, fault_va, UTEMP, tf->tf_esp);
+	//cprintf("UTF: %p, fault_va: %x, UTEMP: %x, esp: %x\n", utf, fault_va, UTEMP, tf->tf_esp);
         env_run(curenv);
 }
 

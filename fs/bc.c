@@ -30,7 +30,9 @@ va_is_dirty(void *va)
 static void
 bc_pgfault(struct UTrapframe *utf)
 {
+	
 	void *addr = (void *) utf->utf_fault_va;
+	cprintf("\t\t\t\tbcpgfault : %x\n", addr);
 	uint32_t blockno = ((uint32_t)addr - DISKMAP) / BLKSIZE;
 	int r;
 
@@ -45,6 +47,7 @@ bc_pgfault(struct UTrapframe *utf)
 	// LAB 5: Your code here
 	void * blk_aligned_addr = ROUNDDOWN(addr, BLKSIZE);
 	sys_page_alloc(env->env_id, blk_aligned_addr, PTE_W | PTE_U);
+	memset(blk_aligned_addr, 0, PGSIZE);
 	ide_read(blockno * BLKSECTS, blk_aligned_addr, BLKSECTS);
 
 	// Sanity check the block number. (exercise for the reader:

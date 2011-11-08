@@ -54,8 +54,8 @@ i386_init(void)
 #else
 	// Touch all you want.
 	// ENV_CREATE(user_writemotd);
-	 ENV_CREATE(user_testfile);
-	// ENV_CREATE(user_icode);
+	// ENV_CREATE(user_testfile);
+	 ENV_CREATE(user_icode);
 #endif // TEST*
 
 	// Schedule and run the first user environment!
