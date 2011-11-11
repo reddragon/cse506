@@ -65,10 +65,9 @@ alloc_block(void)
 	for(blockno = 1; blockno < super->s_nblocks; blockno++)
 		if(block_is_free(blockno))
 		{
-			bitmap[blockno/32] ^= 1<<(blockno%32);
+			bitmap[blockno/32] ^= (1<<(blockno%32));
 			flush_block(diskaddr(2));
 			assert(!block_is_free(blockno));
-			cprintf("\t\t\t\t\tAllocating block number : %x\n", blockno);
 			return blockno;
 		}
 	return -E_NO_DISK;
@@ -146,15 +145,12 @@ file_block_walk(struct File *f, uint32_t filebno, uint32_t **ppdiskbno, bool all
 	if(filebno < NDIRECT)
 	{
 		*ppdiskbno = &(f->f_direct[filebno]);
-		cprintf("\t\t\t\t\tfs_direct, *fsd : %x %x\n", *ppdiskbno, f->f_direct[filebno]);
 		return 0;
 	}
 	if(f->f_indirect == 0 && !alloc)
 		return -E_NOT_FOUND;
-	cprintf("\t\t\t\t\tIndirect block %x\n", f->f_indirect);
 	if(f->f_indirect == 0)
 	{
-		cprintf("\t\t\t\t\tGoing to allocate indirect\n");
 		int status = 0;
 		if((status = alloc_block()) < 0)
 		{
@@ -185,24 +181,19 @@ file_get_block(struct File *f, uint32_t filebno, char **blk)
 	// LAB 5: Your code here.
 	if(filebno >= NDIRECT + NINDIRECT)
 		return -E_INVAL;
-	cprintf("file get block : 1\n");
 	uint32_t* baddr;
 	int status = 0;
 	if((status = file_block_walk(f, filebno, &baddr, 1)) < 0)
 		return status;
-	cprintf("file get block : 2\n");
 	if(*baddr == 0)
 	{
 		if((status = alloc_block()) < 0)
 			return status;
 		*baddr = status;
 	}
-	cprintf("file get block : 3\n");
 	char* addr = (char*)diskaddr(*baddr);
 	*blk = addr;
-	cprintf("file get block : 4\n");
 	return 0;
-	//panic("file_get_block not implemented");
 }
 
 // Try to find a file named "name" in dir.  If so, set *file to it.

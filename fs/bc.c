@@ -24,6 +24,12 @@ va_is_dirty(void *va)
 	return (vpt[VPN(va)] & PTE_D) != 0;
 }
 
+bool
+va_is_not_accessed(void *va)
+{
+	return (vpt[VPN(va)] & PTE_A) != 0;
+}
+
 // Fault any disk block that is read or written in to memory by
 // loading it from disk.
 // Hint: Use ide_read and BLKSECTS.
@@ -32,7 +38,6 @@ bc_pgfault(struct UTrapframe *utf)
 {
 	
 	void *addr = (void *) utf->utf_fault_va;
-	cprintf("\t\t\t\tbcpgfault : %x\n", addr);
 	uint32_t blockno = ((uint32_t)addr - DISKMAP) / BLKSIZE;
 	int r;
 
@@ -77,7 +82,7 @@ flush_block(void *addr)
 
 	// LAB 5: Your code here.
 	// panic("flush_block not implemented");
-	if(va_is_mapped(addr) && va_is_dirty(addr))
+	if(va_is_mapped(addr) && (va_is_dirty(addr) || va_is_not_accessed(addr)))
 	{
 		void * rd_addr = ROUNDDOWN(addr, PGSIZE);
 		ide_write(blockno * BLKSECTS, rd_addr, BLKSECTS);
