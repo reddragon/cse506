@@ -162,7 +162,7 @@ trap_dispatch(struct Trapframe *tf)
 
 		case T_BRKPT:	monitor(tf);	
 				return;
-		case IRQ_OFFSET + IRQ_TIMER : sched_yield();
+		case IRQ_OFFSET + IRQ_TIMER : time_tick();
 				return;
 		case T_SYSCALL:	
 				tf->tf_regs.reg_eax = \
