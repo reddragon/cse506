@@ -1,0 +1,7 @@
+Adding Eviction to the Block Cache
+
+We added another case where the block can be evicted from the cache.
+
+Initially, a block was evicted from the cache if it was mapped and dirty. 
+To remove blocks which are not in use, we check if the block was mapped
+and the PTE_A bit was not set.

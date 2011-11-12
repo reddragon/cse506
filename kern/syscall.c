@@ -145,13 +145,12 @@ sys_env_set_trapframe(envid_t envid, struct Trapframe *tf)
 	// LAB 5: Your code here.
 	// Remember to check whether the user has supplied us with a good
 	// address!
-	cprintf("In trapframe sys\n");
+	if(tf == 0)
+		return -E_INVAL;
 	struct Env* env; 
 	int status = 0;
 	if((status = envid2env(envid, &env, 1)) < 0)
 		return status;
-	// TODO: check that address is valid
-	cprintf("\t\t\t\tOut trapframe\n");
 	env -> env_tf = *tf;
 	env -> env_tf.tf_eflags |= FL_IF;
 	env -> env_tf.tf_eflags |= FL_IOPL_3;
