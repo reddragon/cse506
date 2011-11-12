@@ -30,6 +30,7 @@ struct pci_driver pci_attach_class[] = {
 
 // pci_attach_vendor matches the vendor ID and device ID of a PCI device
 struct pci_driver pci_attach_vendor[] = {
+	{ 0x8086, 0x1209, &(e100_attachfn)},
 	{ 0, 0, 0 },
 };
 
@@ -69,7 +70,6 @@ pci_attach_match(uint32_t key1, uint32_t key2,
 		 struct pci_driver *list, struct pci_func *pcif)
 {
 	uint32_t i;
-	
 	for (i = 0; list[i].attachfn; i++) {
 		if (list[i].key1 == key1 && list[i].key2 == key2) {
 			int r = list[i].attachfn(pcif);
