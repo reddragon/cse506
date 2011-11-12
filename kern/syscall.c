@@ -11,6 +11,7 @@
 #include <kern/syscall.h>
 #include <kern/console.h>
 #include <kern/sched.h>
+#include <kern/time.h>
 
 static int sys_env_set_status(envid_t, int);
 // Print a string to the system console.
@@ -412,6 +413,13 @@ sys_ipc_recv(void *dstva)
 	//panic("sys_ipc_recv not implemented");
 }
 
+// Return the current time.
+static int
+sys_time_msec(void) 
+{
+	// LAB 6: Your code here.
+	panic("sys_time_msec not implemented");
+}
 
 // For Challenge Problem 1 Lab 4a
 // Sets the niceness of the current environment

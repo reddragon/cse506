@@ -14,26 +14,20 @@ int
 sum(const char *s, int n)
 {
 	int i, tot = 0;
-	//cprintf("Sum entered : %s, %x\n", s, n);
 	for (i = 0; i < n; i++)
-	{
-		//cprintf("in sum : %x\n", i);
 		tot ^= i * s[i];
-	}
-
 	return tot;
 }
 		
 void
 umain(int argc, char **argv)
 {
-	int i, r, x = 0, want;
+	int i, r, x, want;
 
 	cprintf("init: running\n");
 
 	want = 0xf989e;
-	cprintf("Testing again\n");
-	if ((sum((char*)&data, sizeof data)) != want)
+	if ((x = sum((char*)&data, sizeof data)) != want)
 		cprintf("init: data is not initialized: got sum %08x wanted %08x\n",
 			x, want);
 	else
