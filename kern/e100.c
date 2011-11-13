@@ -1,5 +1,11 @@
-#include<kern/pci.h>
-#include<inc/stdio.h>
+#include <inc/x86.h>
+#include <inc/assert.h>
+#include <inc/string.h>
+#include <kern/pci.h>
+#include <kern/pcireg.h>
+#include <kern/e100.h>
+
+
 // LAB 6: Your driver code here
 
 // The IRQ line for E100
@@ -23,5 +29,7 @@ e100_attachfn(struct pci_func * pcif) {
 		e100_reg_base[i] = pcif->reg_base[i];
 		e100_reg_size[i] = pcif->reg_size[i];
 	}
+	// Resetting the NIC
+	outl(e100_reg_base[1] + 0x8, 0);
 	return 0;
 }

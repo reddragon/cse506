@@ -13,7 +13,6 @@ PCI: 00:01.1: 8086:7010: class: 1.1 (Storage controller) irq: 0
 PCI: 00:01.3: 8086:7113: class: 6.80 (Bridge device) irq: 9
 PCI: 00:02.0: 1013:00b8: class: 3.0 (Display controller) irq: 0
 PCI: 00:03.0: 8086:1209: class: 2.0 (Network controller) irq: 11
-In the attach function
 PCI function 00:03.0 (8086:1209) enabled
 FS is running
 FS can do I/O
@@ -33,25 +32,46 @@ file_truncate is good
 file rewrite is good
 In serve
 Ipc recv : 1001
-Ipc recv : 1002
+In pgfault_upcall
+The upcall has been set
+In pgfault_upcall
+The upcall has been set
+In the handler of pgfault with va:eebfded0
+In pgfault_upcall
+The upcall has been set
+In the handler of pgfault with va:80703c
+In pgfault_upcall
+The upcall has been set
+In the handler of pgfault with va:eebfded0
+In pgfault_upcall
+The upcall has been set
+In the handler of pgfault with va:807040
+Sending ARP announcement...
+In the handler of pgfault with va:eebfdef4
+In the handler of pgfault with va:807054
+I am the child 1003 1003
+In the handler of pgfault with va:eebfdef4
+In the handler of pgfault with va:807054
+I am the child 1004 1004
+user panic in testinput at lib/ipc.c:73: ipc_send failed
 Welcome to the JOS kernel monitor!
 Type 'help' for a list of commands.
-TRAP frame at 0xf029f000
-  edi  0x00000000
-  esi  0x00000000
-  ebp  0xeebfdfd0
+TRAP frame at 0xf029f100
+  edi  0x0000000b
+  esi  0x00000007
+  ebp  0xeebfdee0
   oesp 0xefbfffdc
-  ebx  0x00000000
-  edx  0x00000000
-  ecx  0x00000000
-  eax  0x0000000b
+  ebx  0xeebfdef4
+  edx  0xeebfdd98
+  ecx  0x00000001
+  eax  0x00000001
   es   0x----0023
   ds   0x----0023
   trap 0x00000003 Breakpoint
   err  0x00000000
-  eip  0x0080004a
+  eip  0x008005d2
   cs   0x----001b
-  flag 0x00000296
-  esp  0xeebfdfc8
+  flag 0x00000292
+  esp  0xeebfdec8
   ss   0x----0023
 K> 

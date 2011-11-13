@@ -146,7 +146,7 @@ qemu-nox: $(IMAGES)
 	@echo "***"
 	@echo "*** Use Ctrl-a x to exit qemu"
 	@echo "***"
-	$(QEMU) -nographic $(QEMUOPTS)
+	$(QEMU) -nographic -debug-e100 $(QEMUOPTS)
 
 qemu-gdb: $(IMAGES) .gdbinit
 	@echo "***"
@@ -210,7 +210,7 @@ run-%-gdb: .gdbinit
 
 run-%-nox:
 	$(V)$(MAKE) --no-print-directory prep-$*
-	$(QEMU) -nographic $(QEMUOPTS)
+	$(QEMU) -nographic -debug -e100 $(QEMUOPTS)
 
 run-%:
 	$(V)$(MAKE) --no-print-directory prep-$*
