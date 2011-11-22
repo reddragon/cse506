@@ -19,6 +19,8 @@ enum
 	SYS_ipc_try_send,
 	SYS_ipc_recv,
 	SYS_time_msec,
+	SYS_net_send,
+	SYS_net_recv,
 	// For Challenge Problem 1 Lab 4a
 	SYS_env_set_nice,
 	NSYSCALLS

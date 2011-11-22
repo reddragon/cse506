@@ -5,6 +5,7 @@
 #include <inc/string.h>
 #include <inc/assert.h>
 
+#include <kern/e100.h>
 #include <kern/env.h>
 #include <kern/pmap.h>
 #include <kern/trap.h>
@@ -413,6 +414,17 @@ sys_ipc_recv(void *dstva)
 	//panic("sys_ipc_recv not implemented");
 }
 
+// Net send
+static int
+sys_net_send(void* va, uint32_t size)
+{
+	if((uint32_t)va >= UTOP)
+		return -E_INVAL;
+	int ret = 0;
+	ret = e100_transmit(va, size);
+	return ret;
+}
+
 // Return the current time.
 static int
 sys_time_msec(void) 
@@ -465,6 +477,7 @@ syscall(uint32_t syscallno, uint32_t a1, uint32_t a2, uint32_t a3, uint32_t a4, 
 		case SYS_ipc_recv: return sys_ipc_recv((void*)a1);
 		case SYS_env_set_trapframe: return sys_env_set_trapframe((envid_t)a1, (struct Trapframe*)a2);
 		case SYS_time_msec: return sys_time_msec();
+		case SYS_net_send: return sys_net_send((void*)a1, (uint32_t) a2);
 	}
 	return 0;
 }

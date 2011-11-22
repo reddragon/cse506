@@ -41,7 +41,8 @@ run () {
 	t0=`date +%s.%N 2>/dev/null`
 	(
 		ulimit -t $timeout
-		exec $qemu -no-kvm -nographic $qemuopts -serial file:jos.out -monitor null -no-reboot $qemuextra
+		# exec $qemu -no-kvm -nographic $qemuopts -serial file:jos.out -monitor null -no-reboot $qemuextra
+		exec $qemu -nographic $qemuopts -serial file:jos.out -monitor null -no-reboot $qemuextra
 	) >$out 2>$err &
 	PID=$!
 

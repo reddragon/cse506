@@ -124,7 +124,10 @@ sys_time_msec(void)
 {
 	return (unsigned int) syscall(SYS_time_msec, 0, 0, 0, 0, 0, 0);
 }
-
+int sys_net_send(void* va, uint32_t size)
+{
+	return syscall(SYS_net_send, 1, (uint32_t)va, size, 0, 0, 0);
+}
 // For Challenge Problem 1 Lab 4a
 int
 sys_env_set_nice(int nice)

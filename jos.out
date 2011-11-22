@@ -14,6 +14,7 @@ PCI: 00:01.3: 8086:7113: class: 6.80 (Bridge device) irq: 9
 PCI: 00:02.0: 1013:00b8: class: 3.0 (Display controller) irq: 0
 PCI: 00:03.0: 8086:1209: class: 2.0 (Network controller) irq: 11
 PCI function 00:03.0 (8086:1209) enabled
+e100_info reg 1 : c040
 FS is running
 FS can do I/O
 Device 1 presence: 1
@@ -50,28 +51,36 @@ Sending ARP announcement...
 In the handler of pgfault with va:eebfdef4
 In the handler of pgfault with va:807054
 I am the child 1003 1003
+In output
+Ipc recv : 1003
 In the handler of pgfault with va:eebfdef4
 In the handler of pgfault with va:807054
 I am the child 1004 1004
-user panic in testinput at lib/ipc.c:73: ipc_send failed
+Waiting for packets...
+Ipc recv : 1002
+net/output.c : received size 2a
+ffffffff ffffffff ffffffff ffffffff ffffffff ffffffff 52 54 0 12 34 56 8 6 0 1 8 0 6 4 0 1 52 54 0 12 34 56 a 0 2 f 0 0 0 0 0 0 a 0 2 2 
+	     	     	     	     	     	      IN E100 TRANSMIT, 806004 2a
+a000 4000 26e020
+Ipc recv : 1003
 Welcome to the JOS kernel monitor!
 Type 'help' for a list of commands.
-TRAP frame at 0xf029f100
-  edi  0x0000000b
-  esi  0x00000007
-  ebp  0xeebfdee0
+TRAP frame at 0xf02a1000
+  edi  0x00000000
+  esi  0x00000000
+  ebp  0xeebfdfd0
   oesp 0xefbfffdc
-  ebx  0xeebfdef4
-  edx  0xeebfdd98
-  ecx  0x00000001
-  eax  0x00000001
+  ebx  0x00000000
+  edx  0x00000000
+  ecx  0x00000000
+  eax  0x0000000b
   es   0x----0023
   ds   0x----0023
   trap 0x00000003 Breakpoint
   err  0x00000000
-  eip  0x008005d2
+  eip  0x0080004a
   cs   0x----001b
-  flag 0x00000292
-  esp  0xeebfdec8
+  flag 0x00000296
+  esp  0xeebfdfc8
   ss   0x----0023
 K> 
