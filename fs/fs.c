@@ -146,7 +146,7 @@ file_block_walk(struct File *f, uint32_t filebno, uint32_t **ppdiskbno, bool all
 	if(filebno < NDIRECT)
 	{
 		*ppdiskbno = &(f->f_direct[filebno]);
-		cprintf("\t\t\t\t\tfs_direct, *fsd : %x %x\n", *ppdiskbno, f->f_direct[filebno]);
+		//cprintf("\t\t\t\t\tfs_direct, *fsd : %x %x\n", *ppdiskbno, f->f_direct[filebno]);
 		return 0;
 	}
 	if(f->f_indirect == 0 && !alloc)
@@ -185,22 +185,22 @@ file_get_block(struct File *f, uint32_t filebno, char **blk)
 	// LAB 5: Your code here.
 	if(filebno >= NDIRECT + NINDIRECT)
 		return -E_INVAL;
-	cprintf("file get block : 1\n");
+	//cprintf("file get block : 1\n");
 	uint32_t* baddr;
 	int status = 0;
 	if((status = file_block_walk(f, filebno, &baddr, 1)) < 0)
 		return status;
-	cprintf("file get block : 2\n");
+	//cprintf("file get block : 2\n");
 	if(*baddr == 0)
 	{
 		if((status = alloc_block()) < 0)
 			return status;
 		*baddr = status;
 	}
-	cprintf("file get block : 3\n");
+	//cprintf("file get block : 3\n");
 	char* addr = (char*)diskaddr(*baddr);
 	*blk = addr;
-	cprintf("file get block : 4\n");
+	//cprintf("file get block : 4, block addr: %p\n", addr);
 	return 0;
 	//panic("file_get_block not implemented");
 }
@@ -257,6 +257,7 @@ dir_alloc_file(struct File *dir, struct File **file)
 				return 0;
 			}
 	}
+	//cprintf("Now increasing the size\n");
 	dir->f_size += BLKSIZE;
 	if ((r = file_get_block(dir, i, &blk)) < 0)
 		return r;
@@ -340,18 +341,50 @@ int
 file_create(const char *path, struct File **pf)
 {
 	char name[MAXNAMELEN];
-	int r;
+	int r, prev;
 	struct File *dir, *f;
-
+	
 	if ((r = walk_path(path, &dir, &f, name)) == 0)
 		return -E_FILE_EXISTS;
 	if (r != -E_NOT_FOUND || dir == 0)
 		return r;
+	cprintf("dir size before: %d\n", dir->f_size);
 	if (dir_alloc_file(dir, &f) < 0)
 		return r;
+	cprintf("dir size after: %d\n", dir->f_size);
+	//if(strcmp(name, "random3"))
 	strcpy(f->f_name, name);
 	*pf = f;
 	file_flush(dir);
+	//cprintf("\t\t\t%s\n", name);	
+	return 0;
+}
+
+// Demonstrates the crashing on file creation
+// And orphaning of files.
+int
+crash_on_file_create(const char *path, struct File **pf)
+{
+	char name[MAXNAMELEN];
+	int r, prev;
+	struct File *dir, *f;
+	
+	if ((r = walk_path(path, &dir, &f, name)) == 0)
+		return -E_FILE_EXISTS;
+	if (r != -E_NOT_FOUND || dir == 0)
+		return r;
+	cprintf("dir size before: %d\n", dir->f_size);
+	prev = dir->f_size;
+	if (dir_alloc_file(dir, &f) < 0)
+		return r;
+	cprintf("dir size after: %d, prev\n", dir->f_size);
+	//if(strcmp(name, "random3"))
+	strcpy(f->f_name, name);
+	*pf = f;
+	
+	int crash = (prev < dir->f_size);
+	crash_on_file_flush(dir, crash);
+	//cprintf("\t\t\t%s\n", name);	
 	return 0;
 }
 
@@ -485,6 +518,7 @@ file_set_size(struct File *f, off_t newsize)
 void
 file_flush(struct File *f)
 {
+	cprintf("Flush called for File: %s\n", f->f_name);
 	int i;
 	uint32_t *pdiskbno;
 
@@ -498,6 +532,29 @@ file_flush(struct File *f)
 	if (f->f_indirect)
 		flush_block(diskaddr(f->f_indirect));
 }
+
+// This is to demonstrate what happens when the
+// system breaks while a big flush is on.
+void
+crash_on_file_flush(struct File *f, int crash)
+{
+	cprintf("Flush called for File: %s %d\n", f->f_name, crash);
+	int i;
+	uint32_t *pdiskbno;
+
+	for (i = 0; i < (f->f_size + BLKSIZE - 1) / BLKSIZE; i++) {
+		if (file_block_walk(f, i, &pdiskbno, 0) < 0 ||
+		    pdiskbno == NULL || *pdiskbno == 0)
+			continue;
+		flush_block(diskaddr(*pdiskbno));
+	}
+	if(crash)
+		panic("Breaking here");
+	flush_block(f);
+	if (f->f_indirect)
+		flush_block(diskaddr(f->f_indirect));
+}
+
 
 // Remove a file by truncating it and then zeroing the name.
 int
@@ -525,4 +582,5 @@ fs_sync(void)
 	for (i = 1; i < super->s_nblocks; i++)
 		flush_block(diskaddr(i));
 }
+
 

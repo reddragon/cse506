@@ -383,6 +383,49 @@ serve(void)
 }
 
 void
+fs_integrity_tests()
+{
+	struct File * pf, * pf2;
+	int create = 0;
+	if(create)
+	{
+		int i, j, t;
+		for(i = 0; i < 14; i++)
+		{
+			char name[20];
+			strcpy(name, "/random000");
+			t = i;
+			for(j = 7; j < 9; j++)
+			{
+				name[j] = t%10 + '0';
+				t/=10;
+			}
+			cprintf("creating file: %s\n", name);
+			int r = crash_on_file_create(name, &pf);
+			cprintf("%e\n", r);
+		}
+	}
+	else
+	{
+		int i, j, t;
+		for(i = 0; i < 14; i++)
+		{
+			char name[20];
+			strcpy(name, "/random000");
+			t = i;
+			for(j = 7; j < 9; j++)
+			{
+				name[j] = t%10 + '0';
+				t/=10;
+			}
+			cprintf("opening file: %s\n", name);
+			int r = file_open(name, &pf);
+			cprintf("%e\n", r);
+		}
+	}
+}
+
+void
 umain(void)
 {
 	static_assert(sizeof(struct File) == 256);
@@ -396,6 +439,7 @@ umain(void)
 	serve_init();
 	fs_init();
 	fs_test();
+	fs_integrity_tests();
 
 	serve();
 }
