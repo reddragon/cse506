@@ -151,10 +151,10 @@ file_block_walk(struct File *f, uint32_t filebno, uint32_t **ppdiskbno, bool all
 	}
 	if(f->f_indirect == 0 && !alloc)
 		return -E_NOT_FOUND;
-	cprintf("\t\t\t\t\tIndirect block %x\n", f->f_indirect);
+	//cprintf("\t\t\t\t\tIndirect block %x\n", f->f_indirect);
 	if(f->f_indirect == 0)
 	{
-		cprintf("\t\t\t\t\tGoing to allocate indirect\n");
+		//cprintf("\t\t\t\t\tGoing to allocate indirect\n");
 		int status = 0;
 		if((status = alloc_block()) < 0)
 		{
@@ -373,11 +373,11 @@ crash_on_file_create(const char *path, struct File **pf)
 		return -E_FILE_EXISTS;
 	if (r != -E_NOT_FOUND || dir == 0)
 		return r;
-	cprintf("dir size before: %d\n", dir->f_size);
+	//cprintf("dir size before: %d\n", dir->f_size);
 	prev = dir->f_size;
 	if (dir_alloc_file(dir, &f) < 0)
 		return r;
-	cprintf("dir size after: %d, prev\n", dir->f_size);
+	//cprintf("dir size after: %d, prev\n", dir->f_size);
 	//if(strcmp(name, "random3"))
 	strcpy(f->f_name, name);
 	*pf = f;
@@ -518,7 +518,6 @@ file_set_size(struct File *f, off_t newsize)
 void
 file_flush(struct File *f)
 {
-	cprintf("Flush called for File: %s\n", f->f_name);
 	int i;
 	uint32_t *pdiskbno;
 
@@ -538,7 +537,7 @@ file_flush(struct File *f)
 void
 crash_on_file_flush(struct File *f, int crash)
 {
-	cprintf("Flush called for File: %s %d\n", f->f_name, crash);
+	//cprintf("Flush called for File: %s %d\n", f->f_name, crash);
 	int i;
 	uint32_t *pdiskbno;
 
@@ -549,7 +548,7 @@ crash_on_file_flush(struct File *f, int crash)
 		flush_block(diskaddr(*pdiskbno));
 	}
 	if(crash)
-		panic("Breaking here");
+		panic("Crash environment setup. Please restart.");
 	flush_block(f);
 	if (f->f_indirect)
 		flush_block(diskaddr(f->f_indirect));
@@ -569,6 +568,24 @@ file_remove(const char *path)
 	file_truncate_blocks(f, 0);
 	f->f_name[0] = '\0';
 	f->f_size = 0;
+	flush_block(f);
+
+	return 0;
+}
+
+int
+crash_on_file_remove(const char *path)
+{
+	int r;
+	struct File *f;
+
+	if ((r = walk_path(path, 0, &f, 0)) < 0)
+		return r;
+
+	file_truncate_blocks(f, 0);
+	f->f_name[0] = '\0';
+	f->f_size = 0;
+	panic("Crash environment set up. Please restart.");
 	flush_block(f);
 
 	return 0;

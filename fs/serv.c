@@ -387,8 +387,8 @@ void
 fs_integrity_tests()
 {
 	
-	#define FILE_CREATE_FAIL 1
-
+	//#define FILE_CREATE_FAIL 1
+	#define FILE_REMOVE_FAIL 1
 	/*
 		Try to create files as long as the root dir's size
 		does not increase. And then fail before the dir
@@ -402,11 +402,11 @@ fs_integrity_tests()
 	*/
 	#ifdef FILE_CREATE_FAIL
 	struct File * pf, * tmp;
-	int create = (file_open("/random", &tmp) < 0);
+	int create = (file_open("/fcftest", &tmp) < 0);
 	if(create)
 	{
 		int i, j, t;
-		file_create("/random", &tmp);
+		file_create("/fcftest", &tmp);
 		for(i = 0; i < 20; i++)
 		{
 			char name[20];
@@ -441,6 +441,26 @@ fs_integrity_tests()
 			if(r < 0)
 				panic("%s should have been created, but is not\n", name);
 		}
+	}
+	#endif
+
+	#ifdef FILE_REMOVE_FAIL
+	struct File * pf, * tmp;
+	int create = (file_open("/frftest", &tmp) < 0);
+	if(create)
+	{
+		int i, j, t;
+		file_create("/frftest", &tmp);
+		file_create("/randomfrf", &pf);
+		crash_on_file_remove("/randomfrf");
+	}
+	else
+	{
+		int r = (file_open("/randomfrf", &pf));
+		if(r == 0)
+			panic("The file should have been removed\n");
+		else
+			cprintf("Works fine\n");
 	}
 	#endif
 }
