@@ -128,6 +128,10 @@ int sys_net_send(void* va, uint32_t size)
 {
 	return syscall(SYS_net_send, 1, (uint32_t)va, size, 0, 0, 0);
 }
+int sys_net_recv(void* va, uint16_t* size)
+{
+	return syscall(SYS_net_recv, 1, (uint32_t)va, (uint32_t)size, 0, 0, 0);
+}
 // For Challenge Problem 1 Lab 4a
 int
 sys_env_set_nice(int nice)

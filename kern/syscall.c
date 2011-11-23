@@ -425,6 +425,15 @@ sys_net_send(void* va, uint32_t size)
 	return ret;
 }
 
+static int
+sys_net_recv(void* va, uint16_t *size)
+{
+	if(e100_recv(va, size) < 0)
+	{
+		return -1;
+	}
+	return 0;
+}
 // Return the current time.
 static int
 sys_time_msec(void) 
@@ -478,6 +487,7 @@ syscall(uint32_t syscallno, uint32_t a1, uint32_t a2, uint32_t a3, uint32_t a4, 
 		case SYS_env_set_trapframe: return sys_env_set_trapframe((envid_t)a1, (struct Trapframe*)a2);
 		case SYS_time_msec: return sys_time_msec();
 		case SYS_net_send: return sys_net_send((void*)a1, (uint32_t) a2);
+		case SYS_net_recv: return sys_net_recv((void*)a1, (uint16_t*) a2);
 	}
 	return 0;
 }

@@ -64,7 +64,8 @@ i386_init(void)
 #else
 	// Touch all you want.
 	// ENV_CREATE(user_hello);
-	 ENV_CREATE(net_testoutput);
+	//  ENV_CREATE(net_testoutput);
+	ENV_CREATE(net_testinput);
 	// ENV_CREATE(user_echosrv);
 	// ENV_CREATE(user_httpd);
 	// ENV_CREATE(user_icode);

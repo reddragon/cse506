@@ -28,10 +28,11 @@ output(envid_t ns_envid)
 		cprintf("\n");
 		//	- send the packet to the device driver
 
-		if((status = sys_net_send((void*)nsipcbuf.pkt.jp_data, (uint32_t) nsipcbuf.pkt.jp_len)) < 0)
+		while((status = sys_net_send((void*)nsipcbuf.pkt.jp_data, (uint32_t) nsipcbuf.pkt.jp_len)) < 0)
 		{
-			cprintf("net/output.c sys_net_send failed\n");
-			return;
+			sys_yield();
+			//cprintf("net/output.c sys_net_send failed\n");
+			// return;
 		}
 	}
 }
