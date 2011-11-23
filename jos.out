@@ -33,4 +33,388 @@ file_truncate is good
 file rewrite is good
 In serve
 Ipc recv : 1001
-starting count down: 5 
+In pgfault_upcall
+The upcall has been set
+In pgfault_upcall
+The upcall has been set
+In the handler of pgfault with va:eebfdf70
+In pgfault_upcall
+The upcall has been set
+In the handler of pgfault with va:818364
+In the handler of pgfault with va:b3ebb8
+In pgfault_upcall
+The upcall has been set
+In the handler of pgfault with va:eebfdf70
+In pgfault_upcall
+The upcall has been set
+In the handler of pgfault with va:818368
+In the handler of pgfault with va:b3ebb8
+In pgfault_upcall
+The upcall has been set
+In the handler of pgfault with va:eebfdf70
+In pgfault_upcall
+The upcall has been set
+In the handler of pgfault with va:81836c
+In the handler of pgfault with va:b3e50c
+In the handler of pgfault with va:b37ec0
+In the handler of pgfault with va:b392c0
+In the handler of pgfault with va:b38000
+In the handler of pgfault with va:b3a040
+In the handler of pgfault with va:b3b018
+In the handler of pgfault with va:b3c08c
+In the handler of pgfault with va:b3d064
+In the handler of pgfault with va:a3869c
+In the handler of pgfault with va:a39050
+In the handler of pgfault with va:a3a000
+In the handler of pgfault with va:a3b010
+In the handler of pgfault with va:a3c720
+In the handler of pgfault with va:a3d6e0
+In the handler of pgfault with va:a3e6a0
+In the handler of pgfault with va:a3f660
+In the handler of pgfault with va:a40620
+In the handler of pgfault with va:a415e0
+In the handler of pgfault with va:a425a0
+In the handler of pgfault with va:a43560
+In the handler of pgfault with va:a44520
+In the handler of pgfault with va:a454e0
+In the handler of pgfault with va:a464a0
+In the handler of pgfault with va:a47460
+In the handler of pgfault with va:a48420
+In the handler of pgfault with va:a493e0
+In the handler of pgfault with va:a4a3a0
+In the handler of pgfault with va:a4b360
+In the handler of pgfault with va:a4c320
+In the handler of pgfault with va:a4d2e0
+In the handler of pgfault with va:a4e2a0
+In the handler of pgfault with va:a4f260
+In the handler of pgfault with va:a50220
+In the handler of pgfault with va:a511e0
+In the handler of pgfault with va:a521a0
+In the handler of pgfault with va:a53160
+In the handler of pgfault with va:a54120
+In the handler of pgfault with va:a550e0
+In the handler of pgfault with va:a560a0
+In the handler of pgfault with va:a57060
+In the handler of pgfault with va:a58020
+In the handler of pgfault with va:a597c0
+In the handler of pgfault with va:a5a780
+In the handler of pgfault with va:a5b740
+In the handler of pgfault with va:a5c700
+In the handler of pgfault with va:a5d6c0
+In the handler of pgfault with va:a5e680
+In the handler of pgfault with va:a5f640
+In the handler of pgfault with va:a60600
+In the handler of pgfault with va:a615c0
+In the handler of pgfault with va:a62580
+In the handler of pgfault with va:a63540
+In the handler of pgfault with va:a64500
+In the handler of pgfault with va:a654c0
+In the handler of pgfault with va:a66480
+In the handler of pgfault with va:a67440
+In the handler of pgfault with va:a68400
+In the handler of pgfault with va:a693c0
+In the handler of pgfault with va:a6a380
+In the handler of pgfault with va:a6b340
+In the handler of pgfault with va:a6c300
+In the handler of pgfault with va:a6d2c0
+In the handler of pgfault with va:a6e280
+In the handler of pgfault with va:a6f240
+In the handler of pgfault with va:a70200
+In the handler of pgfault with va:a711c0
+In the handler of pgfault with va:a72180
+In the handler of pgfault with va:a73140
+In the handler of pgfault with va:a74100
+In the handler of pgfault with va:a750c0
+In the handler of pgfault with va:a76080
+In the handler of pgfault with va:a77040
+In the handler of pgfault with va:a78000
+In the handler of pgfault with va:a797a0
+In the handler of pgfault with va:a7a760
+In the handler of pgfault with va:a7b720
+In the handler of pgfault with va:a7c6e0
+In the handler of pgfault with va:a7d6a0
+In the handler of pgfault with va:a7e660
+In the handler of pgfault with va:a7f620
+In the handler of pgfault with va:a805e0
+In the handler of pgfault with va:a815a0
+In the handler of pgfault with va:a82560
+In the handler of pgfault with va:a83520
+In the handler of pgfault with va:a844e0
+In the handler of pgfault with va:a854a0
+In the handler of pgfault with va:a86460
+In the handler of pgfault with va:a87420
+In the handler of pgfault with va:a883e0
+In the handler of pgfault with va:a893a0
+In the handler of pgfault with va:a8a360
+In the handler of pgfault with va:a8b320
+In the handler of pgfault with va:a8c2e0
+In the handler of pgfault with va:a8d2a0
+In the handler of pgfault with va:a8e260
+In the handler of pgfault with va:a8f220
+In the handler of pgfault with va:a901e0
+In the handler of pgfault with va:a911a0
+In the handler of pgfault with va:a92160
+In the handler of pgfault with va:a93120
+In the handler of pgfault with va:a940e0
+In the handler of pgfault with va:a950a0
+In the handler of pgfault with va:a96060
+In the handler of pgfault with va:a97020
+In the handler of pgfault with va:a987c0
+In the handler of pgfault with va:a99780
+In the handler of pgfault with va:a9a740
+In the handler of pgfault with va:a9b700
+In the handler of pgfault with va:a9c6c0
+In the handler of pgfault with va:a9d680
+In the handler of pgfault with va:a9e640
+In the handler of pgfault with va:a9f600
+In the handler of pgfault with va:aa05c0
+In the handler of pgfault with va:aa1580
+In the handler of pgfault with va:aa2540
+In the handler of pgfault with va:aa3500
+In the handler of pgfault with va:aa44c0
+In the handler of pgfault with va:aa5480
+In the handler of pgfault with va:aa6440
+In the handler of pgfault with va:aa7400
+In the handler of pgfault with va:aa83c0
+In the handler of pgfault with va:aa9380
+In the handler of pgfault with va:aaa340
+In the handler of pgfault with va:aab300
+In the handler of pgfault with va:aac2c0
+In the handler of pgfault with va:aad280
+In the handler of pgfault with va:aae240
+In the handler of pgfault with va:aaf200
+In the handler of pgfault with va:ab01c0
+In the handler of pgfault with va:ab1180
+In the handler of pgfault with va:ab2140
+In the handler of pgfault with va:ab3100
+In the handler of pgfault with va:ab40c0
+In the handler of pgfault with va:ab5080
+In the handler of pgfault with va:ab6040
+In the handler of pgfault with va:ab7000
+In the handler of pgfault with va:ab87a0
+In the handler of pgfault with va:ab9760
+In the handler of pgfault with va:aba720
+In the handler of pgfault with va:abb6e0
+In the handler of pgfault with va:abc6a0
+In the handler of pgfault with va:abd660
+In the handler of pgfault with va:abe620
+In the handler of pgfault with va:abf5e0
+In the handler of pgfault with va:ac05a0
+In the handler of pgfault with va:ac1560
+In the handler of pgfault with va:ac2520
+In the handler of pgfault with va:ac34e0
+In the handler of pgfault with va:ac44a0
+In the handler of pgfault with va:ac5460
+In the handler of pgfault with va:ac6420
+In the handler of pgfault with va:ac73e0
+In the handler of pgfault with va:ac83a0
+In the handler of pgfault with va:ac9360
+In the handler of pgfault with va:aca320
+In the handler of pgfault with va:acb2e0
+In the handler of pgfault with va:acc2a0
+In the handler of pgfault with va:acd260
+In the handler of pgfault with va:ace220
+In the handler of pgfault with va:acf1e0
+In the handler of pgfault with va:ad01a0
+In the handler of pgfault with va:ad1160
+In the handler of pgfault with va:ad2120
+In the handler of pgfault with va:ad30e0
+In the handler of pgfault with va:ad40a0
+In the handler of pgfault with va:ad5060
+In the handler of pgfault with va:ad6020
+In the handler of pgfault with va:ad77c0
+In the handler of pgfault with va:ad8780
+In the handler of pgfault with va:ad9740
+In the handler of pgfault with va:ada700
+In the handler of pgfault with va:adb6c0
+In the handler of pgfault with va:adc680
+In the handler of pgfault with va:add640
+In the handler of pgfault with va:ade600
+In the handler of pgfault with va:adf5c0
+In the handler of pgfault with va:ae0580
+In the handler of pgfault with va:ae1540
+In the handler of pgfault with va:ae2500
+In the handler of pgfault with va:ae34c0
+In the handler of pgfault with va:ae4480
+In the handler of pgfault with va:ae5440
+In the handler of pgfault with va:ae6400
+In the handler of pgfault with va:ae73c0
+In the handler of pgfault with va:ae8380
+In the handler of pgfault with va:ae9340
+In the handler of pgfault with va:aea300
+In the handler of pgfault with va:aeb2c0
+In the handler of pgfault with va:aec280
+In the handler of pgfault with va:aed240
+In the handler of pgfault with va:aee200
+In the handler of pgfault with va:aef1c0
+In the handler of pgfault with va:af0180
+In the handler of pgfault with va:af1140
+In the handler of pgfault with va:af2100
+In the handler of pgfault with va:af30c0
+In the handler of pgfault with va:af4080
+In the handler of pgfault with va:af5040
+In the handler of pgfault with va:af6000
+In the handler of pgfault with va:af77a0
+In the handler of pgfault with va:af8760
+In the handler of pgfault with va:af9720
+In the handler of pgfault with va:afa6e0
+In the handler of pgfault with va:afb6a0
+In the handler of pgfault with va:afc660
+In the handler of pgfault with va:afd620
+In the handler of pgfault with va:afe5e0
+In the handler of pgfault with va:aff5a0
+In the handler of pgfault with va:b00560
+In the handler of pgfault with va:b01520
+In the handler of pgfault with va:b024e0
+In the handler of pgfault with va:b034a0
+In the handler of pgfault with va:b04460
+In the handler of pgfault with va:b05420
+In the handler of pgfault with va:b063e0
+In the handler of pgfault with va:b073a0
+In the handler of pgfault with va:b08360
+In the handler of pgfault with va:b09320
+In the handler of pgfault with va:b0a2e0
+In the handler of pgfault with va:b0b2a0
+In the handler of pgfault with va:b0c260
+In the handler of pgfault with va:b0d220
+In the handler of pgfault with va:b0e1e0
+In the handler of pgfault with va:b0f1a0
+In the handler of pgfault with va:b10160
+In the handler of pgfault with va:b11120
+In the handler of pgfault with va:b120e0
+In the handler of pgfault with va:b130a0
+In the handler of pgfault with va:b14060
+In the handler of pgfault with va:b15020
+In the handler of pgfault with va:b167c0
+In the handler of pgfault with va:b17780
+In the handler of pgfault with va:b18740
+In the handler of pgfault with va:b19700
+In the handler of pgfault with va:b1a6c0
+In the handler of pgfault with va:b1b680
+In the handler of pgfault with va:b1c640
+In the handler of pgfault with va:b1d600
+In the handler of pgfault with va:b1e5c0
+In the handler of pgfault with va:b1f580
+In the handler of pgfault with va:b20540
+In the handler of pgfault with va:b21500
+In the handler of pgfault with va:b224c0
+In the handler of pgfault with va:b23480
+In the handler of pgfault with va:b24440
+In the handler of pgfault with va:b25400
+In the handler of pgfault with va:b263c0
+In the handler of pgfault with va:b27380
+In the handler of pgfault with va:b28340
+In the handler of pgfault with va:b29300
+In the handler of pgfault with va:b2a2c0
+In the handler of pgfault with va:b2b280
+In the handler of pgfault with va:b2c240
+In the handler of pgfault with va:b2d200
+In the handler of pgfault with va:b2e1c0
+In the handler of pgfault with va:b2f180
+In the handler of pgfault with va:b30140
+In the handler of pgfault with va:b31100
+In the handler of pgfault with va:b320c0
+In the handler of pgfault with va:b33080
+In the handler of pgfault with va:b34040
+In the handler of pgfault with va:b35000
+In the handler of pgfault with va:b367a0
+In the handler of pgfault with va:eebfdf94
+In the handler of pgfault with va:b3ebb0
+I am the child 1004 1004
+In the handler of pgfault with va:818364
+In the handler of pgfault with va:eebfdf94
+In the handler of pgfault with va:b3ebb0
+I am the child 1005 1005
+In the handler of pgfault with va:818368
+In the handler of pgfault with va:eebfdf94
+In the handler of pgfault with va:b3ebb0
+I am the child 1006 1006
+In the handler of pgfault with va:81836c
+In output
+Ipc recv : 1006
+ns: 52:54:00:12:34:56 bound to static IP 10.0.2.15
+NS: TCP/IP initialized.
+Ipc recv : 1002
+Ipc recv : 1003
+net/output.c : received size 2a
+ffffffff ffffffff ffffffff ffffffff ffffffff ffffffff 52 54 0 12 34 56 8 6 0 1 8 0 6 4 0 1 52 54 0 12 34 56 a 0 2 f 0 0 0 0 0 0 a 0 2 2 
+	     	     	     	     	     	      IN E100 TRANSMIT, 817004 2a
+a000 4000 2732a0
+Ipc recv : 1006
+Ipc recv : 1002
+Ipc recv : 1003
+e100 input: 0000   5254 0012 3456 5255  0a00 0202 0806 0001
+e100 input: 0010   0800 0604 0002 5255  0a00 0202 0a00 0202
+e100 input: 0020   5254 0012 3456 0a00  020f
+	     	     	     	     	      E100 RECV returning SIZE 2a
+	     	     	     	     	     	     	      Resuming RU
+Now sending stufFFFFFFFFFFFFFFFFFF 2a
+Ipc recv : 1002
+Ipc recv : 1003
+Ipc recv : 1002
+Waiting for http connections...
+Ipc recv : 1003
+Ipc recv : 1002
+Ipc recv : 1002
+Ipc recv : 1004
+Ipc recv : 1002
+e100 input: 0000   5254 0012 3456 5255  0a00 0202 0800 4500
+e100 input: 0010   002c 0000 0000 4006  62bc 0a00 0202 0a00
+e100 input: 0020   020f ba97 0050 0003  e801 0000 0000 6002
+e100 input: 0030   2238 baf1 0000 0204  05b4
+	     	     	     	     	      E100 RECV returning SIZE 3a
+	     	     	     	     	     	     	      Resuming RU
+Now sending stufFFFFFFFFFFFFFFFFFF 3a
+Ipc recv : 1002
+net/output.c : received size 3a
+52 55 a 0 2 2 52 54 0 12 34 56 8 0 45 0 0 2c 0 0 0 0 ffffffff 6 ffffffa3 ffffffbb a 0 2 f a 0 2 2 0 50 ffffffba ffffff97 0 0 19 70 0 3 ffffffe8 2 60 12 5d ffffffc0 65 ffffffe8 0 0 2 4 5 ffffffb4 
+	     	     	     	     	     	      IN E100 TRANSMIT, 817004 3a
+a000 4004 2732a0
+Ipc recv : 1006
+e100 input: 0000   5254 0012 3456 5255  0a00 0202 0800 4500
+e100 input: 0010   0028 0001 0000 4006  62bf 0a00 0202 0a00
+e100 input: 0020   020f ba97 0050 0003  e802 0000 1971 5010
+e100 input: 0030   2238 b92d 0000
+	     	     	     	     	      E100 RECV returning SIZE 36
+	     	     	     	     	     	     	      Resuming RU
+Now sending stufFFFFFFFFFFFFFFFFFF 36
+Ipc recv : 1002
+Ipc recv : 1003
+e100 input: 0000   5254 0012 3456 5255  0a00 0202 0800 4500
+e100 input: 0010   0099 0002 0000 4006  624d 0a00 0202 0a00
+e100 input: 0020   020f ba97 0050 0003  e802 0000 1971 5018
+e100 input: 0030   2238 3e43 0000 4745  5420 2f20 4854 5450
+e100 input: 0040   2f31 2e30 0d0a 5573  6572 2d41 6765 6e74
+e100 input: 0050   3a20 5767 6574 2f31  2e31 3220 286c 696e
+e100 input: 0060   7578 2d67 6e75 290d  0a41 6363 6570 743a
+e100 input: 0070   202a 2f2a 0d0a 486f  7374 3a20 6c6f 6361
+e100 input: 0080   6c68 6f73 743a 3139  3830 380d 0a43 6f6e
+e100 input: 0090   6e65 6374 696f 6e3a  204b 6565 702d 416c
+e100 input: 00a0   6976 650d 0a0d 0a
+	     	     	     	     	      E100 RECV returning SIZE a7
+	     	     	     	     	     	     	      Resuming RU
+Now sending stufFFFFFFFFFFFFFFFFFF a7
+Ipc recv : 1002
+Ipc recv : 1002
+user panic in jhttpd at user/httpd.c:226: send_file not implemented
+Welcome to the JOS kernel monitor!
+Type 'help' for a list of commands.
+TRAP frame at 0xf02a6180
+  edi  0xeebfdd50
+  esi  0x00000009
+  ebp  0xeebfdb20
+  oesp 0xefbfffdc
+  ebx  0xeebfdb34
+  edx  0xeebfd9d8
+  ecx  0x00000001
+  eax  0x00000001
+  es   0x----0023
+  ds   0x----0023
+  trap 0x00000003 Breakpoint
+  err  0x00000000
+  eip  0x0080041e
+  cs   0x----001b
+  flag 0x00000292
+  esp  0xeebfdb08
+  ss   0x----0023
+K> 

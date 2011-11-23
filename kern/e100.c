@@ -105,7 +105,7 @@ int e100_recv(void* va, uint16_t* size)
 		cprintf("\t\t\t\t\t\t\t Resuming RU\n");
 		outb(SCB_CW_LO, RUC_RESUME);
 	}
-	cur_rx_offset = !cur_rx_offset;
+	//cur_rx_offset = !cur_rx_offset;
 	return *size;
 }
 int e100_attachfn(struct pci_func * pcif) 
@@ -136,7 +136,7 @@ int e100_attachfn(struct pci_func * pcif)
 		rx_rfa[i].link = PADDR(&rx_rfa[(i+1)%RX_LIMIT]);
 		rx_rfa[i].cmd_data.rx.size = 1518;
 		rx_rfa[i].cmd_data.rx.reserved = 0xFFFFFFFF;
-		//rx_rfa[i].cmd |= CBL_SUSPEND ;
+		rx_rfa[i].cmd |= CBL_SUSPEND ;
 	}
 	// Disable interrupts
 	outb(SCB_CW_HI, CUC_INT_DISABLE);

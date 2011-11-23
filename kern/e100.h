@@ -3,7 +3,7 @@
 
 #include <kern/pci.h>
 #define TX_LIMIT 1
-#define RX_LIMIT 2
+#define RX_LIMIT 1
 #define MAX_DATA 1518 // Ethernet tch tch. 
 
 #define CUC_INT_DISABLE 0x1

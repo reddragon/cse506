@@ -62,6 +62,7 @@ hexdump(const char *prefix, const void *data, int len)
 		if (i % 16 == 7)
 			*(out++) = ' ';
 	}
+	cprintf("\n");
 }
 
 void
@@ -103,7 +104,7 @@ umain(void)
 			panic("IPC from unexpected environment %08x", whom);
 		if (req != NSREQ_INPUT)
 			panic("Unexpected IPC %d", req);
-
+		cprintf("TESTING INPUT : %x\n", pkt->jp_len);
 		hexdump("input: ", pkt->jp_data, pkt->jp_len);
 		cprintf("\n");
 	}
