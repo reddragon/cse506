@@ -382,15 +382,32 @@ serve(void)
 	cprintf("Out of serve\n");
 }
 
+
 void
 fs_integrity_tests()
 {
-	struct File * pf, * pf2;
-	int create = 0;
+	
+	#define FILE_CREATE_FAIL 1
+
+	/*
+		Try to create files as long as the root dir's size
+		does not increase. And then fail before the dir
+		is flushed out, but its block has been flushed out.
+
+		TODO: 
+	        Journal the case so that both possible failures,
+		when the crash occurs before the dir block's write
+		as well as when it occurs before the file's block
+		being written.
+	*/
+	#ifdef FILE_CREATE_FAIL
+	struct File * pf, * tmp;
+	int create = (file_open("/random", &tmp) < 0);
 	if(create)
 	{
 		int i, j, t;
-		for(i = 0; i < 14; i++)
+		file_create("/random", &tmp);
+		for(i = 0; i < 20; i++)
 		{
 			char name[20];
 			strcpy(name, "/random000");
@@ -408,7 +425,7 @@ fs_integrity_tests()
 	else
 	{
 		int i, j, t;
-		for(i = 0; i < 14; i++)
+		for(i = 0; i < 20; i++)
 		{
 			char name[20];
 			strcpy(name, "/random000");
@@ -421,8 +438,11 @@ fs_integrity_tests()
 			cprintf("opening file: %s\n", name);
 			int r = file_open(name, &pf);
 			cprintf("%e\n", r);
+			if(r < 0)
+				panic("%s should have been created, but is not\n", name);
 		}
 	}
+	#endif
 }
 
 void
