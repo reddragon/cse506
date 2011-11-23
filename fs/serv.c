@@ -387,8 +387,9 @@ void
 fs_integrity_tests()
 {
 	
-	//#define FILE_CREATE_FAIL 1
-	#define FILE_REMOVE_FAIL 1
+	//#define FILE_CREATE_TEST 1
+	//#define FILE_REMOVE_TEST 1
+	#define BLOCK_FREE_TEST 1
 	/*
 		Try to create files as long as the root dir's size
 		does not increase. And then fail before the dir
@@ -400,7 +401,7 @@ fs_integrity_tests()
 		as well as when it occurs before the file's block
 		being written.
 	*/
-	#ifdef FILE_CREATE_FAIL
+	#ifdef FILE_CREATE_TEST
 	struct File * pf, * tmp;
 	int create = (file_open("/fcftest", &tmp) < 0);
 	if(create)
@@ -441,10 +442,20 @@ fs_integrity_tests()
 			if(r < 0)
 				panic("%s should have been created, but is not\n", name);
 		}
+		cprintf("Works fine\n");
 	}
 	#endif
+	
+	/*
+		Create a file named randomfrf, and then crash
+		before the updated file block is committed to 
+		disk.
 
-	#ifdef FILE_REMOVE_FAIL
+		TODO:
+		Journal this case
+	*/
+
+	#ifdef FILE_REMOVE_TEST
 	struct File * pf, * tmp;
 	int create = (file_open("/frftest", &tmp) < 0);
 	if(create)
@@ -462,6 +473,27 @@ fs_integrity_tests()
 		else
 			cprintf("Works fine\n");
 	}
+	#endif
+	#ifdef BLOCK_FREE_TEST
+	struct File * pf, * tmp;
+	int create = (file_open("/bftest", &tmp) < 0);
+	if(create)
+	{
+		int i, j, t;
+		file_create("/bftest", &tmp);
+		file_create("/randombf", &pf);
+		// Increase the size normally
+		file_set_size(pf, 8192);
+		// Now crash while decreasing the size
+		crash_on_file_set_size(pf, 4096, 1);
+	}
+	else
+	{
+		file_open("/randombf", &pf);
+		if(pf->f_size != 4096)
+			panic("The file size was supposed to be 4096");
+		cprintf("Works fine\n");
+	}		
 	#endif
 }
 

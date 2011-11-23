@@ -511,6 +511,58 @@ file_set_size(struct File *f, off_t newsize)
 	return 0;
 }
 
+
+// Ideally, as per soft updates, the pointer should be
+// nullified first. But its good, we demonstrate yet
+// another crash-unsafe point. :-P
+static int
+crash_on_file_free_block(struct File *f, uint32_t filebno, int crash)
+{
+	int r;
+	uint32_t *ptr;
+
+	if ((r = file_block_walk(f, filebno, &ptr, 0)) < 0)
+		return r;
+	if (*ptr) {
+		free_block(*ptr);
+		if(crash)
+			panic("Crash environment set up. Please restart.");
+		*ptr = 0;
+	}
+	return 0;
+}
+
+
+static void
+crash_on_file_truncate_blocks(struct File *f, off_t newsize, int crash)
+{
+	int r;
+	uint32_t bno, old_nblocks, new_nblocks;
+
+	old_nblocks = (f->f_size + BLKSIZE - 1) / BLKSIZE;
+	new_nblocks = (newsize + BLKSIZE - 1) / BLKSIZE;
+	for (bno = new_nblocks; bno < old_nblocks; bno++)
+		if ((r = crash_on_file_free_block(f, bno, crash)) < 0)
+			cprintf("warning: file_free_block: %e", r);
+
+	if (new_nblocks <= NDIRECT && f->f_indirect) {
+		free_block(f->f_indirect);
+		f->f_indirect = 0;
+	}
+}
+
+int
+crash_on_file_set_size(struct File *f, off_t newsize, int crash)
+{
+	if (f->f_size > newsize)
+		crash_on_file_truncate_blocks(f, newsize, crash);
+	f->f_size = newsize;
+	if(crash)
+		panic("Crash environment set up. Please restart");
+	flush_block(f);
+	return 0;
+}
+
 // Flush the contents and metadata of file f out to disk.
 // Loop over all the blocks in file.
 // Translate the file block number into a disk block number

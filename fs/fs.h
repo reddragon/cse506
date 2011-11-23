@@ -41,6 +41,7 @@ void	fs_sync(void);
 void	crash_on_file_flush(struct File *f, int crash);
 int	crash_on_file_create(const char *path, struct File **f);
 int	crash_on_file_remove(const char *path);
+int	crash_on_file_set_size(struct File *f, off_t newsize, int crash);
 
 /* int	map_block(uint32_t); */
 bool	block_is_free(uint32_t blockno);
