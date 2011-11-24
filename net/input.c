@@ -38,6 +38,7 @@ input(envid_t ns_envid)
 		}
 		if(size == 0)
 			continue;
+		sys_page_unmap(0, pkt);
 		cprintf("Now sending stufFFFFFFFFFFFFFFFFFF %x\n", size);
 		if((status = sys_page_alloc(0, pkt, PTE_P|PTE_U|PTE_W)) < 0)
 		{
@@ -47,8 +48,7 @@ input(envid_t ns_envid)
 		pkt->jp_len = size;
 		// Send to the network server
 		ipc_send(ns_envid, NSREQ_INPUT, pkt, PTE_P|PTE_W|PTE_U);
-		// Wait for 10 us 
-		udelay(100);
-		sys_page_unmap(0, pkt);
+		// Wait for 1000 us 
+		udelay(1000);
 	}
 }

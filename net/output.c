@@ -1,7 +1,15 @@
+#include <inc/x86.h>
 #include "ns.h"
 #include <inc/lib.h>
 extern union Nsipc nsipcbuf;
-
+static void udelay(int us)
+{
+	int i;
+	for(i = 0; i < us; i++)
+	{
+		inb(0x80);
+	}
+}
 void
 output(envid_t ns_envid)
 {
@@ -34,5 +42,6 @@ output(envid_t ns_envid)
 			//cprintf("net/output.c sys_net_send failed\n");
 			// return;
 		}
+		udelay(1000);
 	}
 }
