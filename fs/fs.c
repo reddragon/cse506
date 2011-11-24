@@ -94,6 +94,37 @@ check_bitmap(void)
 	cprintf("bitmap is good\n");
 }
 
+
+// fsck to verify the journal and correct it
+void
+fsck(void)
+{
+	cprintf("fsck\n");
+	/*
+	
+	cprintf("nentries: %d, jentries: %p, sizeof(JournalEntry): %d\n", \
+		journal->j_nentries, journal->j_entries, sizeof(struct JournalEntry));
+	
+	uint32_t used_blocks = 0, blockno;
+	for(blockno = 0; blockno < super->s_nblocks; blockno++)
+		if(!block_is_free(blockno))
+			used_blocks++;
+	
+	cprintf("used_blocks: %d\n", used_blocks);
+	*/
+	
+	uint32_t je, cnt = 0;
+	for(je = 0; je < (journal->j_nentries); je++) {
+		if(!(journal->j_entry_bitmap[je/32] & (1<<(je%32))))
+		{
+			// Needs to be fixed
+			cnt++;
+			// TODO: Fill this up to replay the work
+		}
+	}
+	cprintf("%d inconsistencies found using fsck\n", cnt);
+}
+
 // --------------------------------------------------------------
 // File system structures
 // --------------------------------------------------------------
@@ -116,9 +147,13 @@ fs_init(void)
 	super = diskaddr(1);
 	// Set "bitmap" to the beginning of the first bitmap block.
 	bitmap = diskaddr(2);
+	
+	// Set "journal" to the journal data
+	journal = diskaddr(3);
 
 	check_super();
 	check_bitmap();
+	fsck();
 }
 
 // Find the disk block number slot for the 'filebno'th block in file 'f'.

@@ -46,6 +46,9 @@ char *diskmap, *diskpos;
 struct Super *super;
 uint32_t *bitmap;
 
+// Journal
+struct Journal * journal;
+
 void
 panic(const char *fmt, ...)
 {
@@ -117,6 +120,15 @@ opendisk(const char *name)
 	nbitblocks = (nblocks + BLKBITSIZE - 1) / BLKBITSIZE;
 	bitmap = alloc(nbitblocks);
 	memset(bitmap, 0xFF, nbitblocks * BLKSIZE);
+	
+	journal = alloc(BLKSIZE);
+	
+	journal->j_nentries = MAXJENTRIES;
+	memset(journal->j_entry_bitmap, 0xFF, \
+		sizeof(journal->j_entry_bitmap));
+	printf("Allocating %d bytes, %d blocks to the Journal Entries\n", (ROUNDUP(MAXJENTRIES * sizeof(struct JournalEntry), BLKSIZE)), (ROUNDUP(MAXJENTRIES * sizeof(struct JournalEntry), BLKSIZE))/BLKSIZE);
+	journal->j_entries = alloc(ROUNDUP(MAXJENTRIES * sizeof(struct JournalEntry), BLKSIZE));
+	printf("blocks: %d\n", (diskpos-diskmap) / BLKSIZE);
 }
 
 void
@@ -247,7 +259,7 @@ main(int argc, char **argv)
 		writefile(&root, argv[i]);
 	
 	finishdir(&root);
-
+	printf("blocks: %d\n", (diskpos - diskmap)/BLKSIZE);
 	finishdisk();
 	return 0;
 }

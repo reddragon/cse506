@@ -110,4 +110,51 @@ union Fsipc {
 	} remove;
 };
 
+// Maximum number of journal entries
+#define MAXJENTRIES 512
+
+struct Journal {
+	// Number of entries in the journal
+	uint32_t j_nentries;
+	// Actual file pointing to the journal entries
+	struct File * j_entries; 
+	// Bitmap signifying which journal entries are free
+	uint32_t j_entry_bitmap[MAXJENTRIES/32];
+};
+
+
+enum {
+	JE_FILECREATE = 1,
+	JE_FILEREMOVE,
+	JE_BLOCKFREE,
+	JE_BLOCKALLOC
+}; 
+
+struct JournalEntry {
+	// Sequence number of the entry
+	uint32_t je_seqnum;
+	// Type of journal entry
+	unsigned short je_type;
+	// Path of the file associated with this entry
+	char path[MAXPATHLEN];
+	
+	union {
+		// Any special data with each type of journal entry	
+		struct {
+		} desc_filecreate; 
+		
+		struct {
+		} desc_fileremove;
+
+		struct {
+			uint32_t free_block;
+		} desc_blockfree;
+
+		struct {
+			uint32_t alloc_block;
+		} desc_blockalloc;
+
+	} je_desc;
+};
+
 #endif /* !JOS_INC_FS_H */
