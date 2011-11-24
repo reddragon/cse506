@@ -474,6 +474,14 @@ fs_integrity_tests()
 			cprintf("Works fine\n");
 	}
 	#endif
+	/*
+		Decrease the size of the file, and crash before
+		the file's metadata is sent to the disk.
+		
+		TODO:
+		Fix this with the journal
+	*/
+	
 	#ifdef BLOCK_FREE_TEST
 	struct File * pf, * tmp;
 	int create = (file_open("/bftest", &tmp) < 0);
@@ -511,7 +519,11 @@ umain(void)
 	serve_init();
 	fs_init();
 	fs_test();
+
+	#define FS_INTEGRITY_TESTS 1
+	#ifdef FS_INTEGRITY_TESTS
 	fs_integrity_tests();
+	#endif
 
 	serve();
 }

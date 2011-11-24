@@ -360,34 +360,6 @@ file_create(const char *path, struct File **pf)
 	return 0;
 }
 
-// Demonstrates the crashing on file creation
-// And orphaning of files.
-int
-crash_on_file_create(const char *path, struct File **pf)
-{
-	char name[MAXNAMELEN];
-	int r, prev;
-	struct File *dir, *f;
-	
-	if ((r = walk_path(path, &dir, &f, name)) == 0)
-		return -E_FILE_EXISTS;
-	if (r != -E_NOT_FOUND || dir == 0)
-		return r;
-	//cprintf("dir size before: %d\n", dir->f_size);
-	prev = dir->f_size;
-	if (dir_alloc_file(dir, &f) < 0)
-		return r;
-	//cprintf("dir size after: %d, prev\n", dir->f_size);
-	//if(strcmp(name, "random3"))
-	strcpy(f->f_name, name);
-	*pf = f;
-	
-	int crash = (prev < dir->f_size);
-	crash_on_file_flush(dir, crash);
-	//cprintf("\t\t\t%s\n", name);	
-	return 0;
-}
-
 // Open "path".  On success set *pf to point at the file and return 0.
 // On error return < 0.
 int
@@ -512,6 +484,90 @@ file_set_size(struct File *f, off_t newsize)
 }
 
 
+// Flush the contents and metadata of file f out to disk.
+// Loop over all the blocks in file.
+// Translate the file block number into a disk block number
+// and then check whether that disk block is dirty.  If so, write it out.
+void
+file_flush(struct File *f)
+{
+	int i;
+	uint32_t *pdiskbno;
+
+	for (i = 0; i < (f->f_size + BLKSIZE - 1) / BLKSIZE; i++) {
+		if (file_block_walk(f, i, &pdiskbno, 0) < 0 ||
+		    pdiskbno == NULL || *pdiskbno == 0)
+			continue;
+		flush_block(diskaddr(*pdiskbno));
+	}
+	flush_block(f);
+	if (f->f_indirect)
+		flush_block(diskaddr(f->f_indirect));
+}
+
+
+// Remove a file by truncating it and then zeroing the name.
+int
+file_remove(const char *path)
+{
+	int r;
+	struct File *f;
+
+	if ((r = walk_path(path, 0, &f, 0)) < 0)
+		return r;
+
+	file_truncate_blocks(f, 0);
+	f->f_name[0] = '\0';
+	f->f_size = 0;
+	flush_block(f);
+
+	return 0;
+}
+
+// Sync the entire file system.  A big hammer.
+void
+fs_sync(void)
+{
+	int i;
+	for (i = 1; i < super->s_nblocks; i++)
+		flush_block(diskaddr(i));
+}
+
+/* 
+	Below are the crash-prone versions
+	of the functions above. They are to
+	demonstrate potential crashes, and
+	their effect on the File System.
+*/
+
+// Demonstrates the crashing on file creation
+// And orphaning of files.
+int
+crash_on_file_create(const char *path, struct File **pf)
+{
+	char name[MAXNAMELEN];
+	int r, prev;
+	struct File *dir, *f;
+	
+	if ((r = walk_path(path, &dir, &f, name)) == 0)
+		return -E_FILE_EXISTS;
+	if (r != -E_NOT_FOUND || dir == 0)
+		return r;
+	//cprintf("dir size before: %d\n", dir->f_size);
+	prev = dir->f_size;
+	if (dir_alloc_file(dir, &f) < 0)
+		return r;
+	//cprintf("dir size after: %d, prev\n", dir->f_size);
+	//if(strcmp(name, "random3"))
+	strcpy(f->f_name, name);
+	*pf = f;
+	
+	int crash = (prev < dir->f_size);
+	crash_on_file_flush(dir, crash);
+	//cprintf("\t\t\t%s\n", name);	
+	return 0;
+}
+
 // Ideally, as per soft updates, the pointer should be
 // nullified first. But its good, we demonstrate yet
 // another crash-unsafe point. :-P
@@ -563,27 +619,6 @@ crash_on_file_set_size(struct File *f, off_t newsize, int crash)
 	return 0;
 }
 
-// Flush the contents and metadata of file f out to disk.
-// Loop over all the blocks in file.
-// Translate the file block number into a disk block number
-// and then check whether that disk block is dirty.  If so, write it out.
-void
-file_flush(struct File *f)
-{
-	int i;
-	uint32_t *pdiskbno;
-
-	for (i = 0; i < (f->f_size + BLKSIZE - 1) / BLKSIZE; i++) {
-		if (file_block_walk(f, i, &pdiskbno, 0) < 0 ||
-		    pdiskbno == NULL || *pdiskbno == 0)
-			continue;
-		flush_block(diskaddr(*pdiskbno));
-	}
-	flush_block(f);
-	if (f->f_indirect)
-		flush_block(diskaddr(f->f_indirect));
-}
-
 // This is to demonstrate what happens when the
 // system breaks while a big flush is on.
 void
@@ -606,25 +641,6 @@ crash_on_file_flush(struct File *f, int crash)
 		flush_block(diskaddr(f->f_indirect));
 }
 
-
-// Remove a file by truncating it and then zeroing the name.
-int
-file_remove(const char *path)
-{
-	int r;
-	struct File *f;
-
-	if ((r = walk_path(path, 0, &f, 0)) < 0)
-		return r;
-
-	file_truncate_blocks(f, 0);
-	f->f_name[0] = '\0';
-	f->f_size = 0;
-	flush_block(f);
-
-	return 0;
-}
-
 int
 crash_on_file_remove(const char *path)
 {
@@ -643,13 +659,6 @@ crash_on_file_remove(const char *path)
 	return 0;
 }
 
-// Sync the entire file system.  A big hammer.
-void
-fs_sync(void)
-{
-	int i;
-	for (i = 1; i < super->s_nblocks; i++)
-		flush_block(diskaddr(i));
-}
-
-
+/*	
+	Crash-prone functions end 
+*/
