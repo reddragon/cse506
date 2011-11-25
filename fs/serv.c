@@ -387,8 +387,8 @@ void
 fs_integrity_tests()
 {
 	
-	#define FILE_CREATE_TEST 1
-	//#define FILE_REMOVE_TEST 1
+	//#define FILE_CREATE_TEST 1
+	#define FILE_REMOVE_TEST 1
 	//#define BLOCK_FREE_TEST 1
 	/*
 		Try to create files as long as the root dir's size
@@ -471,7 +471,7 @@ fs_integrity_tests()
 		if(r == 0)
 			panic("The file should have been removed\n");
 		else
-			cprintf("Works fine\n");
+			cprintf("File Remove Test: OK\n");
 	}
 	#endif
 	/*

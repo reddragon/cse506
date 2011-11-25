@@ -579,9 +579,12 @@ j_flush_je(int je_num, int strictly)
 }
 
 void
-j_postop_flush_je(int je_num, int strictly)
+j_postop_write(int je_num, int strictly)
 {
 	// Flush the JE after the operation is done
+	// TODO:
+	// Can this be done lazily? Or combined with the
+	// previously pending journal flushes?
 	TOGGLE_JE_BITMAP(je_num);
 	flush_block(journal);
 }
@@ -602,13 +605,7 @@ j_write(struct JournalEntry * je)
 		// This case would not arise unless we are being very lazy
 		je_num = j_flush_all();
 	}
-	cprintf("je_num: %d\n", je_num);
-	struct JournalEntry * jj = journal->j_entries;
-	jj += je_num;
-	cprintf("%s %p %d\n", je->path, jj, je_num);
-	*jj = *je;
-	//(journal->j_entries)[je_num] = *je;
-	cprintf("comes here\n");
+	journal->j_entries[je_num] = *je;
 	TOGGLE_JE_BITMAP(je_num);
 	j_flush_je(je_num, 1);
 	return je_num;
@@ -635,7 +632,6 @@ crash_on_file_create(const char *path, struct File **pf)
 	struct JournalEntry je;
 	strcpy(je.path, path);
 	je.je_type = JE_FILECREATE;
-	cprintf("type: %d\n", je.je_type);
 	#endif
 	
 	if ((r = walk_path(path, &dir, &f, name)) == 0)
@@ -643,7 +639,6 @@ crash_on_file_create(const char *path, struct File **pf)
 	if (r != -E_NOT_FOUND || dir == 0)
 		return r;
 	
-	cprintf("Here\n");
 	#ifdef JOURNALING
 	int je_num = j_write(&je);
 	#endif
@@ -659,7 +654,7 @@ crash_on_file_create(const char *path, struct File **pf)
 	crash_on_file_flush(dir, crash);
 		
 	#ifdef JOURNALING
-	j_postop_flush_je(je_num, 1);		
+	j_postop_write(je_num, 1);		
 	#endif
 	return 0;
 }
@@ -742,15 +737,30 @@ crash_on_file_remove(const char *path)
 {
 	int r;
 	struct File *f;
+	
+	#ifdef JOURNALING
+	struct JournalEntry je;
+	strcpy(je.path, path);
+	je.je_type = JE_FILEREMOVE;
+	#endif
+
 
 	if ((r = walk_path(path, 0, &f, 0)) < 0)
 		return r;
+	
+	#ifdef JOURNALING
+	int je_num = j_write(&je);	
+	#endif
 
 	file_truncate_blocks(f, 0);
 	f->f_name[0] = '\0';
 	f->f_size = 0;
 	panic("Crash environment set up. Please restart.");
 	flush_block(f);
+	
+	#ifdef JOURNALING
+	j_postop_write(je_num, 1);
+	#endif
 
 	return 0;
 }
@@ -761,7 +771,6 @@ fsck(void)
 {
 	cprintf("fsck\n");
 	journal->j_entries = diskaddr(4);
-	cprintf("jj: %p\n", journal->j_entries);
 	/*
 	
 	cprintf("nentries: %d, jentries: %p, sizeof(JournalEntry): %d\n", \
@@ -783,11 +792,15 @@ fsck(void)
 			cnt++;
 			// TODO: Fill this up to replay the work
 			cprintf("Inconsistency in je_num: %d, path: %s\n", je, journal->j_entries[je].path);
+			struct File * pf;
 			switch(journal->j_entries[je].je_type) {
 				case JE_FILECREATE:
 					cprintf("Creating file %s\n", journal->j_entries[je].path);
-					struct File * pf;
 					file_create(journal->j_entries[je].path, &pf);
+					break;
+				case JE_FILEREMOVE:
+					cprintf("Removing file %s\n", journal->j_entries[je].path);
+					file_remove(journal->j_entries[je].path);
 					break;
 			};
 		}
@@ -795,7 +808,7 @@ fsck(void)
 	// Clear the bitmap
 	memset(journal->j_entry_bitmap, 0xFF, sizeof(journal->j_entry_bitmap));
 	flush_block(journal);
-	cprintf("%d inconsistencies found using fsck\n", cnt);
+	cprintf("%d inconsistencies found and fixed using fsck\n", cnt);
 }
 
 
