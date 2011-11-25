@@ -111,14 +111,14 @@ union Fsipc {
 };
 
 // Maximum number of journal entries
-#define MAXJENTRIES 512
+#define MAXJENTRIES 256
 
 struct Journal {
 	// Number of entries in the journal
 	uint32_t j_nentries;
-	// Actual file pointing to the journal entries
-	struct File * j_entries; 
-	// Bitmap signifying which journal entries are free
+	// Pointer to the journal entries
+	struct JournalEntry * j_entries; 
+	// If a bit is set, it means, we need to replay the journal entry
 	uint32_t j_entry_bitmap[MAXJENTRIES/32];
 };
 
@@ -131,8 +131,8 @@ enum {
 }; 
 
 struct JournalEntry {
-	// Sequence number of the entry
-	uint32_t je_seqnum;
+	// Has this been written to disk?
+	unsigned short je_ondisk;
 	// Type of journal entry
 	unsigned short je_type;
 	// Path of the file associated with this entry

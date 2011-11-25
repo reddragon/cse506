@@ -95,36 +95,6 @@ check_bitmap(void)
 }
 
 
-// fsck to verify the journal and correct it
-void
-fsck(void)
-{
-	cprintf("fsck\n");
-	/*
-	
-	cprintf("nentries: %d, jentries: %p, sizeof(JournalEntry): %d\n", \
-		journal->j_nentries, journal->j_entries, sizeof(struct JournalEntry));
-	
-	uint32_t used_blocks = 0, blockno;
-	for(blockno = 0; blockno < super->s_nblocks; blockno++)
-		if(!block_is_free(blockno))
-			used_blocks++;
-	
-	cprintf("used_blocks: %d\n", used_blocks);
-	*/
-	
-	uint32_t je, cnt = 0;
-	for(je = 0; je < (journal->j_nentries); je++) {
-		if(!(journal->j_entry_bitmap[je/32] & (1<<(je%32))))
-		{
-			// Needs to be fixed
-			cnt++;
-			// TODO: Fill this up to replay the work
-		}
-	}
-	cprintf("%d inconsistencies found using fsck\n", cnt);
-}
-
 // --------------------------------------------------------------
 // File system structures
 // --------------------------------------------------------------
@@ -568,6 +538,83 @@ fs_sync(void)
 		flush_block(diskaddr(i));
 }
 
+/*	
+	Functions used for Journaling
+*/
+
+
+// Comment the below line to turn off journaling
+#define JOURNALING 1
+
+#define IS_JE_FREE(x) (!(journal->j_entry_bitmap[(x)/32] & (1<<((x)%32))))
+#define TOGGLE_JE_BITMAP(x) (journal->j_entry_bitmap[(x)/32] ^= (1<<((x)%32)))
+
+int
+j_flush_all()
+{
+	// Flush all pending journal entries
+	// We enter this function when we have been
+	// very lazy in writing journal entries to disk
+	// Check using the je_ondisk member in the JournalEntry struct
+	// Return the first free journal entry
+	
+	// TODO: Write this
+
+	return 0;
+}
+
+void
+j_flush_je(int je_num, int strictly)
+{
+	// TODO:
+	// If strictly != 1, it may not flush the journal
+	// immediately. Thus, allowing the user to fine-tune
+	// the risk. For now, we flush the journal entry
+	// immediately.
+	
+	journal->j_entries[je_num].je_ondisk = 1;
+	flush_block(&(journal->j_entries[je_num]));
+	// Flush the bitmap later
+	flush_block(journal);
+}
+
+void
+j_postop_flush_je(int je_num, int strictly)
+{
+	// Flush the JE after the operation is done
+	TOGGLE_JE_BITMAP(je_num);
+	flush_block(journal);
+}
+
+
+int
+j_write(struct JournalEntry * je)
+{
+	// Write the journal entry
+	int je_num = -1;
+	for(je_num = 0; je_num < MAXJENTRIES; je_num++)
+		if(IS_JE_FREE(je_num))
+		{ break; }
+	
+	if(je_num == MAXJENTRIES)
+	{
+		// Ran out of Journal Entry space;
+		// This case would not arise unless we are being very lazy
+		je_num = j_flush_all();
+	}
+	cprintf("je_num: %d\n", je_num);
+	struct JournalEntry * jj = journal->j_entries;
+	jj += je_num;
+	cprintf("%s %p %d\n", je->path, jj, je_num);
+	*jj = *je;
+	//(journal->j_entries)[je_num] = *je;
+	cprintf("comes here\n");
+	TOGGLE_JE_BITMAP(je_num);
+	j_flush_je(je_num, 1);
+	return je_num;
+}
+
+
 /* 
 	Below are the crash-prone versions
 	of the functions above. They are to
@@ -584,22 +631,36 @@ crash_on_file_create(const char *path, struct File **pf)
 	int r, prev;
 	struct File *dir, *f;
 	
+	#ifdef JOURNALING
+	struct JournalEntry je;
+	strcpy(je.path, path);
+	je.je_type = JE_FILECREATE;
+	cprintf("type: %d\n", je.je_type);
+	#endif
+	
 	if ((r = walk_path(path, &dir, &f, name)) == 0)
 		return -E_FILE_EXISTS;
 	if (r != -E_NOT_FOUND || dir == 0)
 		return r;
-	//cprintf("dir size before: %d\n", dir->f_size);
+	
+	cprintf("Here\n");
+	#ifdef JOURNALING
+	int je_num = j_write(&je);
+	#endif
+	
 	prev = dir->f_size;
 	if (dir_alloc_file(dir, &f) < 0)
 		return r;
-	//cprintf("dir size after: %d, prev\n", dir->f_size);
-	//if(strcmp(name, "random3"))
 	strcpy(f->f_name, name);
 	*pf = f;
 	
+
 	int crash = (prev < dir->f_size);
 	crash_on_file_flush(dir, crash);
-	//cprintf("\t\t\t%s\n", name);	
+		
+	#ifdef JOURNALING
+	j_postop_flush_je(je_num, 1);		
+	#endif
 	return 0;
 }
 
@@ -694,6 +755,49 @@ crash_on_file_remove(const char *path)
 	return 0;
 }
 
-/*	
-	Crash-prone functions end 
-*/
+// fsck to verify the journal and correct it
+void
+fsck(void)
+{
+	cprintf("fsck\n");
+	journal->j_entries = diskaddr(4);
+	cprintf("jj: %p\n", journal->j_entries);
+	/*
+	
+	cprintf("nentries: %d, jentries: %p, sizeof(JournalEntry): %d\n", \
+		journal->j_nentries, journal->j_entries, sizeof(struct JournalEntry));
+	
+	uint32_t used_blocks = 0, blockno;
+	for(blockno = 0; blockno < super->s_nblocks; blockno++)
+		if(!block_is_free(blockno))
+			used_blocks++;
+	
+	cprintf("used_blocks: %d\n", used_blocks);
+	*/
+	
+	uint32_t je, cnt = 0;
+	for(je = 0; je < (journal->j_nentries); je++) {
+		if(!(journal->j_entry_bitmap[je/32] & (1<<(je%32))))
+		{
+			// Needs to be fixed
+			cnt++;
+			// TODO: Fill this up to replay the work
+			cprintf("Inconsistency in je_num: %d, path: %s\n", je, journal->j_entries[je].path);
+			switch(journal->j_entries[je].je_type) {
+				case JE_FILECREATE:
+					cprintf("Creating file %s\n", journal->j_entries[je].path);
+					struct File * pf;
+					file_create(journal->j_entries[je].path, &pf);
+					break;
+			};
+		}
+	}
+	// Clear the bitmap
+	memset(journal->j_entry_bitmap, 0xFF, sizeof(journal->j_entry_bitmap));
+	flush_block(journal);
+	cprintf("%d inconsistencies found using fsck\n", cnt);
+}
+
+
+
+

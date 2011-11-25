@@ -387,9 +387,9 @@ void
 fs_integrity_tests()
 {
 	
-	//#define FILE_CREATE_TEST 1
+	#define FILE_CREATE_TEST 1
 	//#define FILE_REMOVE_TEST 1
-	#define BLOCK_FREE_TEST 1
+	//#define BLOCK_FREE_TEST 1
 	/*
 		Try to create files as long as the root dir's size
 		does not increase. And then fail before the dir
@@ -408,7 +408,7 @@ fs_integrity_tests()
 	{
 		int i, j, t;
 		file_create("/fcftest", &tmp);
-		for(i = 0; i < 20; i++)
+		for(i = 0; i <= 12; i++)
 		{
 			char name[20];
 			strcpy(name, "/random000");
@@ -426,7 +426,7 @@ fs_integrity_tests()
 	else
 	{
 		int i, j, t;
-		for(i = 0; i < 20; i++)
+		for(i = 0; i <= 12; i++)
 		{
 			char name[20];
 			strcpy(name, "/random000");
@@ -442,7 +442,7 @@ fs_integrity_tests()
 			if(r < 0)
 				panic("%s should have been created, but is not\n", name);
 		}
-		cprintf("Works fine\n");
+		cprintf("File Create Test: OK\n");
 	}
 	#endif
 	

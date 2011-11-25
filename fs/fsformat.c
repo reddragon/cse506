@@ -127,8 +127,8 @@ opendisk(const char *name)
 	memset(journal->j_entry_bitmap, 0xFF, \
 		sizeof(journal->j_entry_bitmap));
 	printf("Allocating %d bytes, %d blocks to the Journal Entries\n", (ROUNDUP(MAXJENTRIES * sizeof(struct JournalEntry), BLKSIZE)), (ROUNDUP(MAXJENTRIES * sizeof(struct JournalEntry), BLKSIZE))/BLKSIZE);
+	printf("blocks: %d\n", (diskpos - diskmap)/BLKSIZE);
 	journal->j_entries = alloc(ROUNDUP(MAXJENTRIES * sizeof(struct JournalEntry), BLKSIZE));
-	printf("blocks: %d\n", (diskpos-diskmap) / BLKSIZE);
 }
 
 void
@@ -261,6 +261,7 @@ main(int argc, char **argv)
 	finishdir(&root);
 	printf("blocks: %d\n", (diskpos - diskmap)/BLKSIZE);
 	finishdisk();
+	printf("blocks: %d %p %p\n", (diskpos-diskmap) / BLKSIZE, blockof(journal->j_entries), super);
 	return 0;
 }
 
