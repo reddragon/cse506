@@ -134,19 +134,22 @@ struct JournalEntry {
 	unsigned short je_ondisk;
 	// Type of journal entry
 	unsigned short je_type;
-	// Path of the file associated with this entry
-	char path[MAXPATHLEN];
-	
-	union {
+		union {
 		// Any special data with each type of journal entry	
 		struct {
+			// Path of the file associated with this entry
+			char path[MAXPATHLEN];
 		} desc_filecreate; 
 		
 		struct {
+			// Path of the file associated with this entry
+			char path[MAXPATHLEN];
 		} desc_fileremove;
 
 		struct {
+			// Pointer to the location of File * on disk
 			uintptr_t file_ptr;
+			// New size of the file
 			uint32_t new_size;
 		} desc_fileresize;
 

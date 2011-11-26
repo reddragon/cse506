@@ -630,7 +630,7 @@ crash_on_file_create(const char *path, struct File **pf)
 	
 	#ifdef JOURNALING
 	struct JournalEntry je;
-	strcpy(je.path, path);
+	strcpy(je.je_desc.desc_filecreate.path, path);
 	je.je_type = JE_FILECREATE;
 	#endif
 	
@@ -751,7 +751,7 @@ crash_on_file_remove(const char *path)
 	
 	#ifdef JOURNALING
 	struct JournalEntry je;
-	strcpy(je.path, path);
+	strcpy(je.je_desc.desc_fileremove.path, path);
 	je.je_type = JE_FILEREMOVE;
 	#endif
 
@@ -806,12 +806,12 @@ fsck(void)
 			struct File * pf;
 			switch(journal->j_entries[je].je_type) {
 				case JE_FILECREATE:
-					cprintf("Creating file %s\n", journal->j_entries[je].path);
-					file_create(journal->j_entries[je].path, &pf);
+					cprintf("Creating file %s\n", journal->j_entries[je].je_desc.desc_filecreate.path);
+					file_create(journal->j_entries[je].je_desc.desc_filecreate.path, &pf);
 					break;
 				case JE_FILEREMOVE:
-					cprintf("Removing file %s\n", journal->j_entries[je].path);
-					file_remove(journal->j_entries[je].path);
+					cprintf("Removing file %s\n", journal->j_entries[je].je_desc.desc_fileremove.path);
+					file_remove(journal->j_entries[je].je_desc.desc_fileremove.path);
 					break;
 				case JE_FILERESIZE:
 					pf = (struct File *)(journal->j_entries[je].je_desc.desc_fileresize.file_ptr);
