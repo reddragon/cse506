@@ -132,10 +132,7 @@ PORT7	:= $(shell expr $(GDBPORT) + 1)
 PORT80	:= $(shell expr $(GDBPORT) + 2)
 
 IMAGES = $(OBJDIR)/kern/kernel.img $(OBJDIR)/fs/fs.img
-#QEMUOPTS = -no-kvm -hda $(OBJDIR)/kern/kernel.img -hdb $(OBJDIR)/fs/fs.img -serial mon:stdio \
-	   -net user -net nic,model=i82559er -redir tcp:$(PORT7)::7 \
-	   -redir tcp:$(PORT80)::80 -redir udp:$(PORT7)::7 $(QEMUEXTRA)
-QEMUOPTS = -pcap capture.txt -debug-e100 -hda $(OBJDIR)/kern/kernel.img -hdb $(OBJDIR)/fs/fs.img -serial mon:stdio \
+QEMUOPTS = -no-kvm -hda $(OBJDIR)/kern/kernel.img -hdb $(OBJDIR)/fs/fs.img -serial mon:stdio \
 	   -net user -net nic,model=i82559er -redir tcp:$(PORT7)::7 \
 	   -redir tcp:$(PORT80)::80 -redir udp:$(PORT7)::7 $(QEMUEXTRA)
 
@@ -149,7 +146,7 @@ qemu-nox: $(IMAGES)
 	@echo "***"
 	@echo "*** Use Ctrl-a x to exit qemu"
 	@echo "***"
-	$(QEMU) -nographic -debug-e100 $(QEMUOPTS)
+	$(QEMU) -nographic $(QEMUOPTS)
 
 qemu-gdb: $(IMAGES) .gdbinit
 	@echo "***"
@@ -191,7 +188,7 @@ grade: $(LABSETUP)grade-lab$(LAB).sh
 
 handin: realclean
 	if [ `git status --porcelain| wc -l` != 0 ] ; then echo "\n\n\n\n\t\tWARNING: YOU HAVE UNCOMMITTED CHANGES\n\n    Consider committing any pending changes and rerunning make handin.\n\n\n\n"; fi
-	git tag -f -a lab6-handin -m "Lab6 Handin"
+	git tag -f -a lab7-handin -m "Lab7 Handin"
 	git push --tags
 
 tarball: realclean
@@ -213,7 +210,7 @@ run-%-gdb: .gdbinit
 
 run-%-nox:
 	$(V)$(MAKE) --no-print-directory prep-$*
-	$(QEMU) -nographic -debug -e100 $(QEMUOPTS)
+	$(QEMU) -nographic $(QEMUOPTS)
 
 run-%:
 	$(V)$(MAKE) --no-print-directory prep-$*

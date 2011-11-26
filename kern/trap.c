@@ -151,7 +151,13 @@ trap_dispatch(struct Trapframe *tf)
 		cprintf("Spurious interrupt on irq 7\n");
 		print_trapframe(tf);
 		return;
-	}*/
+	}
+	*/
+
+	// Handle keyboard and serial interrupts.
+	// LAB 7: Your code here.
+
+	
 
 	// Used for the return value of the syscall
 	int syscall_ret = 0;

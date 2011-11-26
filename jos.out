@@ -339,7 +339,7 @@ Ipc recv : 1003
 net/output.c : received size 2a
 ffffffff ffffffff ffffffff ffffffff ffffffff ffffffff 52 54 0 12 34 56 8 6 0 1 8 0 6 4 0 1 52 54 0 12 34 56 a 0 2 f 0 0 0 0 0 0 a 0 2 2 
 	     	     	     	     	     	      IN E100 TRANSMIT, 817004 2a
-a000 4000 2732c0
+a000 4000 2732e0
 Ipc recv : 1006
 Ipc recv : 1002
 Ipc recv : 1003
@@ -358,23 +358,25 @@ Ipc recv : 1002
 Ipc recv : 1002
 Ipc recv : 1004
 Ipc recv : 1002
+Ipc recv : 1004
+Ipc recv : 1002
 e100 input: 0000   5254 0012 3456 5255  0a00 0202 0800 4500
 e100 input: 0010   002c 0000 0000 4006  62bc 0a00 0202 0a00
-e100 input: 0020   020f b933 0050 0004  e201 0000 0000 6002
-e100 input: 0030   2238 c254 0000 0204  05b4
+e100 input: 0020   020f c635 0050 0002  ee01 0000 0000 6002
+e100 input: 0030   2238 a954 0000 0204  05b4
 	     	     	     	     	      E100 RECV returning SIZE 3a
 	     	     	     	     	     	     	      Resuming RU
 Now sending stufFFFFFFFFFFFFFFFFFF 3a
 Ipc recv : 1002
 net/output.c : received size 3a
-52 55 a 0 2 2 52 54 0 12 34 56 8 0 45 0 0 2c 0 0 0 0 ffffffff 6 ffffffa3 ffffffbb a 0 2 f a 0 2 2 0 50 ffffffb9 33 0 0 19 70 0 4 ffffffe2 2 60 12 5d ffffffc0 6d 4b 0 0 2 4 5 ffffffb4 
+52 55 a 0 2 2 52 54 0 12 34 56 8 0 45 0 0 2c 0 0 0 0 ffffffff 6 ffffffa3 ffffffbb a 0 2 f a 0 2 2 0 50 ffffffc6 35 0 0 19 71 0 2 ffffffee 2 60 12 5d ffffffc0 54 4a 0 0 2 4 5 ffffffb4 
 	     	     	     	     	     	      IN E100 TRANSMIT, 817004 3a
-a000 4004 2732c0
+a000 4004 2732e0
 Ipc recv : 1006
 e100 input: 0000   5254 0012 3456 5255  0a00 0202 0800 4500
 e100 input: 0010   0028 0001 0000 4006  62bf 0a00 0202 0a00
-e100 input: 0020   020f b933 0050 0004  e202 0000 1971 5010
-e100 input: 0030   2238 c090 0000
+e100 input: 0020   020f c635 0050 0002  ee02 0000 1972 5010
+e100 input: 0030   2238 a78f 0000
 	     	     	     	     	      E100 RECV returning SIZE 36
 	     	     	     	     	     	     	      Resuming RU
 Now sending stufFFFFFFFFFFFFFFFFFF 36
@@ -383,13 +385,13 @@ Ipc recv : 1003
 Ipc recv : 1002
 e100 input: 0000   5254 0012 3456 5255  0a00 0202 0800 4500
 e100 input: 0010   0099 0002 0000 4006  624d 0a00 0202 0a00
-e100 input: 0020   020f b933 0050 0004  e202 0000 1971 5018
-e100 input: 0030   2238 4d9e 0000 4745  5420 2f20 4854 5450
+e100 input: 0020   020f c635 0050 0002  ee02 0000 1972 5018
+e100 input: 0030   2238 29a3 0000 4745  5420 2f20 4854 5450
 e100 input: 0040   2f31 2e30 0d0a 5573  6572 2d41 6765 6e74
 e100 input: 0050   3a20 5767 6574 2f31  2e31 3220 286c 696e
 e100 input: 0060   7578 2d67 6e75 290d  0a41 6363 6570 743a
 e100 input: 0070   202a 2f2a 0d0a 486f  7374 3a20 6c6f 6361
-e100 input: 0080   6c68 6f73 743a 3339  3638 300d 0a43 6f6e
+e100 input: 0080   6c68 6f73 743a 3433  3938 370d 0a43 6f6e
 e100 input: 0090   6e65 6374 696f 6e3a  204b 6565 702d 416c
 e100 input: 00a0   6976 650d 0a0d 0a
 	     	     	     	     	      E100 RECV returning SIZE a7
@@ -400,9 +402,9 @@ Ipc recv : 1002
 [00001003] fsipc 1 0000002f
 Ipc recv : 1003
 net/output.c : received size 36
-52 55 a 0 2 2 52 54 0 12 34 56 8 0 45 0 0 28 0 1 0 0 ffffffff 6 ffffffa3 ffffffbe a 0 2 f a 0 2 2 0 50 ffffffb9 33 0 0 19 71 0 4 ffffffe2 73 50 10 5d ffffffc0 ffffff84 ffffff97 0 0 
+52 55 a 0 2 2 52 54 0 12 34 56 8 0 45 0 0 28 0 1 0 0 ffffffff 6 ffffffa3 ffffffbe a 0 2 f a 0 2 2 0 50 ffffffc6 35 0 0 19 72 0 2 ffffffee 73 50 10 5d ffffffc0 6b ffffff96 0 0 
 	     	     	     	     	     	      IN E100 TRANSMIT, 817004 36
-a000 4004 2732c0
+a000 4004 2732e0
 Ipc recv : 1006
 fs req 1 from 00001003 [page 03cfd007: /]
 serve_open 00001003 / 0x0
@@ -421,9 +423,9 @@ Ipc recv : 1002
 [00001003] fsipc 6 00000400
 Ipc recv : 1003
 net/output.c : received size c0
-52 55 a 0 2 2 52 54 0 12 34 56 8 0 45 0 0 ffffffb2 0 2 0 0 ffffffff 6 ffffffa3 33 a 0 2 f a 0 2 2 0 50 ffffffb9 33 0 0 19 71 0 4 ffffffe2 73 50 18 5d ffffffc0 23 ffffffd9 0 0 48 54 54 50 2f 31 2e 30 20 34 30 34 20 4e 6f 74 20 46 6f 75 6e 64 d a 53 65 72 76 65 72 3a 20 6a 68 74 74 70 64 2f 30 2e 31 d a 43 6f 6e 6e 65 63 74 69 6f 6e 3a 20 63 6c 6f 73 65 43 6f 6e 74 65 6e 74 2d 74 79 70 65 3a 20 74 65 78 74 2f 68 74 6d 6c d a d a 3c 68 74 6d 6c 3e 3c 62 6f 64 79 3e 3c 70 3e 34 30 34 20 2d 20 4e 6f 74 20 46 6f 75 6e 64 3c 2f 70 3e 3c 2f 62 6f 64 79 3e 3c 2f 68 74 6d 6c 3e d a 
+52 55 a 0 2 2 52 54 0 12 34 56 8 0 45 0 0 ffffffb2 0 2 0 0 ffffffff 6 ffffffa3 33 a 0 2 f a 0 2 2 0 50 ffffffc6 35 0 0 19 72 0 2 ffffffee 73 50 18 5d ffffffc0 a ffffffd8 0 0 48 54 54 50 2f 31 2e 30 20 34 30 34 20 4e 6f 74 20 46 6f 75 6e 64 d a 53 65 72 76 65 72 3a 20 6a 68 74 74 70 64 2f 30 2e 31 d a 43 6f 6e 6e 65 63 74 69 6f 6e 3a 20 63 6c 6f 73 65 43 6f 6e 74 65 6e 74 2d 74 79 70 65 3a 20 74 65 78 74 2f 68 74 6d 6c d a d a 3c 68 74 6d 6c 3e 3c 62 6f 64 79 3e 3c 70 3e 34 30 34 20 2d 20 4e 6f 74 20 46 6f 75 6e 64 3c 2f 70 3e 3c 2f 62 6f 64 79 3e 3c 2f 68 74 6d 6c 3e d a 
 	     	     	     	     	     	      IN E100 TRANSMIT, 817004 c0
-a000 4004 2732c0
+a000 4004 2732e0
 Ipc recv : 1006
 fs req 6 from 00001003 [page 03cfd007: ]
 serve_flush 00001003 00000400
@@ -432,65 +434,63 @@ Ipc recv : 1001
 Ipc recv : 1003
 e100 input: 0000   5254 0012 3456 5255  0a00 0202 0800 4500
 e100 input: 0010   0028 0003 0000 4006  62bd 0a00 0202 0a00
-e100 input: 0020   020f b933 0050 0004  e273 0000 19fb 5010
-e100 input: 0030   2238 bf95 0000
+e100 input: 0020   020f c635 0050 0002  ee73 0000 19fc 5010
+e100 input: 0030   2238 a694 0000
 	     	     	     	     	      E100 RECV returning SIZE 36
 	     	     	     	     	     	     	      Resuming RU
 Now sending stufFFFFFFFFFFFFFFFFFF 36
 Ipc recv : 1002
 Ipc recv : 1003
 net/output.c : received size 36
-52 55 a 0 2 2 52 54 0 12 34 56 8 0 45 0 0 28 0 3 0 0 ffffffff 6 ffffffa3 ffffffbc a 0 2 f a 0 2 2 0 50 ffffffb9 33 0 0 19 fffffffb 0 4 ffffffe2 73 50 11 5d ffffffc0 ffffff84 c 0 0 
+52 55 a 0 2 2 52 54 0 12 34 56 8 0 45 0 0 28 0 3 0 0 ffffffff 6 ffffffa3 ffffffbc a 0 2 f a 0 2 2 0 50 ffffffc6 35 0 0 19 fffffffc 0 2 ffffffee 73 50 11 5d ffffffc0 6b b 0 0 
 	     	     	     	     	     	      IN E100 TRANSMIT, 817004 36
-a000 4004 2732c0
+a000 4004 2732e0
 Ipc recv : 1006
-Ipc recv : 1002
-Ipc recv : 1004
 Ipc recv : 1002
 e100 input: 0000   5254 0012 3456 5255  0a00 0202 0800 4500
 e100 input: 0010   0028 0004 0000 4006  62bc 0a00 0202 0a00
-e100 input: 0020   020f b933 0050 0004  e273 0000 19fb 5011
-e100 input: 0030   2238 bf94 0000
+e100 input: 0020   020f c635 0050 0002  ee73 0000 19fc 5011
+e100 input: 0030   2238 a693 0000
 	     	     	     	     	      E100 RECV returning SIZE 36
 	     	     	     	     	     	     	      Resuming RU
 Now sending stufFFFFFFFFFFFFFFFFFF 36
 Ipc recv : 1002
+e100 input: 0000   5254 0012 3456 5255  0a00 0202 0800 4500
+e100 input: 0010   0028 0005 0000 4006  62bb 0a00 0202 0a00
+e100 input: 0020   020f c635 0050 0002  ee73 0000 19fd 5011
+e100 input: 0030   2238 a692 0000
+	     	     	     	     	      E100 RECV returning SIZE 36
+	     	     	     	     	     	     	      Resuming RU
+Now sending stufFFFFFFFFFFFFFFFFFF 36
 Ipc recv : 1002
 net/output.c : received size 36
-52 55 a 0 2 2 52 54 0 12 34 56 8 0 45 0 0 28 0 4 0 0 ffffffff 6 ffffffa3 ffffffbb a 0 2 f a 0 2 2 0 50 ffffffb9 33 0 0 19 fffffffc 0 4 ffffffe2 74 50 10 5d ffffffbf ffffff84 c 0 0 
+52 55 a 0 2 2 52 54 0 12 34 56 8 0 45 0 0 28 0 4 0 0 ffffffff 6 ffffffa3 ffffffbb a 0 2 f a 0 2 2 0 50 ffffffc6 35 0 0 19 fffffffd 0 2 ffffffee 74 50 10 5d ffffffbf 6b b 0 0 
 	     	     	     	     	     	      IN E100 TRANSMIT, 817004 36
-a000 4004 2732c0
+a000 4004 2732e0
+Ipc recv : 1006
+Ipc recv : 1002
+net/output.c : received size 36
+52 55 a 0 2 2 52 54 0 12 34 56 8 0 45 0 0 28 0 5 0 0 ffffffff 6 ffffffa3 ffffffba a 0 2 f a 0 2 2 0 50 ffffffc6 35 0 0 19 fffffffd 0 2 ffffffee 74 50 10 5d ffffffbf 6b b 0 0 
+	     	     	     	     	     	      IN E100 TRANSMIT, 817004 36
+a000 4004 2732e0
 Ipc recv : 1006
 e100 input: 0000   5254 0012 3456 5255  0a00 0202 0800 4500
-e100 input: 0010   002c 0005 0000 4006  62b7 0a00 0202 0a00
-e100 input: 0020   020f b935 0050 0005  dc01 0000 0000 6002
-e100 input: 0030   2238 c851 0000 0204  05b4
+e100 input: 0010   002c 0006 0000 4006  62b6 0a00 0202 0a00
+e100 input: 0020   020f c637 0050 0003  e801 0000 0000 6002
+e100 input: 0030   2238 af51 0000 0204  05b4
 	     	     	     	     	      E100 RECV returning SIZE 3a
 	     	     	     	     	     	     	      Resuming RU
 Now sending stufFFFFFFFFFFFFFFFFFF 3a
 Ipc recv : 1002
 net/output.c : received size 3a
-52 55 a 0 2 2 52 54 0 12 34 56 8 0 45 0 0 2c 0 5 0 0 ffffffff 6 ffffffa3 ffffffb6 a 0 2 f a 0 2 2 0 50 ffffffb9 35 0 0 19 72 0 5 ffffffdc 2 60 12 5d ffffffc0 73 46 0 0 2 4 5 ffffffb4 
+52 55 a 0 2 2 52 54 0 12 34 56 8 0 45 0 0 2c 0 6 0 0 ffffffff 6 ffffffa3 ffffffb5 a 0 2 f a 0 2 2 0 50 ffffffc6 37 0 0 19 73 0 3 ffffffe8 2 60 12 5d ffffffc0 5a 45 0 0 2 4 5 ffffffb4 
 	     	     	     	     	     	      IN E100 TRANSMIT, 817004 3a
-a000 4004 2732c0
-Ipc recv : 1006
-e100 input: 0000   5254 0012 3456 5255  0a00 0202 0800 4500
-e100 input: 0010   0028 0006 0000 4006  62ba 0a00 0202 0a00
-e100 input: 0020   020f b933 0050 0004  e273 0000 19fc 5011
-e100 input: 0030   2238 bf93 0000
-	     	     	     	     	      E100 RECV returning SIZE 36
-	     	     	     	     	     	     	      Resuming RU
-Now sending stufFFFFFFFFFFFFFFFFFF 36
-Ipc recv : 1002
-net/output.c : received size 36
-52 55 a 0 2 2 52 54 0 12 34 56 8 0 45 0 0 28 0 6 0 0 ffffffff 6 ffffffa3 ffffffb9 a 0 2 f a 0 2 2 0 50 ffffffb9 33 0 0 19 fffffffc 0 4 ffffffe2 74 50 10 5d ffffffbf ffffff84 c 0 0 
-	     	     	     	     	     	      IN E100 TRANSMIT, 817004 36
-a000 4004 2732c0
+a000 4004 2732e0
 Ipc recv : 1006
 e100 input: 0000   5254 0012 3456 5255  0a00 0202 0800 4500
 e100 input: 0010   0028 0007 0000 4006  62b9 0a00 0202 0a00
-e100 input: 0020   020f b935 0050 0005  dc02 0000 1973 5010
-e100 input: 0030   2238 c68b 0000
+e100 input: 0020   020f c637 0050 0003  e802 0000 1974 5010
+e100 input: 0030   2238 ad8a 0000
 	     	     	     	     	      E100 RECV returning SIZE 36
 	     	     	     	     	     	     	      Resuming RU
 Now sending stufFFFFFFFFFFFFFFFFFF 36
@@ -499,14 +499,14 @@ Ipc recv : 1003
 Ipc recv : 1002
 e100 input: 0000   5254 0012 3456 5255  0a00 0202 0800 4500
 e100 input: 0010   00a3 0008 0000 4006  623d 0a00 0202 0a00
-e100 input: 0020   020f b935 0050 0005  dc02 0000 1973 5018
-e100 input: 0030   2238 7073 0000 4745  5420 2f69 6e64 6578
+e100 input: 0020   020f c637 0050 0003  e802 0000 1974 5018
+e100 input: 0030   2238 4c78 0000 4745  5420 2f69 6e64 6578
 e100 input: 0040   2e68 746d 6c20 4854  5450 2f31 2e30 0d0a
 e100 input: 0050   5573 6572 2d41 6765  6e74 3a20 5767 6574
 e100 input: 0060   2f31 2e31 3220 286c  696e 7578 2d67 6e75
 e100 input: 0070   290d 0a41 6363 6570  743a 202a 2f2a 0d0a
 e100 input: 0080   486f 7374 3a20 6c6f  6361 6c68 6f73 743a
-e100 input: 0090   3339 3638 300d 0a43  6f6e 6e65 6374 696f
+e100 input: 0090   3433 3938 370d 0a43  6f6e 6e65 6374 696f
 e100 input: 00a0   6e3a 204b 6565 702d  416c 6976 650d 0a0d
 e100 input: 00b0   0a
 	     	     	     	     	      E100 RECV returning SIZE b1
@@ -517,9 +517,9 @@ Ipc recv : 1002
 [00001003] fsipc 1 646e692f
 Ipc recv : 1003
 net/output.c : received size 36
-52 55 a 0 2 2 52 54 0 12 34 56 8 0 45 0 0 28 0 7 0 0 ffffffff 6 ffffffa3 ffffffb8 a 0 2 f a 0 2 2 0 50 ffffffb9 35 0 0 19 73 0 5 ffffffdc 7d 50 10 5d ffffffc0 ffffff8a ffffff88 0 0 
+52 55 a 0 2 2 52 54 0 12 34 56 8 0 45 0 0 28 0 7 0 0 ffffffff 6 ffffffa3 ffffffb8 a 0 2 f a 0 2 2 0 50 ffffffc6 37 0 0 19 74 0 3 ffffffe8 7d 50 10 5d ffffffc0 71 ffffff87 0 0 
 	     	     	     	     	     	      IN E100 TRANSMIT, 817004 36
-a000 4004 2732c0
+a000 4004 2732e0
 Ipc recv : 1006
 fs req 1 from 00001003 [page 03cfd007: /index.html]
 serve_open 00001003 /index.html 0x0
@@ -537,16 +537,16 @@ Ipc recv : 1003
 Ipc recv : 1002
 Ipc recv : 1003
 net/output.c : received size 5b
-52 55 a 0 2 2 52 54 0 12 34 56 8 0 45 0 0 4d 0 8 0 0 ffffffff 6 ffffffa3 ffffff92 a 0 2 f a 0 2 2 0 50 ffffffb9 35 0 0 19 73 0 5 ffffffdc 7d 50 18 5d ffffffc0 ffffffaf 77 0 0 48 54 54 50 2f 31 2e 30 20 32 30 30 20 4f 4b d a 53 65 72 76 65 72 3a 20 6a 68 74 74 70 64 2f 30 2e 31 d a 
+52 55 a 0 2 2 52 54 0 12 34 56 8 0 45 0 0 4d 0 8 0 0 ffffffff 6 ffffffa3 ffffff92 a 0 2 f a 0 2 2 0 50 ffffffc6 37 0 0 19 74 0 3 ffffffe8 7d 50 18 5d ffffffc0 ffffff96 76 0 0 48 54 54 50 2f 31 2e 30 20 32 30 30 20 4f 4b d a 53 65 72 76 65 72 3a 20 6a 68 74 74 70 64 2f 30 2e 31 d a 
 	     	     	     	     	     	      IN E100 TRANSMIT, 817004 5b
-a000 4004 2732c0
+a000 4004 2732e0
 Ipc recv : 1006
 Ipc recv : 1002
 Ipc recv : 1003
 e100 input: 0000   5254 0012 3456 5255  0a00 0202 0800 4500
 e100 input: 0010   0028 0009 0000 4006  62b7 0a00 0202 0a00
-e100 input: 0020   020f b935 0050 0005  dc7d 0000 1998 5010
-e100 input: 0030   2238 c5eb 0000
+e100 input: 0020   020f c637 0050 0003  e87d 0000 1999 5010
+e100 input: 0030   2238 acea 0000
 	     	     	     	     	      E100 RECV returning SIZE 36
 	     	     	     	     	     	     	      Resuming RU
 Now sending stufFFFFFFFFFFFFFFFFFF 36
@@ -563,9 +563,9 @@ Ipc recv : 1002
 [00001003] fsipc 3 00000800
 Ipc recv : 1003
 net/output.c : received size 66
-52 55 a 0 2 2 52 54 0 12 34 56 8 0 45 0 0 58 0 9 0 0 ffffffff 6 ffffffa3 ffffff86 a 0 2 f a 0 2 2 0 50 ffffffb9 35 0 19 ffffff98 0 5 ffffffdc 7d 50 18 5d ffffffc0 ffffffdb 77 0 0 43 6f 6e 74 65 6e 74 2d 4c 65 6e 67 74 68 3a 20 31 36 36 d a 43 6f 6e 74 65 6e 74 2d 54 79 70 65 3a 20 74 65 78 74 2f 68 74 6d 6c d a d a 
+52 55 a 0 2 2 52 54 0 12 34 56 8 0 45 0 0 58 0 9 0 0 ffffffff 6 ffffffa3 ffffff86 a 0 2 f a 0 2 2 0 50 ffffffc6 37 0 0 19 ffffff99 0 3 ffffffe8 7d 50 18 5d ffffffc0 ffffffc2 76 0 0 43 6f 6e 74 65 6e 74 2d 4c 65 6e 67 74 68 3a 20 31 36 36 d a 43 6f 6e 74 65 6e 74 2d 54 79 70 65 3a 20 74 65 78 74 2f 68 74 6d 6c d a d a 
 	     	     	     	     	     	      IN E100 TRANSMIT, 817004 66
-a000 4004 2732c0
+a000 4004 2732e0
 Ipc recv : 1006
 fs req 3 from 00001003 [page 03cfd007: ]
 serve_read 00001003 00000800 00000200
@@ -578,8 +578,8 @@ Ipc recv : 1001
 Ipc recv : 1003
 e100 input: 0000   5254 0012 3456 5255  0a00 0202 0800 4500
 e100 input: 0010   0028 000a 0000 4006  62b6 0a00 0202 0a00
-e100 input: 0020   020f b935 0050 0005  dc7d 0000 19c8 5010
-e100 input: 0030   2238 c5bb 0000
+e100 input: 0020   020f c637 0050 0003  e87d 0000 19c9 5010
+e100 input: 0030   2238 acba 0000
 	     	     	     	     	      E100 RECV returning SIZE 36
 	     	     	     	     	     	     	      Resuming RU
 Now sending stufFFFFFFFFFFFFFFFFFF 36
@@ -593,100 +593,100 @@ Ipc recv : 1001
 Ipc recv : 1002
 Ipc recv : 1003
 net/output.c : received size dc
-52 55 a 0 2 2 52 54 0 12 34 56 8 0 45 0 0 ffffffce 0 a 0 0 ffffffff 6 ffffffa3 f a 0 2 f a 0 2 2 0 50 ffffffb9 35 0 0 19 ffffffc8 0 5 ffffffdc 7d 50 18 5d ffffffc0 ffffff90 ffffffd4 0 0 3c 68 74 6d 6c 3e a 3c 68 65 61 64 3e a 9 3c 74 69 74 6c 65 3e 6a 68 74 74 70 64 20 6f 6e 20 4a 4f 53 3c 2f 74 69 74 6c 65 3e a 3c 2f 68 65 61 64 3e a 3c 62 6f 64 79 3e a 9 3c 63 65 6e 74 65 72 3e a 9 9 3c 68 32 3e 54 68 69 73 20 66 69 6c 65 20 63 61 6d 65 20 66 72 6f 6d 20 4a 4f 53 2e 3c 2f 68 32 3e a 9 9 3c 62 6c 69 6e 6b 3e 43 68 65 65 73 79 20 77 65 62 20 70 61 67 65 21 3c 2f 62 6c 69 6e 6b 3e a 9 3c 2f 63 65 6e 74 65 72 3e a 3c 2f 62 6f 64 79 3e a 3c 2f 68 74 6d 6c 3e a 
+52 55 a 0 2 2 52 54 0 12 34 56 8 0 45 0 0 ffffffce 0 a 0 0 ffffffff 6 ffffffa3 f a 0 2 f a 0 2 2 0 50 ffffffc6 37 0 0 19 ffffffc9 0 3 ffffffe8 7d 50 18 5d ffffffc0 77 ffffffd3 0 0 3c 68 74 6d 6c 3e a 3c 68 65 61 64 3e a 9 3c 74 69 74 6c 65 3e 6a 68 74 74 70 64 20 6f 6e 20 4a 4f 53 3c 2f 74 69 74 6c 65 3e a 3c 2f 68 65 61 64 3e a 3c 62 6f 64 79 3e a 9 3c 63 65 6e 74 65 72 3e a 9 9 3c 68 32 3e 54 68 69 73 20 66 69 6c 65 20 63 61 6d 65 20 66 72 6f 6d 20 4a 4f 53 2e 3c 2f 68 32 3e a 9 9 3c 62 6c 69 6e 6b 3e 43 68 65 65 73 79 20 77 65 62 20 70 61 67 65 21 3c 2f 62 6c 69 6e 6b 3e a 9 3c 2f 63 65 6e 74 65 72 3e a 3c 2f 62 6f 64 79 3e a 3c 2f 68 74 6d 6c 3e a 
 	     	     	     	     	     	      IN E100 TRANSMIT, 817004 dc
-a000 4004 2732c0
+a000 4004 2732e0
 Ipc recv : 1006
 Ipc recv : 1002
 Ipc recv : 1003
 e100 input: 0000   5254 0012 3456 5255  0a00 0202 0800 4500
 e100 input: 0010   0028 000b 0000 4006  62b5 0a00 0202 0a00
-e100 input: 0020   020f b935 0050 0005  dc7d 0000 1a6e 5010
-e100 input: 0030   2238 c515 0000
+e100 input: 0020   020f c637 0050 0003  e87d 0000 1a6f 5010
+e100 input: 0030   2238 ac14 0000
 	     	     	     	     	      E100 RECV returning SIZE 36
 	     	     	     	     	     	     	      Resuming RU
 Now sending stufFFFFFFFFFFFFFFFFFF 36
 net/output.c : received size 36
-52 55 a 0 2 2 52 54 0 12 34 56 8 0 45 0 0 28 0 b 0 0 ffffffff 6 ffffffa3 ffffffb4 a 0 2 f a 0 2 2 0 50 ffffffb9 35 0 0 1a 6e 0 5 ffffffdc 7d 50 11 5d ffffffc0 ffffff89 ffffff8c 0 0 
+52 55 a 0 2 2 52 54 0 12 34 56 8 0 45 0 0 28 0 b 0 0 ffffffff 6 ffffffa3 ffffffb4 a 0 2 f a 0 2 2 0 50 ffffffc6 37 0 0 1a 6f 0 3 ffffffe8 7d 50 11 5d ffffffc0 70 ffffff8b 0 0 
 	     	     	     	     	     	      IN E100 TRANSMIT, 817004 36
-a000 4004 2732c0
+a000 4004 2732e0
 Ipc recv : 1006
-Ipc recv : 1002
-Ipc recv : 1004
 Ipc recv : 1002
 e100 input: 0000   5254 0012 3456 5255  0a00 0202 0800 4500
 e100 input: 0010   0028 000c 0000 4006  62b4 0a00 0202 0a00
-e100 input: 0020   020f b935 0050 0005  dc7d 0000 1a6e 5011
-e100 input: 0030   2238 c514 0000
+e100 input: 0020   020f c637 0050 0003  e87d 0000 1a6f 5011
+e100 input: 0030   2238 ac13 0000
 	     	     	     	     	      E100 RECV returning SIZE 36
 	     	     	     	     	     	     	      Resuming RU
 Now sending stufFFFFFFFFFFFFFFFFFF 36
 Ipc recv : 1002
 Ipc recv : 1002
-net/output.c : received size 36
-52 55 a 0 2 2 52 54 0 12 34 56 8 0 45 0 0 28 0 c 0 0 ffffffff 6 ffffffa3 ffffffb3 a 0 2 f a 0 2 2 0 50 ffffffb9 35 0 0 1a 6f 0 5 ffffffdc 7e 50 10 5d ffffffbf ffffff89 ffffff8c 0 0 
-	     	     	     	     	     	      IN E100 TRANSMIT, 817004 36
-a000 4004 2732c0
-Ipc recv : 1006
 e100 input: 0000   5254 0012 3456 5255  0a00 0202 0800 4500
 e100 input: 0010   0028 000d 0000 4006  62b3 0a00 0202 0a00
-e100 input: 0020   020f b935 0050 0005  dc7d 0000 1a6f 5011
-e100 input: 0030   2238 c513 0000
+e100 input: 0020   020f c637 0050 0003  e87d 0000 1a70 5011
+e100 input: 0030   2238 ac12 0000
 	     	     	     	     	      E100 RECV returning SIZE 36
 	     	     	     	     	     	     	      Resuming RU
 Now sending stufFFFFFFFFFFFFFFFFFF 36
+net/output.c : received size 36
+52 55 a 0 2 2 52 54 0 12 34 56 8 0 45 0 0 28 0 c 0 0 ffffffff 6 ffffffa3 ffffffb3 a 0 2 f a 0 2 2 0 50 ffffffc6 37 0 0 1a 70 0 3 ffffffe8 7e 50 10 5d ffffffbf 70 ffffff8b 0 0 
+	     	     	     	     	     	      IN E100 TRANSMIT, 817004 36
+a000 4004 2732e0
+Ipc recv : 1006
 Ipc recv : 1002
 net/output.c : received size 36
-52 55 a 0 2 2 52 54 0 12 34 56 8 0 45 0 0 28 0 d 0 0 ffffffff 6 ffffffa3 ffffffb2 a 0 2 f a 0 2 2 0 50 ffffffb9 35 0 0 1a 6f 0 5 ffffffdc 7e 50 10 5d ffffffbf ffffff89 ffffff8c 0 0 
+52 55 a 0 2 2 52 54 0 12 34 56 8 0 45 0 0 28 0 d 0 0 ffffffff 6 ffffffa3 ffffffb2 a 0 2 f a 0 2 2 0 50 ffffffc6 37 0 0 1a 70 0 3 ffffffe8 7e 50 10 5d ffffffbf 70 ffffff8b 0 0 
 	     	     	     	     	     	      IN E100 TRANSMIT, 817004 36
-a000 4004 2732c0
+a000 4004 2732e0
 Ipc recv : 1006
+Ipc recv : 1004
+Ipc recv : 1002
 e100 input: 0000   5254 0012 3456 5255  0a00 0202 0800 4500
 e100 input: 0010   002c 000e 0000 4006  62ae 0a00 0202 0a00
-e100 input: 0020   020f b937 0050 0007  d001 0000 0000 6002
-e100 input: 0030   2238 d44d 0000 0204  05b4
+e100 input: 0020   020f c639 0050 0004  e201 0000 0000 6002
+e100 input: 0030   2238 b54e 0000 0204  05b4
 	     	     	     	     	      E100 RECV returning SIZE 3a
 	     	     	     	     	     	     	      Resuming RU
 Now sending stufFFFFFFFFFFFFFFFFFF 3a
 Ipc recv : 1002
 net/output.c : received size 3a
-52 55 a 0 2 2 52 54 0 12 34 56 8 0 45 0 0 2c 0 e 0 0 ffffffff 6 ffffffa3 ffffffad a 0 2 f a 0 2 2 0 50 ffffffb9 37 0 0 19 74 0 7 ffffffd0 2 60 12 5d ffffffc0 7f 40 0 0 2 4 5 ffffffb4 
+52 55 a 0 2 2 52 54 0 12 34 56 8 0 45 0 0 2c 0 e 0 0 ffffffff 6 ffffffa3 ffffffad a 0 2 f a 0 2 2 0 50 ffffffc6 39 0 0 19 75 0 4 ffffffe2 2 60 12 5d ffffffc0 60 40 0 0 2 4 5 ffffffb4 
 	     	     	     	     	     	      IN E100 TRANSMIT, 817004 3a
-a000 4004 2732c0
+a000 4004 2732e0
 Ipc recv : 1006
 e100 input: 0000   5254 0012 3456 5255  0a00 0202 0800 4500
 e100 input: 0010   0028 000f 0000 4006  62b1 0a00 0202 0a00
-e100 input: 0020   020f b937 0050 0007  d002 0000 1975 5010
-e100 input: 0030   2238 d285 0000
+e100 input: 0020   020f c639 0050 0004  e202 0000 1976 5010
+e100 input: 0030   2238 b385 0000
 	     	     	     	     	      E100 RECV returning SIZE 36
 	     	     	     	     	     	     	      Resuming RU
 Now sending stufFFFFFFFFFFFFFFFFFF 36
 Ipc recv : 1002
 Ipc recv : 1003
-Ipc recv : 1002
 e100 input: 0000   5254 0012 3456 5255  0a00 0202 0800 4500
 e100 input: 0010   00a8 0010 0000 4006  6230 0a00 0202 0a00
-e100 input: 0020   020f b937 0050 0007  d002 0000 1975 5018
-e100 input: 0030   2238 4689 0000 4745  5420 2f72 616e 646f
+e100 input: 0020   020f c639 0050 0004  e202 0000 1976 5018
+e100 input: 0030   2238 2d7e 0000 4745  5420 2f72 616e 646f
 e100 input: 0040   6d5f 6669 6c65 2e74  7874 2048 5454 502f
 e100 input: 0050   312e 300d 0a55 7365  722d 4167 656e 743a
 e100 input: 0060   2057 6765 742f 312e  3132 2028 6c69 6e75
 e100 input: 0070   782d 676e 7529 0d0a  4163 6365 7074 3a20
 e100 input: 0080   2a2f 2a0d 0a48 6f73  743a 206c 6f63 616c
-e100 input: 0090   686f 7374 3a33 3936  3830 0d0a 436f 6e6e
+e100 input: 0090   686f 7374 3a34 3339  3837 0d0a 436f 6e6e
 e100 input: 00a0   6563 7469 6f6e 3a20  4b65 6570 2d41 6c69
 e100 input: 00b0   7665 0d0a 0d0a
 	     	     	     	     	      E100 RECV returning SIZE b6
 	     	     	     	     	     	     	      Resuming RU
 Now sending stufFFFFFFFFFFFFFFFFFF b6
 Ipc recv : 1002
+Ipc recv : 1002
 	     	     	     	     	     	      HTTP SEND FILE 1 /random_file.txt HTTP/1.0
 [00001003] fsipc 1 6e61722f
 Ipc recv : 1003
 net/output.c : received size 36
-52 55 a 0 2 2 52 54 0 12 34 56 8 0 45 0 0 28 0 f 0 0 ffffffff 6 ffffffa3 ffffffb0 a 0 2 f a 0 2 2 0 50 ffffffb9 37 0 0 19 75 0 7 ffffffd0 ffffff82 50 10 5d ffffffc0 ffffff96 7d 0 0 
+52 55 a 0 2 2 52 54 0 12 34 56 8 0 45 0 0 28 0 f 0 0 ffffffff 6 ffffffa3 ffffffb0 a 0 2 f a 0 2 2 0 50 ffffffc6 39 0 0 19 76 0 4 ffffffe2 ffffff82 50 10 5d ffffffc0 77 7d 0 0 
 	     	     	     	     	     	      IN E100 TRANSMIT, 817004 36
-a000 4004 2732c0
+a000 4004 2732e0
 Ipc recv : 1006
 fs req 1 from 00001003 [page 03cfd007: /random_file.txt]
 serve_open 00001003 /random_file.txt 0x0
@@ -697,36 +697,44 @@ Ipc recv : 1003
 Ipc recv : 1002
 Ipc recv : 1003
 net/output.c : received size c0
-52 55 a 0 2 2 52 54 0 12 34 56 8 0 45 0 0 ffffffb2 0 10 0 0 ffffffff 6 ffffffa3 25 a 0 2 f a 0 2 2 0 50 ffffffb9 37 0 0 19 75 0 7 ffffffd0 ffffff82 50 18 5d ffffffc0 35 ffffffbf 0 0 48 54 54 50 2f 31 2e 30 20 34 30 34 20 4e 6f 74 20 46 6f 75 6e 64 d a 53 65 72 76 65 72 3a 20 6a 68 74 74 70 64 2f 30 2e 31 d a 43 6f 6e 6e 65 63 74 69 6f 6e 3a 20 63 6c 6f 73 65 43 6f 6e 74 65 6e 74 2d 74 79 70 65 3a 20 74 65 78 74 2f 68 74 6d 6c d a d a 3c 68 74 6d 6c 3e 3c 62 6f 64 79 3e 3c 70 3e 34 30 34 20 2d 20 4e 6f 74 20 46 6f 75 6e 64 3c 2f 70 3e 3c 2f 62 6f 64 79 3e 3c 2f 68 74 6d 6c 3e d a 
+52 55 a 0 2 2 52 54 0 12 34 56 8 0 45 0 0 ffffffb2 0 10 0 0 ffffffff 6 ffffffa3 25 a 0 2 f a 0 2 2 0 50 ffffffc6 39 0 0 19 76 0 4 ffffffe2 ffffff82 50 18 5d ffffffc0 16 ffffffbf 0 0 48 54 54 50 2f 31 2e 30 20 34 30 34 20 4e 6f 74 20 46 6f 75 6e 64 d a 53 65 72 76 65 72 3a 20 6a 68 74 74 70 64 2f 30 2e 31 d a 43 6f 6e 6e 65 63 74 69 6f 6e 3a 20 63 6c 6f 73 65 43 6f 6e 74 65 6e 74 2d 74 79 70 65 3a 20 74 65 78 74 2f 68 74 6d 6c d a d a 3c 68 74 6d 6c 3e 3c 62 6f 64 79 3e 3c 70 3e 34 30 34 20 2d 20 4e 6f 74 20 46 6f 75 6e 64 3c 2f 70 3e 3c 2f 62 6f 64 79 3e 3c 2f 68 74 6d 6c 3e d a 
 	     	     	     	     	     	      IN E100 TRANSMIT, 817004 c0
-a000 4004 2732c0
+a000 4004 2732e0
 Ipc recv : 1006
 Ipc recv : 1002
 Ipc recv : 1003
 e100 input: 0000   5254 0012 3456 5255  0a00 0202 0800 4500
 e100 input: 0010   0028 0011 0000 4006  62af 0a00 0202 0a00
-e100 input: 0020   020f b937 0050 0007  d082 0000 19ff 5010
-e100 input: 0030   2238 d17b 0000
+e100 input: 0020   020f c639 0050 0004  e282 0000 1a00 5010
+e100 input: 0030   2238 b27b 0000
 	     	     	     	     	      E100 RECV returning SIZE 36
 	     	     	     	     	     	     	      Resuming RU
 Now sending stufFFFFFFFFFFFFFFFFFF 36
 net/output.c : received size 36
-52 55 a 0 2 2 52 54 0 12 34 56 8 0 45 0 0 28 0 11 0 0 ffffffff 6 ffffffa3 ffffffae a 0 2 f a 0 2 2 0 50 ffffffb9 37 0 0 19 ffffffff 0 7 ffffffd0 ffffff82 50 11 5d ffffffc0 ffffff95 fffffff2 0 0 
+52 55 a 0 2 2 52 54 0 12 34 56 8 0 45 0 0 28 0 11 0 0 ffffffff 6 ffffffa3 ffffffae a 0 2 f a 0 2 2 0 50 ffffffc6 39 0 0 1a 0 0 4 ffffffe2 ffffff82 50 11 5d ffffffc0 76 fffffff2 0 0 
 	     	     	     	     	     	      IN E100 TRANSMIT, 817004 36
-a000 4004 2732c0
+a000 4004 2732e0
 Ipc recv : 1006
 Ipc recv : 1002
 e100 input: 0000   5254 0012 3456 5255  0a00 0202 0800 4500
 e100 input: 0010   0028 0012 0000 4006  62ae 0a00 0202 0a00
-e100 input: 0020   020f b937 0050 0007  d082 0000 19ff 5011
-e100 input: 0030   2238 d17a 0000
+e100 input: 0020   020f c639 0050 0004  e282 0000 1a01 5010
+e100 input: 0030   2238 b27a 0000
 	     	     	     	     	      E100 RECV returning SIZE 36
 	     	     	     	     	     	     	      Resuming RU
 Now sending stufFFFFFFFFFFFFFFFFFF 36
 Ipc recv : 1002
 Ipc recv : 1002
+e100 input: 0000   5254 0012 3456 5255  0a00 0202 0800 4500
+e100 input: 0010   0028 0013 0000 4006  62ad 0a00 0202 0a00
+e100 input: 0020   020f c639 0050 0004  e282 0000 1a01 5011
+e100 input: 0030   2238 b279 0000
+	     	     	     	     	      E100 RECV returning SIZE 36
+	     	     	     	     	     	     	      Resuming RU
+Now sending stufFFFFFFFFFFFFFFFFFF 36
+Ipc recv : 1002
 net/output.c : received size 36
-52 55 a 0 2 2 52 54 0 12 34 56 8 0 45 0 0 28 0 12 0 0 ffffffff 6 ffffffa3 ffffffad a 0 2 f a 0 2 2 0 50 ffffffb9 37 0 0 1a 0 0 7 ffffffd0 ffffff83 50 10 5d ffffffbf ffffff95 fffffff2 0 0 
+52 55 a 0 2 2 52 54 0 12 34 56 8 0 45 0 0 28 0 12 0 0 ffffffff 6 ffffffa3 ffffffad a 0 2 f a 0 2 2 0 50 ffffffc6 39 0 0 1a 1 0 4 ffffffe2 ffffff83 50 10 5d ffffffbf 76 fffffff2 0 0 
 	     	     	     	     	     	      IN E100 TRANSMIT, 817004 36
-a000 4004 2732c0
+a000 4004 2732e0
 Ipc recv : 1006

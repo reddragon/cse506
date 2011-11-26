@@ -229,9 +229,11 @@ brkfn=
 pts=15
 runtest1 -tag "testinput [5 packets]" -dir net testinput -DTEST_NO_NS \
 	-check check_testinput 5
+
 pts=10
 runtest1 -tag "testinput [100 packets]" -dir net testinput -DTEST_NO_NS \
 	-check check_testinput 100
+
 pts=15
 runtest1 -tag 'tcp echo server [echosrv]' echosrv \
 	-check check_echosrv

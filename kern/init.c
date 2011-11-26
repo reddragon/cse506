@@ -63,13 +63,17 @@ i386_init(void)
 	ENV_CREATE2(TEST, TESTSIZE);
 #else
 	// Touch all you want.
+	ENV_CREATE(user_icode);
 	// ENV_CREATE(user_hello);
 	//  ENV_CREATE(net_testoutput);
 	// ENV_CREATE(net_testinput);
 	// ENV_CREATE(user_echosrv);
-	 ENV_CREATE(user_httpd);
+	// ENV_CREATE(user_httpd);
 	// ENV_CREATE(user_icode);
 #endif // TEST*
+
+	// Should not be necessary - drains keyboard because interrupt has given up.
+	kbd_intr();
 
 	// Schedule and run the first user environment!
 	//ENV_CREATE(user_yield);
