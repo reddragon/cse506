@@ -701,12 +701,23 @@ crash_on_file_truncate_blocks(struct File *f, off_t newsize, int crash)
 int
 crash_on_file_set_size(struct File *f, off_t newsize, int crash)
 {
+	#ifdef JOURNALING
+	struct JournalEntry je;
+	je.je_desc.desc_fileresize.file_ptr = (uintptr_t)f;
+	je.je_type = JE_FILERESIZE;
+	je.je_desc.desc_fileresize.new_size = newsize;
+	int je_num = j_write(&je);
+	#endif
+
 	if (f->f_size > newsize)
 		crash_on_file_truncate_blocks(f, newsize, crash);
 	f->f_size = newsize;
 	if(crash)
 		panic("Crash environment set up. Please restart");
 	flush_block(f);
+	#ifdef JOURNALING
+	j_postop_write(je_num, 1);	
+	#endif
 	return 0;
 }
 
@@ -791,7 +802,7 @@ fsck(void)
 			// Needs to be fixed
 			cnt++;
 			// TODO: Fill this up to replay the work
-			cprintf("Inconsistency in je_num: %d, path: %s\n", je, journal->j_entries[je].path);
+			cprintf("Inconsistency in je_num: %d\n", je);
 			struct File * pf;
 			switch(journal->j_entries[je].je_type) {
 				case JE_FILECREATE:
@@ -801,6 +812,11 @@ fsck(void)
 				case JE_FILEREMOVE:
 					cprintf("Removing file %s\n", journal->j_entries[je].path);
 					file_remove(journal->j_entries[je].path);
+					break;
+				case JE_FILERESIZE:
+					pf = (struct File *)(journal->j_entries[je].je_desc.desc_fileresize.file_ptr);
+					cprintf("Resizing file %s\n", pf->f_name);
+					file_set_size(pf, journal->j_entries[je].je_desc.desc_fileresize.new_size);
 					break;
 			};
 		}

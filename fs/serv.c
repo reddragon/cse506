@@ -388,8 +388,8 @@ fs_integrity_tests()
 {
 	
 	//#define FILE_CREATE_TEST 1
-	#define FILE_REMOVE_TEST 1
-	//#define BLOCK_FREE_TEST 1
+	//#define FILE_REMOVE_TEST 1
+	#define BLOCK_FREE_TEST 1
 	/*
 		Try to create files as long as the root dir's size
 		does not increase. And then fail before the dir
@@ -500,7 +500,7 @@ fs_integrity_tests()
 		file_open("/randombf", &pf);
 		if(pf->f_size != 4096)
 			panic("The file size was supposed to be 4096");
-		cprintf("Works fine\n");
+		cprintf("Block Free Test: OK\n");
 	}		
 	#endif
 }

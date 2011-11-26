@@ -126,8 +126,7 @@ struct Journal {
 enum {
 	JE_FILECREATE = 1,
 	JE_FILEREMOVE,
-	JE_BLOCKFREE,
-	JE_BLOCKALLOC
+	JE_FILERESIZE
 }; 
 
 struct JournalEntry {
@@ -147,12 +146,9 @@ struct JournalEntry {
 		} desc_fileremove;
 
 		struct {
-			uint32_t free_block;
-		} desc_blockfree;
-
-		struct {
-			uint32_t alloc_block;
-		} desc_blockalloc;
+			uintptr_t file_ptr;
+			uint32_t new_size;
+		} desc_fileresize;
 
 	} je_desc;
 };
