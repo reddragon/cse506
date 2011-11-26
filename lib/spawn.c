@@ -126,9 +126,10 @@ spawn(const char *prog, const char **argv)
 			goto error;
 	}
 	close(fd);
-	cprintf("Spawn fd closed\n");
+	cprintf("Spawn fd closed!\n");
 	fd = -1;
-
+	
+	cprintf("About to begin\n");
 	// Copy shared library state.
 	if ((r = copy_shared_pages(child)) < 0)
 		panic("copy_shared_pages: %e", r);
@@ -281,6 +282,19 @@ static int
 copy_shared_pages(envid_t child)
 {
 	// LAB 7: Your code here.
+	cprintf("In copy_shared_pages\n");
+	
+	uint32_t va;
+	for(va = UTEXT; va <= UTOP; va += PGSIZE)
+	{
+		if((vpd[VPN(va)/NPTENTRIES] & PTE_P) && (vpt[VPN(va)] & PTE_SHARE))
+		{
+			cprintf("PTE_SHARE va: %x\n", va);
+			sys_page_map(0, (void *)va, \
+					child, (void *)va, (vpt[VPN(va)] & PTE_USER));
+		}
+	}
+	cprintf("Done with copy_shared_pages\n");
 	return 0;
 }
 

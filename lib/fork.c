@@ -70,7 +70,24 @@ duppage(envid_t envid, unsigned pn)
 	uint32_t perm = vpt[pn] & PTE_USER;
 	envid_t cur_envid;
 	// LAB 4: Your code here.
-	if((perm & PTE_COW) || (perm & PTE_W))
+	
+	if(perm & PTE_SHARE)
+		cprintf("\t\t\t\tIn duppage va: %x\n", pn<<PGSHIFT);
+
+	
+	if(perm & PTE_SHARE)
+	{
+		cprintf("In duppage va: %x \n", pn<<PGSHIFT);
+		r = sys_page_map(0, (void *)(pn<<PGSHIFT), \
+			envid, (void *)(pn<<PGSHIFT), perm);
+		
+		if(r < 0) {
+			cprintf("error: %e\n", r);
+
+		}
+		return 0;
+	}
+	else if((perm & PTE_COW) || (perm & PTE_W))
 	{
 		
 		perm &= ~PTE_W;
