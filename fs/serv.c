@@ -70,7 +70,7 @@ openfile_alloc(struct OpenFile **o)
 	for (i = 0; i < MAXOPEN; i++) {
 		switch (pageref(opentab[i].o_fd)) {
 		case 0:
-			if ((r = sys_page_alloc(0, opentab[i].o_fd, PTE_P|PTE_U|PTE_W)) < 0)
+			if ((r = sys_page_alloc(0, opentab[i].o_fd, PTE_SHARE|PTE_P|PTE_U|PTE_W)) < 0)
 				return r;
 			/* fall through */
 		case 1:
@@ -165,7 +165,7 @@ try_open:
 
 	// Share the FD page with the caller
 	*pg_store = o->o_fd;
-	*perm_store = PTE_P|PTE_U|PTE_W;
+	*perm_store = PTE_SHARE|PTE_P|PTE_U|PTE_W;
 	return 0;
 }
 

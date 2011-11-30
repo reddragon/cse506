@@ -86,6 +86,12 @@ idt_init(void)
 	asm("movl $h_timer, %0"
 			:"=r"(addr));
 	SETGATE(idt[IRQ_OFFSET + IRQ_TIMER], 0, GD_KT, addr, 3);
+	asm("movl $h_kbd, %0"
+			:"=r"(addr));
+	SETGATE(idt[IRQ_OFFSET + IRQ_KBD], 0, GD_KT, addr, 3);
+	asm("movl $h_serial, %0"
+			:"=r"(addr));
+	SETGATE(idt[IRQ_OFFSET + IRQ_SERIAL], 0, GD_KT, addr, 3);
 	// Setup a TSS so that we get the right stack
 	// when we trap to the kernel.
 	ts.ts_esp0 = KSTACKTOP;
@@ -157,8 +163,6 @@ trap_dispatch(struct Trapframe *tf)
 	// Handle keyboard and serial interrupts.
 	// LAB 7: Your code here.
 
-	
-
 	// Used for the return value of the syscall
 	int syscall_ret = 0;
 	switch(tf->tf_trapno) {
@@ -175,6 +179,11 @@ trap_dispatch(struct Trapframe *tf)
 					syscall(tf->tf_regs.reg_eax, tf->tf_regs.reg_edx, \
 					tf->tf_regs.reg_ecx, tf->tf_regs.reg_ebx, \
 					tf->tf_regs.reg_esi, tf->tf_regs.reg_edi);
+				return;
+		case IRQ_OFFSET + IRQ_KBD: kbd_intr();
+				return;
+
+		case IRQ_OFFSET + IRQ_SERIAL: serial_intr();
 				return;
 	};
 	
