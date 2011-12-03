@@ -1,0 +1,976 @@
+6828 decimal is 15254 octal!
+Physical memory: 66556K available, base = 640K, extended = 65532K
+check_page_alloc() succeeded!
+page_check() succeeded!
+check_boot_pgdir() succeeded!
+enabled interrupts: 1 2 4
+	     Setup timer interrupts via 8259A
+enabled interrupts: 0 1 2 4
+	     unmasked timer interrupt
+PCI: 00:00.0: 8086:1237: class: 6.0 (Bridge device) irq: 0
+PCI: 00:01.0: 8086:7000: class: 6.1 (Bridge device) irq: 0
+PCI: 00:01.1: 8086:7010: class: 1.1 (Storage controller) irq: 0
+PCI: 00:01.3: 8086:7113: class: 6.80 (Bridge device) irq: 9
+PCI: 00:02.0: 1013:00b8: class: 3.0 (Display controller) irq: 0
+PCI: 00:03.0: 8086:1209: class: 2.0 (Network controller) irq: 11
+PCI function 00:03.0 (8086:1209) enabled
+e100_info reg 1 : c040
+FS is running
+FS can do I/O
+Device 1 presence: 1
+In pgfault_upcall
+The upcall has been set
+block cache is good
+superblock is good
+bitmap is good
+alloc_block is good
+file_open for /not-found : -11
+file_open for /newmotd : 0
+file_open is good
+file_get_block is good
+file_flush is good
+file_truncate is good
+file rewrite is good
+In serve
+In pgfault_upcall
+The upcall has been set
+In pgfault_upcall
+The upcall has been set
+In the handler of pgfault with va:eebfdf70
+In pgfault_upcall
+The upcall has been set
+In the handler of pgfault with va:8193a4
+In the handler of pgfault with va:b3fbf8
+In pgfault_upcall
+The upcall has been set
+In the handler of pgfault with va:eebfdf70
+In pgfault_upcall
+The upcall has been set
+In the handler of pgfault with va:8193a8
+In the handler of pgfault with va:b3fbf8
+In pgfault_upcall
+The upcall has been set
+In the handler of pgfault with va:eebfdf70
+In pgfault_upcall
+The upcall has been set
+In the handler of pgfault with va:8193ac
+In the handler of pgfault with va:b3f54c
+In the handler of pgfault with va:b38f00
+In the handler of pgfault with va:b3a300
+In the handler of pgfault with va:b39000
+In the handler of pgfault with va:b3b080
+In the handler of pgfault with va:b3c058
+In the handler of pgfault with va:b3d030
+In the handler of pgfault with va:b3e008
+In the handler of pgfault with va:a396dc
+In the handler of pgfault with va:a3a090
+In the handler of pgfault with va:a3b004
+In the handler of pgfault with va:a3c020
+In the handler of pgfault with va:a3d760
+In the handler of pgfault with va:a3e720
+In the handler of pgfault with va:a3f6e0
+In the handler of pgfault with va:a406a0
+In the handler of pgfault with va:a41660
+In the handler of pgfault with va:a42620
+In the handler of pgfault with va:a435e0
+In the handler of pgfault with va:a445a0
+In the handler of pgfault with va:a45560
+In the handler of pgfault with va:a46520
+In the handler of pgfault with va:a474e0
+In the handler of pgfault with va:a484a0
+In the handler of pgfault with va:a49460
+In the handler of pgfault with va:a4a420
+In the handler of pgfault with va:a4b3e0
+In the handler of pgfault with va:a4c3a0
+In the handler of pgfault with va:a4d360
+In the handler of pgfault with va:a4e320
+In the handler of pgfault with va:a4f2e0
+In the handler of pgfault with va:a502a0
+In the handler of pgfault with va:a51260
+In the handler of pgfault with va:a52220
+In the handler of pgfault with va:a531e0
+In the handler of pgfault with va:a541a0
+In the handler of pgfault with va:a55160
+In the handler of pgfault with va:a56120
+In the handler of pgfault with va:a570e0
+In the handler of pgfault with va:a580a0
+In the handler of pgfault with va:a59060
+In the handler of pgfault with va:a5a020
+In the handler of pgfault with va:a5b7c0
+In the handler of pgfault with va:a5c780
+In the handler of pgfault with va:a5d740
+In the handler of pgfault with va:a5e700
+In the handler of pgfault with va:a5f6c0
+In the handler of pgfault with va:a60680
+In the handler of pgfault with va:a61640
+In the handler of pgfault with va:a62600
+In the handler of pgfault with va:a635c0
+In the handler of pgfault with va:a64580
+In the handler of pgfault with va:a65540
+In the handler of pgfault with va:a66500
+In the handler of pgfault with va:a674c0
+In the handler of pgfault with va:a68480
+In the handler of pgfault with va:a69440
+In the handler of pgfault with va:a6a400
+In the handler of pgfault with va:a6b3c0
+In the handler of pgfault with va:a6c380
+In the handler of pgfault with va:a6d340
+In the handler of pgfault with va:a6e300
+In the handler of pgfault with va:a6f2c0
+In the handler of pgfault with va:a70280
+In the handler of pgfault with va:a71240
+In the handler of pgfault with va:a72200
+In the handler of pgfault with va:a731c0
+In the handler of pgfault with va:a74180
+In the handler of pgfault with va:a75140
+In the handler of pgfault with va:a76100
+In the handler of pgfault with va:a770c0
+In the handler of pgfault with va:a78080
+In the handler of pgfault with va:a79040
+In the handler of pgfault with va:a7a000
+In the handler of pgfault with va:a7b7a0
+In the handler of pgfault with va:a7c760
+In the handler of pgfault with va:a7d720
+In the handler of pgfault with va:a7e6e0
+In the handler of pgfault with va:a7f6a0
+In the handler of pgfault with va:a80660
+In the handler of pgfault with va:a81620
+In the handler of pgfault with va:a825e0
+In the handler of pgfault with va:a835a0
+In the handler of pgfault with va:a84560
+In the handler of pgfault with va:a85520
+In the handler of pgfault with va:a864e0
+In the handler of pgfault with va:a874a0
+In the handler of pgfault with va:a88460
+In the handler of pgfault with va:a89420
+In the handler of pgfault with va:a8a3e0
+In the handler of pgfault with va:a8b3a0
+In the handler of pgfault with va:a8c360
+In the handler of pgfault with va:a8d320
+In the handler of pgfault with va:a8e2e0
+In the handler of pgfault with va:a8f2a0
+In the handler of pgfault with va:a90260
+In the handler of pgfault with va:a91220
+In the handler of pgfault with va:a921e0
+In the handler of pgfault with va:a931a0
+In the handler of pgfault with va:a94160
+In the handler of pgfault with va:a95120
+In the handler of pgfault with va:a960e0
+In the handler of pgfault with va:a970a0
+In the handler of pgfault with va:a98060
+In the handler of pgfault with va:a99020
+In the handler of pgfault with va:a9a7c0
+In the handler of pgfault with va:a9b780
+In the handler of pgfault with va:a9c740
+In the handler of pgfault with va:a9d700
+In the handler of pgfault with va:a9e6c0
+In the handler of pgfault with va:a9f680
+In the handler of pgfault with va:aa0640
+In the handler of pgfault with va:aa1600
+In the handler of pgfault with va:aa25c0
+In the handler of pgfault with va:aa3580
+In the handler of pgfault with va:aa4540
+In the handler of pgfault with va:aa5500
+In the handler of pgfault with va:aa64c0
+In the handler of pgfault with va:aa7480
+In the handler of pgfault with va:aa8440
+In the handler of pgfault with va:aa9400
+In the handler of pgfault with va:aaa3c0
+In the handler of pgfault with va:aab380
+In the handler of pgfault with va:aac340
+In the handler of pgfault with va:aad300
+In the handler of pgfault with va:aae2c0
+In the handler of pgfault with va:aaf280
+In the handler of pgfault with va:ab0240
+In the handler of pgfault with va:ab1200
+In the handler of pgfault with va:ab21c0
+In the handler of pgfault with va:ab3180
+In the handler of pgfault with va:ab4140
+In the handler of pgfault with va:ab5100
+In the handler of pgfault with va:ab60c0
+In the handler of pgfault with va:ab7080
+In the handler of pgfault with va:ab8040
+In the handler of pgfault with va:ab9000
+In the handler of pgfault with va:aba7a0
+In the handler of pgfault with va:abb760
+In the handler of pgfault with va:abc720
+In the handler of pgfault with va:abd6e0
+In the handler of pgfault with va:abe6a0
+In the handler of pgfault with va:abf660
+In the handler of pgfault with va:ac0620
+In the handler of pgfault with va:ac15e0
+In the handler of pgfault with va:ac25a0
+In the handler of pgfault with va:ac3560
+In the handler of pgfault with va:ac4520
+In the handler of pgfault with va:ac54e0
+In the handler of pgfault with va:ac64a0
+In the handler of pgfault with va:ac7460
+In the handler of pgfault with va:ac8420
+In the handler of pgfault with va:ac93e0
+In the handler of pgfault with va:aca3a0
+In the handler of pgfault with va:acb360
+In the handler of pgfault with va:acc320
+In the handler of pgfault with va:acd2e0
+In the handler of pgfault with va:ace2a0
+In the handler of pgfault with va:acf260
+In the handler of pgfault with va:ad0220
+In the handler of pgfault with va:ad11e0
+In the handler of pgfault with va:ad21a0
+In the handler of pgfault with va:ad3160
+In the handler of pgfault with va:ad4120
+In the handler of pgfault with va:ad50e0
+In the handler of pgfault with va:ad60a0
+In the handler of pgfault with va:ad7060
+In the handler of pgfault with va:ad8020
+In the handler of pgfault with va:ad97c0
+In the handler of pgfault with va:ada780
+In the handler of pgfault with va:adb740
+In the handler of pgfault with va:adc700
+In the handler of pgfault with va:add6c0
+In the handler of pgfault with va:ade680
+In the handler of pgfault with va:adf640
+In the handler of pgfault with va:ae0600
+In the handler of pgfault with va:ae15c0
+In the handler of pgfault with va:ae2580
+In the handler of pgfault with va:ae3540
+In the handler of pgfault with va:ae4500
+In the handler of pgfault with va:ae54c0
+In the handler of pgfault with va:ae6480
+In the handler of pgfault with va:ae7440
+In the handler of pgfault with va:ae8400
+In the handler of pgfault with va:ae93c0
+In the handler of pgfault with va:aea380
+In the handler of pgfault with va:aeb340
+In the handler of pgfault with va:aec300
+In the handler of pgfault with va:aed2c0
+In the handler of pgfault with va:aee280
+In the handler of pgfault with va:aef240
+In the handler of pgfault with va:af0200
+In the handler of pgfault with va:af11c0
+In the handler of pgfault with va:af2180
+In the handler of pgfault with va:af3140
+In the handler of pgfault with va:af4100
+In the handler of pgfault with va:af50c0
+In the handler of pgfault with va:af6080
+In the handler of pgfault with va:af7040
+In the handler of pgfault with va:af8000
+In the handler of pgfault with va:af97a0
+In the handler of pgfault with va:afa760
+In the handler of pgfault with va:afb720
+In the handler of pgfault with va:afc6e0
+In the handler of pgfault with va:afd6a0
+In the handler of pgfault with va:afe660
+In the handler of pgfault with va:aff620
+In the handler of pgfault with va:b005e0
+In the handler of pgfault with va:b015a0
+In the handler of pgfault with va:b02560
+In the handler of pgfault with va:b03520
+In the handler of pgfault with va:b044e0
+In the handler of pgfault with va:b054a0
+In the handler of pgfault with va:b06460
+In the handler of pgfault with va:b07420
+In the handler of pgfault with va:b083e0
+In the handler of pgfault with va:b093a0
+In the handler of pgfault with va:b0a360
+In the handler of pgfault with va:b0b320
+In the handler of pgfault with va:b0c2e0
+In the handler of pgfault with va:b0d2a0
+In the handler of pgfault with va:b0e260
+In the handler of pgfault with va:b0f220
+In the handler of pgfault with va:b101e0
+In the handler of pgfault with va:b111a0
+In the handler of pgfault with va:b12160
+In the handler of pgfault with va:b13120
+In the handler of pgfault with va:b140e0
+In the handler of pgfault with va:b150a0
+In the handler of pgfault with va:b16060
+In the handler of pgfault with va:b17020
+In the handler of pgfault with va:b187c0
+In the handler of pgfault with va:b19780
+In the handler of pgfault with va:b1a740
+In the handler of pgfault with va:b1b700
+In the handler of pgfault with va:b1c6c0
+In the handler of pgfault with va:b1d680
+In the handler of pgfault with va:b1e640
+In the handler of pgfault with va:b1f600
+In the handler of pgfault with va:b205c0
+In the handler of pgfault with va:b21580
+In the handler of pgfault with va:b22540
+In the handler of pgfault with va:b23500
+In the handler of pgfault with va:b244c0
+In the handler of pgfault with va:b25480
+In the handler of pgfault with va:b26440
+In the handler of pgfault with va:b27400
+In the handler of pgfault with va:b283c0
+In the handler of pgfault with va:b29380
+In the handler of pgfault with va:b2a340
+In the handler of pgfault with va:b2b300
+In the handler of pgfault with va:b2c2c0
+In the handler of pgfault with va:b2d280
+In the handler of pgfault with va:b2e240
+In the handler of pgfault with va:b2f200
+In the handler of pgfault with va:b301c0
+In the handler of pgfault with va:b31180
+In the handler of pgfault with va:b32140
+In the handler of pgfault with va:b33100
+In the handler of pgfault with va:b340c0
+In the handler of pgfault with va:b35080
+In the handler of pgfault with va:b36040
+In the handler of pgfault with va:b37000
+[00001003] fsipc 1 74736574
+In the handler of pgfault with va:eebfdf90
+In the handler of pgfault with va:b3fbf0
+I am the child 1004 1004
+In the handler of pgfault with va:8193a4
+In the handler of pgfault with va:eebfdf90
+In the handler of pgfault with va:b3fbf0
+I am the child 1005 1005
+In the handler of pgfault with va:8193a8
+In the handler of pgfault with va:eebfdf90
+In the handler of pgfault with va:b3fbf0
+I am the child 1006 1006
+In the handler of pgfault with va:8193ac
+In output
+fs req 1 from 00001003 [page 03cf5007: testshell.sh]
+serve_open 00001003 testshell.sh 0x0
+file_open for testshell.sh : 0
+sending success, page d0000000
+In serve
+ns: 52:54:00:12:34:56 bound to static IP 10.0.2.15
+NS: TCP/IP initialized.
+[00001003] fsipc 1 74736574
+net/output.c : received size 2a
+ffffffff ffffffff ffffffff ffffffff ffffffff ffffffff 52 54 0 12 34 56 8 6 0 1 8 0 6 4 0 1 52 54 0 12 34 56 a 0 2 f 0 0 0 0 0 0 a 0 2 2 
+	     	     	     	     	     	      IN E100 TRANSMIT, 818004 2a
+a000 4000 2d1000
+fs req 1 from 00001003 [page 03cf5007: testshell.out]
+serve_open 00001003 testshell.out 0x301
+sending success, page d0001000
+In serve
+running sh -x < testshell.sh > testshell.out
+In pgfault_upcall
+The upcall has been set
+In pgfault_upcall
+The upcall has been set
+	     	     	     	     In duppage va: d0000000
+In duppage va: d0000000 
+	     	     	     	     In duppage va: d0001000
+In duppage va: d0001000 
+	     	     	     	     In duppage va: d0002000
+In duppage va: d0002000 
+	     	     	     	     In duppage va: d0003000
+In duppage va: d0003000 
+In the handler of pgfault with va:eebfdf40
+In pgfault_upcall
+The upcall has been set
+In the handler of pgfault with va:805000
+[00001003] fsipc 6 00000400
+e100 input: 0000   5254 0012 3456 5255  0a00 0202 0806 0001
+e100 input: 0010   0800 0604 0002 5255  0a00 0202 0a00 0202
+e100 input: 0020   5254 0012 3456 0a00  020f
+	     	     	     	     	      E100 RECV returning SIZE 2a
+	     	     	     	     	     	     	      Resuming RU
+Now sending stufFFFFFFFFFFFFFFFFFF 2a
+In the handler of pgfault with va:eebfdf60
+In the handler of pgfault with va:808074
+I am the child 1007 1007
+In the handler of pgfault with va:805000
+[00001007] fsipc 6 00000400
+fs req 6 from 00001003 [page 03bac007: ]
+serve_flush 00001003 00000400
+In serve
+[00001003] fsipc 6 00000401
+fs req 6 from 00001003 [page 03bac007: ]
+serve_flush 00001003 00000401
+In serve
+fs req 6 from 00001007 [page 03ba0007: ]
+serve_flush 00001007 00000400
+In serve
+[00001007] fsipc 6 00000401
+fs req 6 from 00001007 [page 03ba0007: ]
+serve_flush 00001007 00000401
+In serve
+In spawn
+[00001007] fsipc 1 0068732f
+fs req 1 from 00001007 [page 03ba0007: /sh]
+serve_open 00001007 /sh 0x0
+file_open for /sh : 0
+sending success, page d0002000
+In serve
+[00001007] fsipc 3 00000402
+fs req 3 from 00001007 [page 03ba0007: ]
+serve_read 00001007 00000402 00000200
+opened : 809040 d0002000 ffff000
+In file_read 200 0 
+In file_read 0
+	     	     	     	     	     file_read : blk : 100f0000
+In serve
+Spawn read elf
+Spawn exoforked
+	     	     	     	     Child entry : 800020
+	     	     	     	     	     ELF_PROG_LOAD
+type : 1, va : 200000, pa : 200000
+[00001007] fsipc 3 00000402
+fs req 3 from 00001007 [page 03ba0007: ]
+serve_read 00001007 00000402 00001000
+opened : 809040 d0002000 ffff000
+In file_read 1000 1000 
+In file_read 1000
+	     	     	     	     	     file_read : blk : 100f1000
+In serve
+[00001007] fsipc 3 00000402
+fs req 3 from 00001007 [page 03ba0007: ]
+serve_read 00001007 00000402 00001000
+opened : 809040 d0002000 ffff000
+In file_read 1000 2000 
+In file_read 2000
+	     	     	     	     	     file_read : blk : 100f2000
+In serve
+[00001007] fsipc 3 00000402
+fs req 3 from 00001007 [page 03ba0007: ]
+serve_read 00001007 00000402 00001000
+opened : 809040 d0002000 ffff000
+In file_read 1000 3000 
+In file_read 3000
+	     	     	     	     	     file_read : blk : 100f3000
+In serve
+[00001007] fsipc 3 00000402
+fs req 3 from 00001007 [page 03ba0007: ]
+serve_read 00001007 00000402 00001000
+opened : 809040 d0002000 ffff000
+In file_read 1000 4000 
+In file_read 4000
+	     	     	     	     	     file_read : blk : 100f4000
+In serve
+[00001007] fsipc 3 00000402
+fs req 3 from 00001007 [page 03ba0007: ]
+serve_read 00001007 00000402 00001000
+opened : 809040 d0002000 ffff000
+In file_read 1000 5000 
+In file_read 5000
+	     	     	     	     	     file_read : blk : 100f5000
+In serve
+[00001007] fsipc 3 00000402
+fs req 3 from 00001007 [page 03ba0007: ]
+serve_read 00001007 00000402 00001000
+opened : 809040 d0002000 ffff000
+In file_read 1000 6000 
+In file_read 6000
+	     	     	     	     	     file_read : blk : 100f6000
+In serve
+[00001007] fsipc 3 00000402
+fs req 3 from 00001007 [page 03ba0007: ]
+serve_read 00001007 00000402 00001000
+opened : 809040 d0002000 ffff000
+In file_read 1000 7000 
+In file_read 7000
+	     	     	     	     	     file_read : blk : 100f7000
+In serve
+[00001007] fsipc 3 00000402
+fs req 3 from 00001007 [page 03ba0007: ]
+serve_read 00001007 00000402 00001000
+opened : 809040 d0002000 ffff000
+In file_read 1000 8000 
+In file_read 8000
+	     	     	     	     	     file_read : blk : 100f8000
+In serve
+[00001007] fsipc 3 00000402
+fs req 3 from 00001007 [page 03ba0007: ]
+serve_read 00001007 00000402 00001000
+opened : 809040 d0002000 ffff000
+In file_read 1000 9000 
+In file_read 9000
+	     	     	     	     	     file_read : blk : 100f9000
+In serve
+[00001007] fsipc 3 00000402
+fs req 3 from 00001007 [page 03ba0007: ]
+serve_read 00001007 00000402 00001000
+opened : 809040 d0002000 ffff000
+In file_read 1000 a000 
+In file_read a000
+	     	     	     	     	     file_read : blk : 100fa000
+In serve
+[00001007] fsipc 3 00000402
+fs req 3 from 00001007 [page 03ba0007: ]
+serve_read 00001007 00000402 00001000
+opened : 809040 d0002000 ffff000
+In file_read 1000 b000 
+In file_read b000
+	     	     	     	     	     file_read : blk : 100fb000
+In serve
+[00001007] fsipc 3 00000402
+fs req 3 from 00001007 [page 03ba0007: ]
+serve_read 00001007 00000402 00001000
+opened : 809040 d0002000 ffff000
+In file_read 1000 c000 
+In file_read c000
+	     	     	     	     	     file_read : blk : 100fc000
+In serve
+[00001007] fsipc 3 00000402
+fs req 3 from 00001007 [page 03ba0007: ]
+serve_read 00001007 00000402 00001000
+opened : 809040 d0002000 ffff000
+In file_read 1000 d000 
+In file_read d000
+	     	     	     	     	     file_read : blk : 100fd000
+In serve
+[00001007] fsipc 3 00000402
+fs req 3 from 00001007 [page 03ba0007: ]
+serve_read 00001007 00000402 00000f0f
+opened : 809040 d0002000 ffff000
+In file_read f0f e000 
+In file_read e000
+	     	     	     	     	     file_read : blk : 100fe000
+In serve
+	     	     	     	     	     ELF_PROG_LOAD
+type : 1, va : 800020, pa : 800020
+[00001007] fsipc 3 00000402
+fs req 3 from 00001007 [page 03ba0007: ]
+serve_read 00001007 00000402 00001000
+opened : 809040 d0002000 ffff000
+In file_read 1000 f000 
+In file_read f000
+	     	     	     	     	     file_read : blk : 100ff000
+In serve
+[00001007] fsipc 3 00000402
+fs req 3 from 00001007 [page 03ba0007: ]
+serve_read 00001007 00000402 00001000
+opened : 809040 d0002000 ffff000
+In file_read 1000 10000 
+In file_read 10000
+	     	     	     	     	     file_read : blk : 10100000
+In serve
+[00001007] fsipc 3 00000402
+fs req 3 from 00001007 [page 03ba0007: ]
+serve_read 00001007 00000402 00001000
+opened : 809040 d0002000 ffff000
+In file_read 1000 11000 
+In file_read 11000
+	     	     	     	     	     file_read : blk : 10101000
+In serve
+[00001007] fsipc 3 00000402
+fs req 3 from 00001007 [page 03ba0007: ]
+serve_read 00001007 00000402 00001000
+opened : 809040 d0002000 ffff000
+In file_read 1000 12000 
+In file_read 12000
+	     	     	     	     	     file_read : blk : 10102000
+In serve
+[00001007] fsipc 3 00000402
+fs req 3 from 00001007 [page 03ba0007: ]
+serve_read 00001007 00000402 000007b4
+opened : 809040 d0002000 ffff000
+In file_read 7b4 13000 
+In file_read 13000
+	     	     	     	     	     file_read : blk : 10103000
+In serve
+	     	     	     	     	     ELF_PROG_LOAD
+type : 1, va : 805000, pa : 805000
+[00001007] fsipc 3 00000402
+fs req 3 from 00001007 [page 03ba0007: ]
+serve_read 00001007 00000402 00001000
+opened : 809040 d0002000 ffff000
+In file_read 1000 14000 
+In file_read 14000
+	     	     	     	     	     file_read : blk : 10104000
+In serve
+[00001007] fsipc 3 00000402
+fs req 3 from 00001007 [page 03ba0007: ]
+serve_read 00001007 00000402 00001000
+opened : 809040 d0002000 ffff000
+In file_read 1000 15000 
+In file_read 15000
+	     	     	     	     	     file_read : blk : 10105000
+In serve
+[00001007] fsipc 3 00000402
+fs req 3 from 00001007 [page 03ba0007: ]
+serve_read 00001007 00000402 00001000
+opened : 809040 d0002000 ffff000
+In file_read 1000 16000 
+In file_read 16000
+	     	     	     	     	     file_read : blk : 10106000
+In serve
+[00001007] fsipc 3 00000402
+fs req 3 from 00001007 [page 03ba0007: ]
+serve_read 00001007 00000402 00000074
+opened : 809040 d0002000 ffff000
+In file_read 74 17000 
+In file_read 17000
+	     	     	     	     	     file_read : blk : 10107000
+In serve
+[00001007] fsipc 6 00000402
+fs req 6 from 00001007 [page 03ba0007: ]
+serve_flush 00001007 00000402
+In serve
+Spawn fd closed!
+About to begin
+In copy_shared_pages
+PTE_SHARE va: d0000000
+PTE_SHARE va: d0001000
+Done with copy_shared_pages
+[00001007] fsipc 6 00000400
+[00001008] unknown device type 102
+read error: invalid parameter
+[00001008] unknown device type 102
+[00001008] unknown device type 102
+fs req 6 from 00001007 [page 03ba0007: ]
+serve_flush 00001007 00000400
+In serve
+[00001007] fsipc 6 00000401
+fs req 6 from 00001007 [page 03ba0007: ]
+serve_flush 00001007 00000401
+In serve
+[00001003] fsipc 1 74736574
+fs req 1 from 00001003 [page 03bac007: testshell.out]
+serve_open 00001003 testshell.out 0x0
+file_open for testshell.out : 0
+sending success, page d0000000
+In serve
+[00001003] fsipc 1 74736574
+fs req 1 from 00001003 [page 03bac007: testshell.key]
+serve_open 00001003 testshell.key 0x0
+file_open for testshell.key : 0
+sending success, page d0001000
+In serve
+[00001003] fsipc 3 00000800
+fs req 3 from 00001003 [page 03bac007: ]
+serve_read 00001003 00000800 00000001
+opened : 809020 d0000000 ffff000
+In file_read 1 0 
+In serve
+[00001003] fsipc 3 00000801
+fs req 3 from 00001003 [page 03bac007: ]
+serve_read 00001003 00000801 00000001
+opened : 809030 d0001000 ffff000
+In file_read 1 0 
+In file_read 0
+	     	     	     	     	     file_read : blk : 10008000
+In serve
+shell produced incorrect output.
+expected:
+===
+[00001003] fsipc 3 00000801
+fs req 3 from 00001003 [page 03bac007: ]
+serve_read 00001003 00000801 00000063
+opened : 809030 d0001000 ffff000
+In file_read 63 0 
+In file_read 0
+	     	     	     	     	     file_read : blk : 10008000
+In serve
+# echo hello world | cat
+hello world
+# cat lorem >out
+# cat out
+Lorem ipsum dolor sit amet, consect[00001003] fsipc 3 00000801
+fs req 3 from 00001003 [page 03bac007: ]
+serve_read 00001003 00000801 00000063
+opened : 809030 d0001000 ffff000
+In file_read 63 63 
+In file_read 63
+	     	     	     	     	     file_read : blk : 10008000
+In serve
+etur
+adipisicing elit, sed do eiusmod tempor
+incididunt ut labore et dolore magna
+aliqua. Ut enim a[00001003] fsipc 3 00000801
+fs req 3 from 00001003 [page 03bac007: ]
+serve_read 00001003 00000801 00000063
+opened : 809030 d0001000 ffff000
+In file_read 63 c6 
+In file_read c6
+	     	     	     	     	     file_read : blk : 10008000
+In serve
+d minim veniam, quis
+nostrud exercitation ullamco laboris
+nisi ut aliquip ex ea commodo consequat.
+[00001003] fsipc 3 00000801
+fs req 3 from 00001003 [page 03bac007: ]
+serve_read 00001003 00000801 00000063
+opened : 809030 d0001000 ffff000
+In file_read 63 129 
+In file_read 129
+	     	     	     	     	     file_read : blk : 10008000
+In serve
+Duis aute irure dolor in reprehenderit
+in voluptate velit esse cillum dolore eu
+fugiat nulla pariat[00001003] fsipc 3 00000801
+fs req 3 from 00001003 [page 03bac007: ]
+serve_read 00001003 00000801 00000063
+opened : 809030 d0001000 ffff000
+In file_read 63 18c 
+In file_read 18c
+	     	     	     	     	     file_read : blk : 10008000
+In serve
+ur. Excepteur sint
+occaecat cupidatat non proident, sunt in
+culpa qui officia deserunt mollit anim
+[00001003] fsipc 3 00000801
+fs req 3 from 00001003 [page 03bac007: ]
+serve_read 00001003 00000801 00000063
+opened : 809030 d0001000 ffff000
+In file_read 63 1ef 
+In file_read 1ef
+	     	     	     	     	     file_read : blk : 10008000
+In serve
+id est laborum.
+# cat lorem |num
+    1 Lorem ipsum dolor sit amet, consectetur
+    2 adipisicing el[00001003] fsipc 3 00000801
+fs req 3 from 00001003 [page 03bac007: ]
+serve_read 00001003 00000801 00000063
+opened : 809030 d0001000 ffff000
+In file_read 63 252 
+In file_read 252
+	     	     	     	     	     file_read : blk : 10008000
+In serve
+it, sed do eiusmod tempor
+    3 incididunt ut labore et dolore magna
+    4 aliqua. Ut enim ad minim[00001003] fsipc 3 00000801
+fs req 3 from 00001003 [page 03bac007: ]
+serve_read 00001003 00000801 00000063
+opened : 809030 d0001000 ffff000
+In file_read 63 2b5 
+In file_read 2b5
+	     	     	     	     	     file_read : blk : 10008000
+In serve
+ veniam, quis
+    5 nostrud exercitation ullamco laboris
+    6 nisi ut aliquip ex ea commodo conseq[00001003] fsipc 3 00000801
+fs req 3 from 00001003 [page 03bac007: ]
+serve_read 00001003 00000801 00000063
+opened : 809030 d0001000 ffff000
+In file_read 63 318 
+In file_read 318
+	     	     	     	     	     file_read : blk : 10008000
+In serve
+uat.
+    7 Duis aute irure dolor in reprehenderit
+    8 in voluptate velit esse cillum dolore eu
+  [00001003] fsipc 3 00000801
+fs req 3 from 00001003 [page 03bac007: ]
+serve_read 00001003 00000801 00000063
+opened : 809030 d0001000 ffff000
+In file_read 63 37b 
+In file_read 37b
+	     	     	     	     	     file_read : blk : 10008000
+In serve
+  9 fugiat nulla pariatur. Excepteur sint
+   10 occaecat cupidatat non proident, sunt in
+   11 culp[00001003] fsipc 3 00000801
+fs req 3 from 00001003 [page 03bac007: ]
+serve_read 00001003 00000801 00000063
+opened : 809030 d0001000 ffff000
+In file_read 63 3de 
+In file_read 3de
+	     	     	     	     	     file_read : blk : 10008000
+In serve
+a qui officia deserunt mollit anim
+   12 id est laborum.
+# cat lorem |num |num |num |num |num
+    1[00001003] fsipc 3 00000801
+fs req 3 from 00001003 [page 03bac007: ]
+serve_read 00001003 00000801 00000063
+opened : 809030 d0001000 ffff000
+In file_read 63 441 
+In file_read 441
+	     	     	     	     	     file_read : blk : 10008000
+In serve
+     1     1     1     1 Lorem ipsum dolor sit amet, consectetur
+    2     2     2     2     2 adip[00001003] fsipc 3 00000801
+fs req 3 from 00001003 [page 03bac007: ]
+serve_read 00001003 00000801 00000063
+opened : 809030 d0001000 ffff000
+In file_read 63 4a4 
+In file_read 4a4
+	     	     	     	     	     file_read : blk : 10008000
+In serve
+isicing elit, sed do eiusmod tempor
+    3     3     3     3     3 incididunt ut labore et dolore ma[00001003] fsipc 3 00000801
+fs req 3 from 00001003 [page 03bac007: ]
+serve_read 00001003 00000801 00000063
+opened : 809030 d0001000 ffff000
+In file_read 63 507 
+In file_read 507
+	     	     	     	     	     file_read : blk : 10008000
+In serve
+gna
+    4     4     4     4     4 aliqua. Ut enim ad minim veniam, quis
+    5     5     5     5    [00001003] fsipc 3 00000801
+fs req 3 from 00001003 [page 03bac007: ]
+serve_read 00001003 00000801 00000063
+opened : 809030 d0001000 ffff000
+In file_read 63 56a 
+In file_read 56a
+	     	     	     	     	     file_read : blk : 10008000
+In serve
+ 5 nostrud exercitation ullamco laboris
+    6     6     6     6     6 nisi ut aliquip ex ea commodo[00001003] fsipc 3 00000801
+fs req 3 from 00001003 [page 03bac007: ]
+serve_read 00001003 00000801 00000063
+opened : 809030 d0001000 ffff000
+In file_read 63 5cd 
+In file_read 5cd
+	     	     	     	     	     file_read : blk : 10008000
+In serve
+ consequat.
+    7     7     7     7     7 Duis aute irure dolor in reprehenderit
+    8     8     8 [00001003] fsipc 3 00000801
+fs req 3 from 00001003 [page 03bac007: ]
+serve_read 00001003 00000801 00000063
+opened : 809030 d0001000 ffff000
+In file_read 63 630 
+In file_read 630
+	     	     	     	     	     file_read : blk : 10008000
+In serve
+    8     8 in voluptate velit esse cillum dolore eu
+    9     9     9     9     9 fugiat nulla par[00001003] fsipc 3 00000801
+fs req 3 from 00001003 [page 03bac007: ]
+serve_read 00001003 00000801 00000063
+opened : 809030 d0001000 ffff000
+In file_read 63 693 
+In file_read 693
+	     	     	     	     	     file_read : blk : 10008000
+In serve
+iatur. Excepteur sint
+   10    10    10    10    10 occaecat cupidatat non proident, sunt in
+   11 [00001003] fsipc 3 00000801
+fs req 3 from 00001003 [page 03bac007: ]
+serve_read 00001003 00000801 00000063
+opened : 809030 d0001000 ffff000
+In file_read 63 6f6 
+In file_read 6f6
+	     	     	     	     	     file_read : blk : 10008000
+In serve
+   11    11    11    11 culpa qui officia deserunt mollit anim
+   12    12    12    12    12 id est[00001003] fsipc 3 00000801
+fs req 3 from 00001003 [page 03bac007: ]
+serve_read 00001003 00000801 00000063
+opened : 809030 d0001000 ffff000
+In file_read 63 759 
+In file_read 759
+	     	     	     	     	     file_read : blk : 10008000
+In serve
+ laborum.
+# lsfd -1
+fd 0: name testshell.sh isdir 0 size 126 dev file
+fd 1: name testshell.out isdi[00001003] fsipc 3 00000801
+fs req 3 from 00001003 [page 03bac007: ]
+serve_read 00001003 00000801 00000063
+opened : 809030 d0001000 ffff000
+In file_read 63 7bc 
+In file_read 7bc
+	     	     	     	     	     file_read : blk : 10008000
+In serve
+r 0 size 1951 dev file
+# cat script
+echo This is from the script.
+cat lorem | num | cat
+echo These [00001003] fsipc 3 00000801
+fs req 3 from 00001003 [page 03bac007: ]
+serve_read 00001003 00000801 00000063
+opened : 809030 d0001000 ffff000
+In file_read 63 81f 
+In file_read 81f
+	     	     	     	     	     file_read : blk : 10008000
+In serve
+are my file descriptors.
+lsfd -1
+echo This is the end of the script.
+# sh <script
+This is from the [00001003] fsipc 3 00000801
+fs req 3 from 00001003 [page 03bac007: ]
+serve_read 00001003 00000801 00000063
+opened : 809030 d0001000 ffff000
+In file_read 63 882 
+In file_read 882
+	     	     	     	     	     file_read : blk : 10008000
+In serve
+script.
+    1 Lorem ipsum dolor sit amet, consectetur
+    2 adipisicing elit, sed do eiusmod tempor[00001003] fsipc 3 00000801
+fs req 3 from 00001003 [page 03bac007: ]
+serve_read 00001003 00000801 00000063
+opened : 809030 d0001000 ffff000
+In file_read 63 8e5 
+In file_read 8e5
+	     	     	     	     	     file_read : blk : 10008000
+In serve
+
+    3 incididunt ut labore et dolore magna
+    4 aliqua. Ut enim ad minim veniam, quis
+    5 nostr[00001003] fsipc 3 00000801
+fs req 3 from 00001003 [page 03bac007: ]
+serve_read 00001003 00000801 00000063
+opened : 809030 d0001000 ffff000
+In file_read 63 948 
+In file_read 948
+	     	     	     	     	     file_read : blk : 10008000
+In serve
+ud exercitation ullamco laboris
+    6 nisi ut aliquip ex ea commodo consequat.
+    7 Duis aute irur[00001003] fsipc 3 00000801
+fs req 3 from 00001003 [page 03bac007: ]
+serve_read 00001003 00000801 00000063
+opened : 809030 d0001000 ffff000
+In file_read 63 9ab 
+In file_read 9ab
+	     	     	     	     	     file_read : blk : 10008000
+In serve
+e dolor in reprehenderit
+    8 in voluptate velit esse cillum dolore eu
+    9 fugiat nulla pariatur[00001003] fsipc 3 00000801
+fs req 3 from 00001003 [page 03bac007: ]
+serve_read 00001003 00000801 00000063
+opened : 809030 d0001000 ffff000
+In file_read 63 a0e 
+In file_read a0e
+	     	     	     	     	     file_read : blk : 10008000
+In serve
+. Excepteur sint
+   10 occaecat cupidatat non proident, sunt in
+   11 culpa qui officia deserunt mo[00001003] fsipc 3 00000801
+fs req 3 from 00001003 [page 03bac007: ]
+serve_read 00001003 00000801 00000063
+opened : 809030 d0001000 ffff000
+In file_read 63 a71 
+In file_read a71
+	     	     	     	     	     file_read : blk : 10008000
+In serve
+llit anim
+   12 id est laborum.
+These are my file descriptors.
+fd 0: name script isdir 0 size 132 d[00001003] fsipc 3 00000801
+fs req 3 from 00001003 [page 03bac007: ]
+serve_read 00001003 00000801 00000063
+opened : 809030 d0001000 ffff000
+In file_read 63 ad4 
+In file_read ad4
+	     	     	     	     	     file_read : blk : 10008000
+In serve
+ev file
+fd 1: name testshell.out isdir 0 size 2780 dev file
+This is the end of the script.
+[00001003] fsipc 3 00000801
+fs req 3 from 00001003 [page 03bac007: ]
+serve_read 00001003 00000801 00000063
+opened : 809030 d0001000 ffff000
+In file_read 63 b2f 
+In serve
+===
+got:
+===
+[00001003] fsipc 3 00000800
+fs req 3 from 00001003 [page 03bac007: ]
+serve_read 00001003 00000800 00000063
+opened : 809020 d0000000 ffff000
+In file_read 63 0 
+In serve
+===
+[00001003] fsipc 6 00000800
+fs req 6 from 00001003 [page 03bac007: ]
+serve_flush 00001003 00000800
+In serve
+[00001003] fsipc 6 00000801
+fs req 6 from 00001003 [page 03bac007: ]
+serve_flush 00001003 00000801
+In serve
