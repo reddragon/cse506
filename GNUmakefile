@@ -82,13 +82,14 @@ CFLAGS := $(CFLAGS) $(DEFS) $(LABDEFS) -O1 -fno-builtin -I$(TOP) -MD
 CFLAGS += -Wall -Wno-format -Wno-unused -Werror -gstabs -m32
 
 # Macros used in Project
-ifneq ($(PTEST), undefined)
+
+ifneq ($(origin PTEST), undefined)
 CFLAGS += -D $(PTEST)
 endif
 
-ifneq ($(PMODE), undefined)
-CFLAGS += -D $(PMODE)
-endif
+#ifneq ($(PMODE), undefined)
+#CFLAGS += -D $(PMODE)
+#endif
 
 # Add -fno-stack-protector if the option exists.
 CFLAGS += $(shell $(CC) -fno-stack-protector -E -x c /dev/null >/dev/null 2>&1 && echo -fno-stack-protector)
