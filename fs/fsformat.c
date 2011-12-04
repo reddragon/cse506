@@ -121,14 +121,18 @@ opendisk(const char *name)
 	bitmap = alloc(nbitblocks);
 	memset(bitmap, 0xFF, nbitblocks * BLKSIZE);
 	
+	#ifdef JOURNALING
+	printf("Journaling has been enabled\n");
 	journal = alloc(BLKSIZE);
 	
 	journal->j_nentries = MAXJENTRIES;
 	memset(journal->j_entry_bitmap, 0xFF, \
 		sizeof(journal->j_entry_bitmap));
 	printf("Allocating %d bytes, %d blocks to the Journal Entries\n", (ROUNDUP(MAXJENTRIES * sizeof(struct JournalEntry), BLKSIZE)), (ROUNDUP(MAXJENTRIES * sizeof(struct JournalEntry), BLKSIZE))/BLKSIZE);
-	printf("blocks: %d\n", (diskpos - diskmap)/BLKSIZE);
 	journal->j_entries = alloc(ROUNDUP(MAXJENTRIES * sizeof(struct JournalEntry), BLKSIZE));
+	#else
+	printf("Journaling is not enabled\n");
+	#endif
 }
 
 void
@@ -212,8 +216,6 @@ writefile(struct Dir *dir, const char *name)
 		last++;
 	else
 		last = name;
-	
-	//fprintf(stdout, "name: %s, this was the value of last: %d\n", name, strrchr(name, '/') - name);
 
 	f = diradd(dir, FTYPE_REG, last);
 	start = alloc(st.st_size);
@@ -236,13 +238,6 @@ main(int argc, char **argv)
 	char *s;
 	struct Dir root;
 	
-	int j;
-	for(j = 0; j < argc; j++)
-	{
-		fprintf(stdout, "%d %s\n", j, argv[j]);
-	}
-	fprintf(stdout, "End of argument\n");
-
 	assert(BLKSIZE % sizeof(struct File) == 0);
 	
 	if (argc < 3)
@@ -259,9 +254,7 @@ main(int argc, char **argv)
 		writefile(&root, argv[i]);
 	
 	finishdir(&root);
-	printf("blocks: %d\n", (diskpos - diskmap)/BLKSIZE);
 	finishdisk();
-	printf("blocks: %d %p %p\n", (diskpos-diskmap) / BLKSIZE, blockof(journal->j_entries), super);
 	return 0;
 }
 
