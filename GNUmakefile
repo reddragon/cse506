@@ -87,9 +87,9 @@ ifneq ($(origin PTEST), undefined)
 CFLAGS += -D $(PTEST)
 endif
 
-#ifneq ($(PMODE), undefined)
-#CFLAGS += -D $(PMODE)
-#endif
+ifneq ($(origin PMODE), undefined)
+CFLAGS += -D $(PMODE)
+endif
 
 # Add -fno-stack-protector if the option exists.
 CFLAGS += $(shell $(CC) -fno-stack-protector -E -x c /dev/null >/dev/null 2>&1 && echo -fno-stack-protector)
