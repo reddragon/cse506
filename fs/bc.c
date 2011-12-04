@@ -32,7 +32,6 @@ bc_pgfault(struct UTrapframe *utf)
 {
 	
 	void *addr = (void *) utf->utf_fault_va;
-	cprintf("\t\t\t\tbcpgfault : %x\n", addr);
 	uint32_t blockno = ((uint32_t)addr - DISKMAP) / BLKSIZE;
 	int r;
 

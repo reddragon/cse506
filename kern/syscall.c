@@ -403,7 +403,6 @@ sys_ipc_recv(void *dstva)
 {
 	// LAB 4: Your code here.
 	// My code : alaud
-	cprintf("Ipc recv : %x\n", curenv -> env_id);
 	if((uint32_t)dstva < UTOP && ROUNDUP(dstva, PGSIZE) != dstva)
 		return -E_INVAL;
 	curenv -> env_ipc_recving = 1;

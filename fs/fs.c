@@ -68,7 +68,6 @@ alloc_block(void)
 			bitmap[blockno/32] ^= 1<<(blockno%32);
 			flush_block(diskaddr(2));
 			assert(!block_is_free(blockno));
-			cprintf("\t\t\t\t\tAllocating block number : %x\n", blockno);
 			return blockno;
 		}
 	return -E_NO_DISK;
@@ -123,7 +122,9 @@ fs_init(void)
 
 	check_super();
 	check_bitmap();
+	#ifdef JOURNALING
 	fsck();
+	#endif
 }
 
 // Find the disk block number slot for the 'filebno'th block in file 'f'.
@@ -151,15 +152,12 @@ file_block_walk(struct File *f, uint32_t filebno, uint32_t **ppdiskbno, bool all
 	if(filebno < NDIRECT)
 	{
 		*ppdiskbno = &(f->f_direct[filebno]);
-		//cprintf("\t\t\t\t\tfs_direct, *fsd : %x %x\n", *ppdiskbno, f->f_direct[filebno]);
 		return 0;
 	}
 	if(f->f_indirect == 0 && !alloc)
 		return -E_NOT_FOUND;
-	//cprintf("\t\t\t\t\tIndirect block %x\n", f->f_indirect);
 	if(f->f_indirect == 0)
 	{
-		//cprintf("\t\t\t\t\tGoing to allocate indirect\n");
 		int status = 0;
 		if((status = alloc_block()) < 0)
 		{
@@ -172,7 +170,6 @@ file_block_walk(struct File *f, uint32_t filebno, uint32_t **ppdiskbno, bool all
 
 	*ppdiskbno = (uint32_t*)(baddr + filebno - NDIRECT);
 	return 0;
-	//panic("file_block_walk not implemented");
 
 }
 
@@ -190,24 +187,19 @@ file_get_block(struct File *f, uint32_t filebno, char **blk)
 	// LAB 5: Your code here.
 	if(filebno >= NDIRECT + NINDIRECT)
 		return -E_INVAL;
-	//cprintf("file get block : 1\n");
 	uint32_t* baddr;
 	int status = 0;
 	if((status = file_block_walk(f, filebno, &baddr, 1)) < 0)
 		return status;
-	//cprintf("file get block : 2\n");
 	if(*baddr == 0)
 	{
 		if((status = alloc_block()) < 0)
 			return status;
 		*baddr = status;
 	}
-	//cprintf("file get block : 3\n");
 	char* addr = (char*)diskaddr(*baddr);
 	*blk = addr;
-	//cprintf("file get block : 4, block addr: %p\n", addr);
 	return 0;
-	//panic("file_get_block not implemented");
 }
 
 // Try to find a file named "name" in dir.  If so, set *file to it.
@@ -262,7 +254,6 @@ dir_alloc_file(struct File *dir, struct File **file)
 				return 0;
 			}
 	}
-	//cprintf("Now increasing the size\n");
 	dir->f_size += BLKSIZE;
 	if ((r = file_get_block(dir, i, &blk)) < 0)
 		return r;
@@ -353,15 +344,11 @@ file_create(const char *path, struct File **pf)
 		return -E_FILE_EXISTS;
 	if (r != -E_NOT_FOUND || dir == 0)
 		return r;
-	cprintf("dir size before: %d\n", dir->f_size);
 	if (dir_alloc_file(dir, &f) < 0)
 		return r;
-	cprintf("dir size after: %d\n", dir->f_size);
-	//if(strcmp(name, "random3"))
 	strcpy(f->f_name, name);
 	*pf = f;
 	file_flush(dir);
-	//cprintf("\t\t\t%s\n", name);	
 	return 0;
 }
 
@@ -371,7 +358,6 @@ int
 file_open(const char *path, struct File **pf)
 {
 	int status = walk_path(path, 0, pf, 0);
-	cprintf("file_open for %s : %d\n", path, status);
 	return status;
 }
 
@@ -381,7 +367,6 @@ file_open(const char *path, struct File **pf)
 ssize_t
 file_read(struct File *f, void *buf, size_t count, off_t offset)
 {
-	cprintf("In file_read %x %x \n", count, offset);
 	int r, bn;
 	off_t pos;
 	char *blk;
@@ -392,10 +377,8 @@ file_read(struct File *f, void *buf, size_t count, off_t offset)
 	count = MIN(count, f->f_size - offset);
 
 	for (pos = offset; pos < offset + count; ) {
-		cprintf("In file_read %x\n", pos);
 		if ((r = file_get_block(f, pos / BLKSIZE, &blk)) < 0)
 			return r;
-		cprintf("\t\t\t\t\tfile_read : blk : %x\n", blk);
 		bn = MIN(BLKSIZE - pos % BLKSIZE, offset + count - pos);
 		memmove(buf, blk + pos % BLKSIZE, bn);
 		pos += bn;

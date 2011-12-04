@@ -353,7 +353,6 @@ serve(void)
 	void *pg;
 
 	while (1) {
-		cprintf("In serve\n");
 		perm = 0;
 		req = ipc_recv((int32_t *) &whom, fsreq, &perm);
 		if (debug)
@@ -379,28 +378,16 @@ serve(void)
 		ipc_send(whom, r, pg, perm);
 		sys_page_unmap(0, fsreq);
 	}
-	cprintf("Out of serve\n");
 }
 
 
 void
 fs_integrity_tests()
 {
-	
-	//#define FILE_CREATE_TEST 1
-	//#define FILE_REMOVE_TEST 1
-	#define BLOCK_FREE_TEST 1
-	//#define BLOCK_ALLOC_TEST 1
 	/*
 		Try to create files as long as the root dir's size
 		does not increase. And then fail before the dir
 		is flushed out, but its block has been flushed out.
-
-		TODO: 
-	        Journal the case so that both possible failures,
-		when the crash occurs before the dir block's write
-		as well as when it occurs before the file's block
-		being written.
 	*/
 	#ifdef FILE_CREATE_TEST
 	struct File * pf, * tmp;
@@ -451,11 +438,7 @@ fs_integrity_tests()
 		Create a file named randomfrf, and then crash
 		before the updated file block is committed to 
 		disk.
-
-		TODO:
-		Journal this case
 	*/
-
 	#ifdef FILE_REMOVE_TEST
 	struct File * pf, * tmp;
 	int create = (file_open("/frftest", &tmp) < 0);
@@ -475,14 +458,11 @@ fs_integrity_tests()
 			cprintf("File Remove Test: OK\n");
 	}
 	#endif
+	
 	/*
 		Decrease the size of the file, and crash before
 		the file's metadata is sent to the disk.
-		
-		TODO:
-		Fix this with the journal
 	*/
-	
 	#ifdef BLOCK_FREE_TEST
 	struct File * pf, * tmp;
 	int create = (file_open("/bftest", &tmp) < 0);
