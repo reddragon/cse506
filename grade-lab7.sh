@@ -15,7 +15,6 @@ pts=10
 runtest1 -tag 'PTE_SHARE [testpteshare]' testpteshare \
 	'fork handles PTE_SHARE right' \
 	'spawn handles PTE_SHARE right' \
-
 # 10 points - run-testfdsharing
 pts=10
 runtest1 -tag 'fd sharing [testfdsharing]' testfdsharing \

@@ -294,15 +294,15 @@ page_fault_handler(struct Trapframe *tf)
 	// Faulted when in the User Exception Stack.
 	if(tf->tf_esp < UXSTACKTOP && tf->tf_esp >= UXSTACKTOP - PGSIZE)
         {
-		cprintf("PgFault on the UXSTACK eip: %x, esp: %x\n", tf->tf_eip, tf->tf_esp);
+		//cprintf("PgFault on the UXSTACK eip: %x, esp: %x\n", tf->tf_eip, tf->tf_esp);
 		utf = (struct UTrapframe *)(tf->tf_esp - (uint32_t)sizeof(struct UTrapframe) - sizeof(uint32_t));
-		user_mem_assert(curenv, (void *)(utf), (uint32_t)(sizeof(struct UTrapframe) + sizeof(uint32_t)), 0);
+		//user_mem_assert(curenv, (void *)(utf), (uint32_t)(sizeof(struct UTrapframe) + sizeof(uint32_t)), 0);
 	}
         else
         {       
 		//cprintf("Normal PgFault  eip: %x, esp: %x\n", tf->tf_eip, tf->tf_esp);
 		utf = (struct UTrapframe *)(UXSTACKTOP - (uint32_t)sizeof(struct UTrapframe));
-		user_mem_assert(curenv, (void *)(utf), (uint32_t)(sizeof(struct UTrapframe)), 0);
+		//user_mem_assert(curenv, (void *)(utf), (uint32_t)(sizeof(struct UTrapframe)), 0);
 	}
 
 	utf->utf_fault_va = fault_va;

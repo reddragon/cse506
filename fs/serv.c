@@ -9,7 +9,7 @@
 #include "fs.h"
 
 
-#define debug 1
+#define debug 0
 
 // The file system server maintains three structures
 // for each open file.
@@ -221,11 +221,11 @@ serve_read(envid_t envid, union Fsipc *ipc)
 	int status;
 	if((status = openfile_lookup(envid, fd, &o)) < 0)
 		return status;
-	cprintf("opened : %x %x %x\n",o, o->o_fd, ret->ret_buf);
+	//cprintf("opened : %x %x %x\n",o, o->o_fd, ret->ret_buf);
 	off_t offset = o->o_fd->fd_offset;
 	if((status = file_read(o->o_file, (void*)ret -> ret_buf, n, offset)) < 0)
 	{
-		cprintf("file_read : error now\n");
+		//cprintf("file_read : error now\n");
 		// Kind of redundant, but useful for debugging
 		return status;
 	}
@@ -353,7 +353,7 @@ serve(void)
 	void *pg;
 
 	while (1) {
-		cprintf("In serve\n");
+		//cprintf("In serve\n");
 		perm = 0;
 		req = ipc_recv((int32_t *) &whom, fsreq, &perm);
 		if (debug)
@@ -362,8 +362,7 @@ serve(void)
 
 		// All requests must contain an argument page
 		if (!(perm & PTE_P)) {
-			cprintf("Invalid request from %08x: no argument page\n",
-				whom);
+			//cprintf("Invalid request from %08x: no argument page\n", whom);
 			continue; // just leave it hanging...
 		}
 
@@ -373,13 +372,13 @@ serve(void)
 		} else if (req < NHANDLERS && handlers[req]) {
 			r = handlers[req](whom, fsreq);
 		} else {
-			cprintf("Invalid request code %d from %08x\n", whom, req);
+			//cprintf("Invalid request code %d from %08x\n", whom, req);
 			r = -E_INVAL;
 		}
 		ipc_send(whom, r, pg, perm);
 		sys_page_unmap(0, fsreq);
 	}
-	cprintf("Out of serve\n");
+	//cprintf("Out of serve\n");
 }
 
 void

@@ -174,11 +174,11 @@ sys_env_set_pgfault_upcall(envid_t envid, void *func)
 {
 	// LAB 4: Your code here.
 	struct Env * env;
-	cprintf("In pgfault_upcall\n");
+	//cprintf("In pgfault_upcall\n");
 	if(envid2env(envid, &env, 1) < 0)
 		return -E_BAD_ENV;
 	env->env_pgfault_upcall = func;
-	cprintf("The upcall has been set\n");
+	//cprintf("The upcall has been set\n");
     	return 0;  
 }
 

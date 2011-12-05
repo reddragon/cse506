@@ -84,7 +84,7 @@ spawn(const char *prog, const char **argv)
 	//     correct initial eip and esp values in the child.
 	//
 	//   - Start the child process running with sys_env_set_status().
-	cprintf("In spawn\n");
+	//cprintf("In spawn\n");
 	if ((r = open(prog, O_RDONLY)) < 0)
 		return r;
 	fd = r;
@@ -94,19 +94,19 @@ spawn(const char *prog, const char **argv)
 	if (read(fd, elf_buf, sizeof(elf_buf)) != sizeof(elf_buf)
 	    || elf->e_magic != ELF_MAGIC) {
 		close(fd);
-		cprintf("elf magic %08x want %08x\n", elf->e_magic, ELF_MAGIC);
+		//cprintf("elf magic %08x want %08x\n", elf->e_magic, ELF_MAGIC);
 		return -E_NOT_EXEC;
 	}
-	cprintf("Spawn read elf\n");
+	//cprintf("Spawn read elf\n");
 	// Create new child environment
 	if ((r = sys_exofork()) < 0)
 		return r;
 	child = r;
-	cprintf("Spawn exoforked\n");
+	//cprintf("Spawn exoforked\n");
 	// Set up trap frame, including initial stack.
 	child_tf = envs[ENVX(child)].env_tf;
 	child_tf.tf_eip = elf->e_entry;
-	cprintf("\t\t\t\tChild entry : %x\n", elf->e_entry);
+	//cprintf("\t\t\t\tChild entry : %x\n", elf->e_entry);
 
 	if ((r = init_stack(child, argv, &child_tf.tf_esp)) < 0)
 		return r;
@@ -116,8 +116,8 @@ spawn(const char *prog, const char **argv)
 	for (i = 0; i < elf->e_phnum; i++, ph++) {
 		if (ph->p_type != ELF_PROG_LOAD)
 			continue;
-		cprintf("\t\t\t\t\tELF_PROG_LOAD\n");
-		cprintf("type : %x, va : %x, pa : %x\n", ph->p_type, ph->p_va, ph->p_pa);
+		//cprintf("\t\t\t\t\tELF_PROG_LOAD\n");
+		//cprintf("type : %x, va : %x, pa : %x\n", ph->p_type, ph->p_va, ph->p_pa);
 		perm = PTE_P | PTE_U;
 		if (ph->p_flags & ELF_PROG_FLAG_WRITE)
 			perm |= PTE_W;
@@ -126,10 +126,10 @@ spawn(const char *prog, const char **argv)
 			goto error;
 	}
 	close(fd);
-	cprintf("Spawn fd closed!\n");
+	//cprintf("Spawn fd closed!\n");
 	fd = -1;
 	
-	cprintf("About to begin\n");
+	//cprintf("About to begin\n");
 	// Copy shared library state.
 	if ((r = copy_shared_pages(child)) < 0)
 		panic("copy_shared_pages: %e", r);
@@ -282,19 +282,19 @@ static int
 copy_shared_pages(envid_t child)
 {
 	// LAB 7: Your code here.
-	cprintf("In copy_shared_pages\n");
+	//cprintf("In copy_shared_pages\n");
 	
 	uint32_t va;
-	for(va = UTEXT; va <= UTOP; va += PGSIZE)
+	for(va = UTEXT; va < UTOP; va += PGSIZE)
 	{
 		if((vpd[VPN(va)/NPTENTRIES] & PTE_P) && (vpt[VPN(va)] & PTE_SHARE))
 		{
-			cprintf("PTE_SHARE va: %x\n", va);
+			//cprintf("PTE_SHARE va: %x\n", va);
 			sys_page_map(0, (void *)va, \
 					child, (void *)va, (vpt[VPN(va)] & PTE_USER));
 		}
 	}
-	cprintf("Done with copy_shared_pages\n");
+	//cprintf("Done with copy_shared_pages\n");
 	return 0;
 }
 

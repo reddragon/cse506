@@ -25,7 +25,14 @@ pgfault(struct UTrapframe *utf)
 	//   (see <inc/memlayout.h>).
 
 	// LAB 4: Your code here.
-	cprintf("In the handler of pgfault with va:%x\n", addr);
+	//cprintf("In the handler of pgfault with va:%x\n", addr);
+	cprintf("Entered in pagefault entered. Fault va: %p, err: %d, perm: %d, VPN(addr): %d, addr>>PGSHIFT: %d\n", \
+			addr, err, PTE_COW, vpt[VPN(addr)], (uint32_t)addr>>PGSHIFT);
+	if(vpt[VPN(addr)] == 0 || addr == 0)
+	{
+		cprintf("In \n");
+		return;
+	}
 	if(!((err & FEC_WR) && (vpt[VPN(addr)] & PTE_COW)))
 		panic("Incorrectly entered in pagefault entered. Fault va: %p, err: %d, perm: %d, VPN(addr): %d, addr>>PGSHIFT: %d\n", \
 			addr, err, PTE_COW, vpt[VPN(addr)], (uint32_t)addr>>PGSHIFT);
@@ -71,18 +78,19 @@ duppage(envid_t envid, unsigned pn)
 	envid_t cur_envid;
 	// LAB 4: Your code here.
 	
-	if(perm & PTE_SHARE)
-		cprintf("\t\t\t\tIn duppage va: %x\n", pn<<PGSHIFT);
+	/*if(perm & PTE_SHARE)
+		cprintf("\t\t\t\tIn duppage va: %x\n", pn<<PGSHIFT);*/
 
 	
 	if(perm & PTE_SHARE)
 	{
-		cprintf("In duppage va: %x \n", pn<<PGSHIFT);
+		//cprintf("In duppage va: %x \n", pn<<PGSHIFT);
 		r = sys_page_map(0, (void *)(pn<<PGSHIFT), \
 			envid, (void *)(pn<<PGSHIFT), perm);
 		
 		if(r < 0) {
-			cprintf("error: %e\n", r);
+			//cprintf("error: %e\n", r);
+			return r;
 
 		}
 		return 0;
@@ -138,7 +146,7 @@ fork(void)
 	else if(envid == 0)
 	{
 		env = &envs[ENVX(sys_getenvid())];
-		cprintf("I am the child %04x %04x\n", sys_getenvid(), env->env_id);
+		//cprintf("I am the child %04x %04x\n", sys_getenvid(), env->env_id);
 		return 0;
 	}
 	

@@ -352,7 +352,7 @@ int
 file_open(const char *path, struct File **pf)
 {
 	int status = walk_path(path, 0, pf, 0);
-	cprintf("file_open for %s : %d\n", path, status);
+	//cprintf("file_open for %s : %d\n", path, status);
 	return status;
 }
 
@@ -362,7 +362,7 @@ file_open(const char *path, struct File **pf)
 ssize_t
 file_read(struct File *f, void *buf, size_t count, off_t offset)
 {
-	cprintf("In file_read %x %x \n", count, offset);
+	//cprintf("In file_read %x %x \n", count, offset);
 	int r, bn;
 	off_t pos;
 	char *blk;
@@ -373,10 +373,10 @@ file_read(struct File *f, void *buf, size_t count, off_t offset)
 	count = MIN(count, f->f_size - offset);
 
 	for (pos = offset; pos < offset + count; ) {
-		cprintf("In file_read %x\n", pos);
+		//cprintf("In file_read %x\n", pos);
 		if ((r = file_get_block(f, pos / BLKSIZE, &blk)) < 0)
 			return r;
-		cprintf("\t\t\t\t\tfile_read : blk : %x\n", blk);
+		//cprintf("\t\t\t\t\tfile_read : blk : %x\n", blk);
 		bn = MIN(BLKSIZE - pos % BLKSIZE, offset + count - pos);
 		memmove(buf, blk + pos % BLKSIZE, bn);
 		pos += bn;
