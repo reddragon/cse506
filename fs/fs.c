@@ -570,7 +570,8 @@ j_write(struct JournalEntry * je)
 	{
 		// Ran out of Journal Entry space;
 		// This case would not arise unless we are being very lazy
-		je_num = j_flush_all();
+		panic("No more journal entries left\n");
+		// Implement a function to flush out journal entries
 	}
 	journal->j_entries[je_num] = *je;
 	TOGGLE_JE_BITMAP(je_num);
