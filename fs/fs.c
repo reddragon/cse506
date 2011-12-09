@@ -765,26 +765,12 @@ fsck(void)
 {
 	cprintf("fsck\n");
 	journal->j_entries = diskaddr(4);
-	/*
-	
-	cprintf("nentries: %d, jentries: %p, sizeof(JournalEntry): %d\n", \
-		journal->j_nentries, journal->j_entries, sizeof(struct JournalEntry));
-	
-	uint32_t used_blocks = 0, blockno;
-	for(blockno = 0; blockno < super->s_nblocks; blockno++)
-		if(!block_is_free(blockno))
-			used_blocks++;
-	
-	cprintf("used_blocks: %d\n", used_blocks);
-	*/
-	
+		
 	uint32_t je, cnt = 0;
 	for(je = 0; je < (journal->j_nentries); je++) {
 		if(!(journal->j_entry_bitmap[je/32] & (1<<(je%32))))
 		{
-			// Needs to be fixed
 			cnt++;
-			// TODO: Fill this up to replay the work
 			cprintf("Inconsistency in je_num: %d\n", je);
 			struct File * pf;
 			switch(journal->j_entries[je].je_type) {

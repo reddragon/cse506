@@ -123,12 +123,17 @@ opendisk(const char *name)
 	
 	#ifdef JOURNALING
 	printf("Journaling has been enabled\n");
+	// Space for journal meta-data
 	journal = alloc(BLKSIZE);
 	
+	// Number of journal entries
 	journal->j_nentries = MAXJENTRIES;
+
+	// Clearing the journal entry bitmap
 	memset(journal->j_entry_bitmap, 0xFF, \
 		sizeof(journal->j_entry_bitmap));
-	printf("Allocating %d bytes, %d blocks to the Journal Entries\n", (ROUNDUP(MAXJENTRIES * sizeof(struct JournalEntry), BLKSIZE)), (ROUNDUP(MAXJENTRIES * sizeof(struct JournalEntry), BLKSIZE))/BLKSIZE);
+
+	// Allocating space for the journal entries
 	journal->j_entries = alloc(ROUNDUP(MAXJENTRIES * sizeof(struct JournalEntry), BLKSIZE));
 	#else
 	printf("Journaling is not enabled\n");
