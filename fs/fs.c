@@ -531,25 +531,21 @@ fs_sync(void)
 #define IS_JE_FREE(x) (!(journal->j_entry_bitmap[(x)/32] & (1<<((x)%32))))
 #define TOGGLE_JE_BITMAP(x) (journal->j_entry_bitmap[(x)/32] ^= (1<<((x)%32)))
 
+// Flush the journal entry to disk
 void
-j_flush_je(int je_num, int strictly)
+j_flush_je(int je_num)
 {
-	// If strictly != 1, it may not flush the journal
-	// immediately. Thus, allowing the user to fine-tune
-	// the risk. For now, we flush the journal entry
-	// immediately.
-	
-	journal->j_entries[je_num].je_ondisk = 1;
 	flush_block(&(journal->j_entries[je_num]));
 	// Flush the bitmap later
 	flush_block(journal);
 }
 
+// Flush the JE after the operation is done
 void
 j_postop_write(int je_num, int strictly)
 {
-	// Flush the JE after the operation is done
 	TOGGLE_JE_BITMAP(je_num);
+	cprintf("je_num:%d bit: %d\n", je_num, IS_JE_FREE(je_num));
 	flush_block(journal);
 }
 
@@ -566,13 +562,14 @@ j_write(struct JournalEntry * je)
 	if(je_num == MAXJENTRIES)
 	{
 		// Ran out of Journal Entry space;
-		// This case would not arise unless we are being very lazy
+		// This case would not arise unless we lazily flush journal entries		
 		panic("No more journal entries left\n");
 		// Implement a function to flush out journal entries
 	}
+
 	journal->j_entries[je_num] = *je;
 	TOGGLE_JE_BITMAP(je_num);
-	j_flush_je(je_num, 1);
+	j_flush_je(je_num);
 	return je_num;
 }
 
@@ -750,7 +747,7 @@ fsck(void)
 		
 	uint32_t je, cnt = 0;
 	for(je = 0; je < (journal->j_nentries); je++) {
-		if(!(journal->j_entry_bitmap[je/32] & (1<<(je%32))))
+		if((journal->j_entry_bitmap[je/32] & (1<<(je%32))))
 		{
 			cnt++;
 			cprintf("Inconsistency in je_num: %d\n", je);
@@ -773,7 +770,7 @@ fsck(void)
 		}
 	}
 	// Clear the bitmap
-	memset(journal->j_entry_bitmap, 0xFF, sizeof(journal->j_entry_bitmap));
+	memset(journal->j_entry_bitmap, 0x0, sizeof(journal->j_entry_bitmap));
 	flush_block(journal);
 	cprintf("%d inconsistencies found and fixed using fsck\n", cnt);
 }

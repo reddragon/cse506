@@ -130,8 +130,6 @@ enum {
 }; 
 
 struct JournalEntry {
-	// Has this been written to disk?
-	unsigned short je_ondisk;
 	// Type of journal entry
 	unsigned short je_type;
 		union {
