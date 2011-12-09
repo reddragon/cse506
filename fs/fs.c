@@ -528,9 +528,6 @@ fs_sync(void)
 */
 
 
-// Comment the below line to turn off journaling
-#define JOURNALING 1
-
 #define IS_JE_FREE(x) (!(journal->j_entry_bitmap[(x)/32] & (1<<((x)%32))))
 #define TOGGLE_JE_BITMAP(x) (journal->j_entry_bitmap[(x)/32] ^= (1<<((x)%32)))
 
