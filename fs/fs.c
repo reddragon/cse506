@@ -117,8 +117,10 @@ fs_init(void)
 	// Set "bitmap" to the beginning of the first bitmap block.
 	bitmap = diskaddr(2);
 	
+	#ifdef JOURNALING
 	// Set "journal" to the journal data
 	journal = diskaddr(3);
+	#endif
 
 	check_super();
 	check_bitmap();
