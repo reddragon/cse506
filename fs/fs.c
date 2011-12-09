@@ -534,24 +534,9 @@ fs_sync(void)
 #define IS_JE_FREE(x) (!(journal->j_entry_bitmap[(x)/32] & (1<<((x)%32))))
 #define TOGGLE_JE_BITMAP(x) (journal->j_entry_bitmap[(x)/32] ^= (1<<((x)%32)))
 
-int
-j_flush_all()
-{
-	// Flush all pending journal entries
-	// We enter this function when we have been
-	// very lazy in writing journal entries to disk
-	// Check using the je_ondisk member in the JournalEntry struct
-	// Return the first free journal entry
-	
-	// TODO: Write this
-
-	return 0;
-}
-
 void
 j_flush_je(int je_num, int strictly)
 {
-	// TODO:
 	// If strictly != 1, it may not flush the journal
 	// immediately. Thus, allowing the user to fine-tune
 	// the risk. For now, we flush the journal entry
@@ -567,9 +552,6 @@ void
 j_postop_write(int je_num, int strictly)
 {
 	// Flush the JE after the operation is done
-	// TODO:
-	// Can this be done lazily? Or combined with the
-	// previously pending journal flushes?
 	TOGGLE_JE_BITMAP(je_num);
 	flush_block(journal);
 }
