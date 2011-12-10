@@ -396,39 +396,30 @@ fs_integrity_tests()
 	{
 		int i, j, t;
 		file_create("/fcftest", &tmp);
+		char name[20];
+		strcpy(name, "/random00");
+
 		for(i = 0; i <= 12; i++)
 		{
-			char name[20];
-			strcpy(name, "/random000");
-			t = i;
-			for(j = 7; j < 9; j++)
-			{
-				name[j] = t%10 + '0';
-				t/=10;
-			}
+			name[7] = i/10 + '0';	
+			name[8] = i%10 + '0';
 			cprintf("creating file: %s\n", name);
-			int r = crash_on_file_create(name, &pf);
-			cprintf("%e\n", r);
+			crash_on_file_create(name, &pf);
 		}
 	}
 	else
 	{
 		int i, j, t;
+		char name[20];
+		strcpy(name, "/random00");
 		for(i = 0; i <= 12; i++)
 		{
-			char name[20];
-			strcpy(name, "/random000");
-			t = i;
-			for(j = 7; j < 9; j++)
-			{
-				name[j] = t%10 + '0';
-				t/=10;
-			}
+			name[7] = i/10 + '0';	
+			name[8] = i%10 + '0';
 			cprintf("opening file: %s\n", name);
 			int r = file_open(name, &pf);
-			cprintf("%e\n", r);
 			if(r < 0)
-				panic("%s should have been created, but is not\n", name);
+				panic("%s should have been created, but is not. Error: %e\n", name, r);
 		}
 		cprintf("File Create Test: OK\n");
 	}
@@ -463,7 +454,7 @@ fs_integrity_tests()
 		Decrease the size of the file, and crash before
 		the file's metadata is sent to the disk.
 	*/
-	#ifdef BLOCK_FREE_TEST
+	#ifdef FILE_RESIZE_TEST
 	struct File * pf, * tmp;
 	int create = (file_open("/bftest", &tmp) < 0);
 	if(create)

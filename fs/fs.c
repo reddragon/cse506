@@ -329,6 +329,59 @@ walk_path(const char *path, struct File **pdir, struct File **pf, char *lastelem
 	return 0;
 }
 
+
+/*	
+	Functions used for Journaling
+*/
+
+
+#define IS_JE_FREE(x) (!(journal->j_entry_bitmap[(x)/32] & (1<<((x)%32))))
+#define TOGGLE_JE_BITMAP(x) (journal->j_entry_bitmap[(x)/32] ^= (1<<((x)%32)))
+
+// Flush the journal entry to disk
+void
+j_flush_je(int je_num)
+{
+	flush_block(&(journal->j_entries[je_num]));
+	// Flush the bitmap later
+	flush_block(journal);
+}
+
+// Flush the JE after the operation is done
+void
+j_postop_write(int je_num, int strictly)
+{
+	TOGGLE_JE_BITMAP(je_num);
+	flush_block(journal);
+}
+
+
+int
+j_write(struct JournalEntry * je)
+{
+	// Write the journal entry
+	int je_num = -1;
+	for(je_num = 0; je_num < MAXJENTRIES; je_num++)
+		if(IS_JE_FREE(je_num))
+		{ break; }
+	
+	if(je_num == MAXJENTRIES)
+	{
+		// Ran out of Journal Entry space;
+		// This case would not arise unless we lazily flush journal entries		
+		panic("No more journal entries left\n");
+		// Implement a function to flush out journal entries
+	}
+
+	journal->j_entries[je_num] = *je;
+	TOGGLE_JE_BITMAP(je_num);
+	j_flush_je(je_num);
+	return je_num;
+}
+
+
+
+
 // --------------------------------------------------------------
 // File operations
 // --------------------------------------------------------------
@@ -342,15 +395,30 @@ file_create(const char *path, struct File **pf)
 	int r, prev;
 	struct File *dir, *f;
 	
+	#ifdef JOURNALING
+	struct JournalEntry je;
+	strcpy(je.je_desc.desc_filecreate.path, path);
+	je.je_type = JE_FILECREATE;
+	#endif
+	
 	if ((r = walk_path(path, &dir, &f, name)) == 0)
 		return -E_FILE_EXISTS;
 	if (r != -E_NOT_FOUND || dir == 0)
 		return r;
 	if (dir_alloc_file(dir, &f) < 0)
 		return r;
+
+	#ifdef JOURNALING
+	int je_num = j_write(&je);
+	#endif
+	
 	strcpy(f->f_name, name);
 	*pf = f;
 	file_flush(dir);
+	
+	#ifdef JOURNALING
+	j_postop_write(je_num, 1);		
+	#endif
 	return 0;
 }
 
@@ -466,10 +534,21 @@ file_truncate_blocks(struct File *f, off_t newsize)
 int
 file_set_size(struct File *f, off_t newsize)
 {
+	#ifdef JOURNALING
+	struct JournalEntry je;
+	je.je_desc.desc_fileresize.file_ptr = (uintptr_t)f;
+	je.je_type = JE_FILERESIZE;
+	je.je_desc.desc_fileresize.new_size = newsize;
+	int je_num = j_write(&je);
+	#endif
+	
 	if (f->f_size > newsize)
 		file_truncate_blocks(f, newsize);
 	f->f_size = newsize;
 	flush_block(f);
+	#ifdef JOURNALING
+	j_postop_write(je_num, 1);	
+	#endif
 	return 0;
 }
 
@@ -502,15 +581,28 @@ file_remove(const char *path)
 {
 	int r;
 	struct File *f;
+	
+	#ifdef JOURNALING
+	struct JournalEntry je;
+	strcpy(je.je_desc.desc_fileremove.path, path);
+	je.je_type = JE_FILEREMOVE;
+	#endif
 
 	if ((r = walk_path(path, 0, &f, 0)) < 0)
 		return r;
-
+	
+	#ifdef JOURNALING
+	int je_num = j_write(&je);	
+	#endif
+	
 	file_truncate_blocks(f, 0);
 	f->f_name[0] = '\0';
 	f->f_size = 0;
 	flush_block(f);
-
+	
+	#ifdef JOURNALING
+	j_postop_write(je_num, 1);
+	#endif
 	return 0;
 }
 
@@ -521,56 +613,6 @@ fs_sync(void)
 	int i;
 	for (i = 1; i < super->s_nblocks; i++)
 		flush_block(diskaddr(i));
-}
-
-/*	
-	Functions used for Journaling
-*/
-
-
-#define IS_JE_FREE(x) (!(journal->j_entry_bitmap[(x)/32] & (1<<((x)%32))))
-#define TOGGLE_JE_BITMAP(x) (journal->j_entry_bitmap[(x)/32] ^= (1<<((x)%32)))
-
-// Flush the journal entry to disk
-void
-j_flush_je(int je_num)
-{
-	flush_block(&(journal->j_entries[je_num]));
-	// Flush the bitmap later
-	flush_block(journal);
-}
-
-// Flush the JE after the operation is done
-void
-j_postop_write(int je_num, int strictly)
-{
-	TOGGLE_JE_BITMAP(je_num);
-	cprintf("je_num:%d bit: %d\n", je_num, IS_JE_FREE(je_num));
-	flush_block(journal);
-}
-
-
-int
-j_write(struct JournalEntry * je)
-{
-	// Write the journal entry
-	int je_num = -1;
-	for(je_num = 0; je_num < MAXJENTRIES; je_num++)
-		if(IS_JE_FREE(je_num))
-		{ break; }
-	
-	if(je_num == MAXJENTRIES)
-	{
-		// Ran out of Journal Entry space;
-		// This case would not arise unless we lazily flush journal entries		
-		panic("No more journal entries left\n");
-		// Implement a function to flush out journal entries
-	}
-
-	journal->j_entries[je_num] = *je;
-	TOGGLE_JE_BITMAP(je_num);
-	j_flush_je(je_num);
-	return je_num;
 }
 
 
